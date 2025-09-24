@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  {% load static %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}DÉSSO FLOWERS{% endblock %}</title>
+
+  <!-- Шрифты -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Главные стили -->
+  <link rel="stylesheet" href="{% static 'main_page/css/main.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  {% block header %}
+    <!-- Твой «взрослый» header -->
+    <header class="site-header" id="siteHeader">
+      <div class="container header-inner">
+        <div class="brand-row">
+          <a href="/" class="logo">DÉSSO FLOWERS ®</a>
+        </div>
+        <nav class="nav-row">
+          <a href="/">Главная</a>
+          <a href="#">Букеты</a>
+          <a href="#">Сладости</a>
+          <a href="#">Подарки</a>
+          <a href="#">Контакты</a>
+        </nav>
+      </div>
+    </header>
+  {% endblock %}
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+  <!-- Скрипты страницы -->
+  {% block scripts %}{% endblock %}
+</body>
+</html>

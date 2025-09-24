@@ -1,202 +1,136 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  {% load static %}
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DESSO Flowers</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#fff;
-      --card:#faf6fb;
-      --muted:#555;
-      --text:#222;
-      --accent:#7b2cbf;   /* фиолетовый */
-      --accent-2:#d63384; /* розовый */
-      --gold:#f1c232;     /* золотой */
-      --radius:20px;
-      --shadow:0 6px 20px rgba(0,0,0,.12);
-      --max:1280px;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,sans-serif}
-    a{color:inherit;text-decoration:none}
-    img{max-width:100%;display:block;border-radius:var(--radius)}
-    .container{max-width:var(--max);margin:0 auto;padding:0 20px}
+{% extends "base.html" %}
+{% load static %}
 
-    /* Header */
-    header{background:#fff;position:sticky;top:0;z-index:50;border-bottom:1px solid #eee}
-    .head{display:flex;justify-content:space-between;align-items:center;padding:16px 0}
-    .logo{display:flex;align-items:center;gap:10px;font-family:'Playfair Display',serif;font-weight:700;font-size:24px;color:var(--accent)}
-    .logo .mark{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:var(--shadow)}
-    .nav{display:flex;gap:18px}
-    .nav a{padding:10px 16px;border-radius:999px;font-weight:500;color:var(--accent)}
-    .nav a:hover,.nav a.active{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff}
+{% block title %}Главная — DÉSSO FLOWERS{% endblock %}
 
-    /* ============== HERO: FULL-BLEED VIDEO SLIDER ============== */
-    .hero{position:relative;width:100vw;margin-left:calc(50% - 50vw);overflow:hidden}
-    .hero{height:64vh;min-height:360px;max-height:720px;border-radius:0}
-    .hero .slider{display:flex;height:100%;transition:transform .6s ease}
-    .hero .slide{min-width:100%;height:100%;position:relative}
-    .hero video,.hero .slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-    .hero .gradient{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,.15),rgba(0,0,0,.55));pointer-events:none}
-
-    .caption{position:absolute;left:8%;top:50%;transform:translateY(-50%);max-width:560px;color:#fff}
-    .title{font-family:'Playfair Display',serif;font-size:48px;line-height:1.05;margin:0 0 14px;text-shadow:0 8px 24px rgba(0,0,0,.45)}
-    .subtitle{opacity:.95;margin-bottom:18px}
-    .cta{display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;padding:12px 24px;border-radius:999px;font-weight:600;border:none}
-
-    .hero .nav-zones{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:stretch}
-    .hero .nav-zones button{appearance:none;background:transparent;border:0;width:35%;cursor:pointer}
-    .hero .nav-zones button:focus{outline:2px solid rgba(255,255,255,.4)}
-    .hero .nav-zones .prev{cursor:w-resize}
-    .hero .nav-zones .next{cursor:e-resize}
-    .hero .nav-zones button::after{content:'❮';position:absolute;top:50%;transform:translateY(-50%);font-size:44px;color:#ffffffaa;opacity:0;transition:.2s}
-    .hero .nav-zones .next::after{content:'❯';right:24px}
-    .hero .nav-zones .prev::after{left:24px}
-    .hero .nav-zones button:hover::after{opacity:1}
-
-    .hero .dots{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;display:flex;gap:8px}
-    .hero .dots button{width:10px;height:10px;border-radius:999px;border:0;background:#ffffff55}
-    .hero .dots button.active{background:#fff}
-
-    /* ============== STORIES (centered) ============== */
-    .stories{background:#fff;padding:22px 0;border-bottom:1px solid #eee}
-    .stories .container{display:flex;justify-content:center}
-    .stories .track{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}
-    .story{width:96px;text-align:center;font-size:12px;color:#333}
-    .story .ring{width:90px;height:90px;border-radius:50%;padding:3px;background:conic-gradient(from 180deg,var(--accent),var(--accent-2));margin:0 auto 8px}
-    .story .circle{width:100%;height:100%;border-radius:50%;background:#fff;padding:3px}
-    .story .inner{width:100%;height:100%;border-radius:50%;overflow:hidden}
-    .story img{width:100%;height:100%;object-fit:cover;border-radius:50%}
-
-    /* Products */
-    .section-head{display:flex;justify-content:space-between;align-items:center;margin:34px 0 18px}
-    .section-head h2{margin:0;font-size:26px;font-family:'Playfair Display',serif;color:var(--accent)}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
-    .product{background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:.2s}
-    .product:hover{transform:translateY(-4px)}
-    .product img{aspect-ratio:1/1;object-fit:cover;border-radius:0}
-    .product .body{padding:14px}
-    .product .brand{font-size:12px;color:var(--muted);text-transform:uppercase}
-    .product .name{margin:6px 0;font-weight:600;font-family:'Playfair Display',serif;font-size:18px;color:#333}
-    .product .price{font-weight:700;font-size:16px;margin-top:8px;color:var(--gold)}
-
-    /* Banner */
-    .banner{margin:36px 0;border-radius:var(--radius);overflow:hidden;position:relative;box-shadow:var(--shadow)}
-    .banner img{width:100%;height:320px;object-fit:cover}
-    .banner .inner{position:absolute;left:8%;top:50%;transform:translateY(-50%);color:#fff}
-    .banner .inner h3{font-size:34px;margin:0 0 12px;font-weight:700;font-family:'Playfair Display',serif}
-
-    footer{margin-top:40px;background:#faf6fb;border-top:1px solid #eee;color:var(--muted)}
-    .foot{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:20px;padding:30px 0}
-    .foot h4{margin:0 0 10px;color:var(--accent);font-family:'Playfair Display',serif}
-    .foot ul{list-style:none;padding:0;margin:0;display:grid;gap:8px}
-    .copyright{border-top:1px solid #eee;padding:14px 0;text-align:center;font-size:13px;color:#777}
-
-    @media(max-width:920px){
-      .hero{height:56vh;min-height:280px}
-      .title{font-size:34px}
-      .foot{grid-template-columns:1fr 1fr}
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="container head">
-      <a href="#" class="logo"><div class="mark"></div>DÉSSO FLOWERS ®</a>
-      <nav class="nav">
-        <a href="#" class="active">Главная</a>
-        <a href="#">Букеты</a>
-        <a href="#">Сладости</a>
-        <a href="#">Подарки</a>
-        <a href="#">Контакты</a>
-      </nav>
-    </div>
-  </header>
-
-  <!-- ===================== HERO ===================== -->
-  <section class="hero" id="hero" aria-roledescription="carousel" aria-label="Промо-видео">
+{% block content %}
+  <!-- HERO -->
+  <section class="hero" id="hero">
     <div class="slider" id="heroSlider">
-      <section class="slide" data-idx="0" aria-label="Букеты и эмоции">
-        <video autoplay muted loop playsinline
-            poster="{% static 'main_page/video/poster.jpg' %}">
-        <source src="{% static 'main_page/video/TRAIN DESSO.mp4' %}" type="video/mp4">
-        Ваш браузер не поддерживает видео.
-        </video>      
+
+      <section class="slide" data-idx="0">
+        <video autoplay muted playsinline
+               poster="{% static 'main_page/img/poster.jpg' %}">
+          <source src="{% static 'main_page/head_video/DamelyaOne.mp4' %}" type="video/mp4">
+        </video>
         <div class="gradient"></div>
         <div class="caption">
-          <div class="kicker">DÉSSO FLOWERS</div>
+          <div class="kicker">DESSO</div>
           <h1 class="title">Цветы, как признание в любви</h1>
-          <p class="subtitle">Крупные, сочные композиции, упаковка премиум и доставка 24/7</p>
-          <button class="cta" onclick="alert('Переход в каталог')">Перейти в каталог</button>
+          <p class="subtitle">Крупные, сочные композиции, премиум упаковка и доставка 24/7</p>
+          <a href="#" class="cta">Перейти в каталог</a>
         </div>
       </section>
-      <section class="slide" data-idx="1" aria-label="Сладкие подарки">
-        <video autoplay muted loop playsinline
-            poster="{% static 'main_page/video/poster.jpg' %}">
-        <source src="{% static 'main_page/video/DESSO.mp4' %}" type="video/mp4">
-        Ваш браузер не поддерживает видео.
-        </video> 
+
+      <section class="slide" data-idx="1">
+        <video autoplay muted playsinline
+               poster="{% static 'main_page/img/poster.jpg' %}">
+          <source src="{% static 'main_page/head_video/DamelyaTwo.mp4' %}" type="video/mp4">
+        </video>
         <div class="gradient"></div>
         <div class="caption">
-          <div class="kicker">DÉSSO SWEETS</div>
+          <div class="kicker">DESSO SWEETS</div>
           <h2 class="title">Шоколадные клубники и наборы</h2>
-          <p class="subtitle">Идеальная пара к букету — оформим как подарок</p>
-          <button class="cta" onclick="alert('Сладкие подарки')">Выбрать набор</button>
+          <p class="subtitle">Идеальная пара к букету</p>
+          <a href="#" class="cta">Выбрать набор</a>
         </div>
       </section>
-      <section class="slide" data-idx="2" aria-label="Галерея клиентов">
-        <video autoplay muted loop playsinline
-                poster="{% static 'main_page/video/poster.jpg' %}">
-            <source src="{% static 'main_page/video/Dubai2025.mp4' %}" type="video/mp4">
-            Ваш браузер не поддерживает видео.
-        </video> 
+
+      <section class="slide" data-idx="3">
+        <video autoplay muted playsinline
+               poster="{% static 'main_page/img/poster.jpg' %}">
+          <source src="{% static 'main_page/head_video/DamelyaThree.mp4' %}" type="video/mp4">
+        </video>
         <div class="gradient"></div>
         <div class="caption">
           <div class="kicker">INSTAGRAM</div>
           <h2 class="title">Ваши эмоции — наш вайб</h2>
-          <p class="subtitle">Подписывайтесь @desso_flowers и вдохновляйтесь</p>
-          <button class="cta" onclick="alert('Открыть Instagram')">Подписаться</button>
+          <a class="cta" href="#">Подписаться</a>
         </div>
       </section>
+
+      <section class="slide" data-idx="4">
+        <video autoplay muted playsinline
+               poster="{% static 'main_page/img/poster.jpg' %}">
+          <source src="{% static 'main_page/head_video/DamelyaFour.mp4' %}" type="video/mp4">
+        </video>
+        <div class="gradient"></div>
+        <div class="caption">
+          <div class="kicker">INSTAGRAM</div>
+          <h2 class="title">Ваши эмоции — наш вайб</h2>
+          <a class="cta" href="#">Подписаться</a>
+        </div>
+      </section>
+
     </div>
+
+    <!-- нав. зоны и точки -->
     <div class="nav-zones" aria-hidden="true">
-      <button class="prev" id="heroPrev" title="Предыдущий слайд"></button>
-      <button class="next" id="heroNext" title="Следующий слайд"></button>
+      <button class="prev" id="heroPrev"></button>
+      <button class="next" id="heroNext"></button>
     </div>
-    <div class="dots" id="heroDots" aria-label="Пагинация"></div>
+    <div class="dots" id="heroDots"></div>
   </section>
 
-  <!-- ===================== STORIES (CENTERED) ===================== -->
-  <section class="stories" aria-label="Сториз">
-    <div class="container">
-      <div class="track">
-        <a class="story" href="#">
-          <div class="ring"><div class="circle"><div class="inner"><img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=240" alt="Новинки"></div></div></div>
-          <div class="label">Новинки</div>
-        </a>
-        <a class="story" href="#">
-          <div class="ring"><div class="circle"><div class="inner"><img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=240" alt="Букеты"></div></div></div>
-          <div class="label">Букеты</div>
-        </a>
-        <a class="story" href="#">
-          <div class="ring"><div class="circle"><div class="inner"><img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200&auto=format&fit=crop" alt="Сладости"></div></div></div>
-          <div class="label">Сладости</div>
-        </a>
-        <a class="story" href="#">
-          <div class="ring"><div class="circle"><div class="inner"><img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=240" alt="Отзывы"></div></div></div>
-          <div class="label">Отзывы</div>
-        </a>
-      </div>
+<!-- ===== STORIES (preview circles) ===== -->
+<section class="stories" aria-label="Сториз">
+  <div class="container">
+    <div class="track">
+      <button class="story" data-story="novinki" type="button">
+        <div class="ring"><div class="circle"><div class="inner">
+          <img src="{% static 'main_page/img/rings/magnifique.jpg' %}" alt="Новинки">
+        </div></div></div>
+        <div class="label">"Magnifique"</div>
+      </button>
+
+      <button class="story" data-story="sweets" type="button">
+        <div class="ring"><div class="circle"><div class="inner">
+          <img src="{% static 'main_page/img/rings/sweet.jpg' %}" alt="Букеты">
+        </div></div></div>
+        <div class="label">Desso Sweets</div>
+      </button>
+
+      <button class="story" data-story="Damelya" type="button">
+        <div class="ring"><div class="circle"><div class="inner">
+          <img src="{% static 'main_page/img/rings/logo.jpg' %}" alt="Сладости">
+        </div></div></div>
+        <div class="label">Damelya</div>
+      </button>
+
+      <button class="story" data-story="otzyvy" type="button">
+        <div class="ring"><div class="circle"><div class="inner">
+          <img src="{% static 'main_page/img/rings/logo.jpg' %}" alt="Отзывы">
+        </div></div></div>
+        <div class="label">Reviews</div>
+      </button>
     </div>
-  </section>
+  </div>
+</section>
+
+<!-- ===== STORIES MODAL ===== -->
+<div class="stories-modal" id="storiesModal" aria-hidden="true">
+  <div class="stories-backdrop"></div>
+
+  <div class="stories-frame" role="dialog" aria-modal="true" aria-label="Истории">
+    <!-- progress segments -->
+    <div class="stories-progress" id="storiesProgress"></div>
+
+    <!-- media area (9:16) -->
+    <div class="stories-media" id="storiesMedia">
+      <!-- сюда будет подставляться <video> или <img> -->
+    </div>
+
+    <!-- overlay tap zones -->
+    <button class="stories-zone left"  id="storiesPrev" aria-label="Назад"></button>
+    <button class="stories-zone right" id="storiesNext" aria-label="Дальше"></button>
+
+    <!-- close -->
+    <button class="stories-close" id="storiesClose" aria-label="Закрыть">✕</button>
+  </div>
+</div>
 
   <div class="container">
-    <div class="section-head"><h2>Популярные букеты</h2><a href="#">Смотреть все →</a></div>
+    <div class="section-head"><h2>Коллекции</h2><a href="#">Смотреть все →</a></div>
     <div class="grid">
       <div class="product">
         <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=1600&auto=format&fit=crop" alt="Букет 1">
@@ -243,49 +177,74 @@
         <ul><li><a href="#">Instagram</a></li><li><a href="#">WhatsApp</a></li><li><a href="#">Telegram</a></li></ul>
       </div>
     </div>
-    <div class="copyright">© 2025 DESSO Flowers</div>
+    <div class="copyright">© 2023 DESSO Flowers</div>
   </footer>
 
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'main_page/js/hero.js' %}"></script>
   <script>
-    // ===== HERO logic
-    const slider = document.getElementById('heroSlider');
-    const slides = [...slider.children];
-    const dotsWrap = document.getElementById('heroDots');
-    let index = 0; const total = slides.length; let timer = null;
-
-    function go(n){
-      index = (n + total) % total;
-      slider.style.transform = `translateX(-${index*100}%)`;
-      [...dotsWrap.children].forEach((d,i)=>d.classList.toggle('active', i===index));
-      // play/pause videos
-      slides.forEach((s,i)=>{
-        const v = s.querySelector('video');
-        if(!v) return;
-        if(i===index){ try{v.play()}catch(e){} } else { try{v.pause()}catch(e){} }
-      });
-      restart();
-    }
-    const next = () => go(index+1);
-    const prev = () => go(index-1);
-
-    // dots
-    for(let i=0;i<total;i++){ const b=document.createElement('button'); b.onclick=()=>go(i); dotsWrap.appendChild(b); }
-
-    // nav zones
-    document.getElementById('heroNext').onclick = next;
-    document.getElementById('heroPrev').onclick = prev;
-
-    // auto-rotate
-    function restart(){ clearInterval(timer); timer = setInterval(next, 6000); }
-    restart();
-
-    // pause on hover/focus
-    const hero = document.getElementById('hero');
-    hero.addEventListener('mouseenter', ()=>clearInterval(timer));
-    hero.addEventListener('mouseleave', restart);
-
-    // init
-    go(0);
+    const STORIES = {
+      novinki: [
+        {
+          type: 'video',
+          src: "{% static 'main_page/stories_video/novinki/magnifiqueA.mp4' %}",
+          poster: "{% static 'main_page/img/flowers/magnifiqueA.jpg' %}"
+        },
+        { 
+          type:'image', 
+          src: "{% static 'main_page/img/flowers/magnifiqueA.jpg' %}", duration:5000 
+        },
+        {
+          type: 'video',
+          src: "{% static 'main_page/stories_video/novinki/magnifiqueB.mp4' %}",
+          // poster: "{% static 'main_page/img/flowers/magnifiqueB.jpg' %}"
+        },
+        { 
+          type:'image', 
+          src: "{% static 'main_page/img/flowers/magnifiqueB.jpg' %}", duration:5000 
+        },
+      ],
+      sweets: [
+        { 
+          type:'video', 
+          src:"{% static 'main_page/stories_video/sweets/sweetA.mp4' %}", 
+          poster:"{% static 'main_page/img/stories/buk-1-poster.jpg' %}" 
+        },
+        { 
+          type:'image', 
+          src:"{% static 'main_page/img/sweetA.jpg' %}", duration:5000 
+        },
+      ],
+      Damelya: [
+        { 
+          type:'video', 
+          src:"{% static 'main_page/stories_video/Damelya/storiesA.mp4' %}", 
+          poster:"{% static 'main_page/img/stories/sweets-2-poster.jpg' %}" 
+        },
+        { 
+          type:'video', 
+          src:"{% static 'main_page/stories_video/Damelya/storiesB.mp4' %}", 
+          poster:"{% static 'main_page/img/stories/sweets-2-poster.jpg' %}" 
+        },
+        { 
+          type:'video', 
+          src:"{% static 'main_page/stories_video/Damelya/storiesC.mp4' %}", 
+          poster:"{% static 'main_page/img/stories/sweets-2-poster.jpg' %}" 
+        },
+      ],
+      otzyvy: [
+        { 
+          type:'image', 
+          src:"{% static 'main_page/img/stories/otz-1.jpg' %}", duration:5000 
+        },
+        {  
+          type:'video', 
+          src:"{% static 'main_page/img/stories/otz-2.jpg' %}", duration:5000 
+        },
+      ],
+    };
   </script>
-</body>
-</html>
+  <script src="{% static 'main_page/js/stories.js' %}"></script>
+{% endblock %}
