@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+
+# Env
+.env
+.venv/
+venv/
+myenv/
+
+# Django
+db.sqlite3
+media/
+
+# Editors
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Big binaries (если не используешь LFS)
+*.mp4
+*.mov
+*.avi
