@@ -38,14 +38,60 @@ img{max-width:100%;display:block}
 .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .hero .gradient{position:absolute;inset:0;background:
   linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,.15),rgba(0,0,0,.55))}
-.hero .caption{position:absolute;left:8%;top:50%;transform:translateY(-50%);color:#fff;max-width:560px}
+.hero .caption{
+  position:absolute;
+  left:8%;
+  top:50%;
+  transform:translateY(-50%);
+  color:#fff;
+  max-width:560px;
+  z-index:10; /* добавь эту строку */
+}
 .hero .kicker{letter-spacing:.18em;text-transform:uppercase;font-size:12px;opacity:.9;margin-bottom:6px}
 .hero .title{font-family:"Playfair Display",serif;font-weight:700;font-size:48px;line-height:1.05;margin:0 0 14px}
 .hero .subtitle{opacity:.95;margin-bottom:18px}
-.hero .cta{display:inline-block;padding:12px 24px;border-radius:999px;color:#fff;
-  background:linear-gradient(135deg,var(--accent),var(--accent-2));font-weight:600}
-.hero .nav-zones{position:absolute;inset:0;display:flex;justify-content:space-between}
-.hero .nav-zones button{appearance:none;background:transparent;border:0;width:35%;cursor:pointer}
+.hero .cta {
+  display: inline-block;
+  padding: 14px 32px;
+  border-radius: 999px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(270deg, #d63384, #7b2cbf, #d63384);
+  background-size: 400% 400%;
+  animation: gradientFlow 6s ease infinite;
+  box-shadow: 0 4px 15px rgba(123, 44, 191, 0.5);
+  transition: transform 0.3s ease;
+}
+
+.hero .cta{
+  position:relative;
+  z-index:11;
+}
+.hero .cta:hover {
+  transform: scale(1.06);
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.hero .nav-zones{
+  position:absolute;
+  inset:0;
+  display:flex;
+  justify-content:space-between;
+  pointer-events:none; /* важное изменение */
+  z-index:5;
+}
+.hero .nav-zones button{
+  appearance:none;
+  background:transparent;
+  border:0;
+  width:35%;
+  cursor:pointer;
+  pointer-events:auto; /* кликабельны только стрелки по бокам */
+}
 .hero .dots{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:8px}
 .hero .dots button{width:10px;height:10px;border-radius:50%;border:0;background:#ffffff55}
 .hero .dots button.active{background:#fff}
@@ -59,13 +105,37 @@ img{max-width:100%;display:block}
 .stories{background:#fff;padding:18px 0 6px;border-bottom:1px solid #eee}
 .stories .track{display:flex;justify-content:center;gap:26px}
 .story{flex:0 0 auto;text-align:center;color:#555;font-size:13px}
-.story .ring{
-  padding:2px;border-radius:50%;
-  background:conic-gradient(from 0deg, #ff8bd1, #7b2cbf, #ff8bd1);
+.story .ring {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: conic-gradient(from 0deg, #ff8bd1, #7b2cbf, #ff8bd1);
 }
-.story .circle{width:86px;height:86px;border-radius:50%;background:#fff;display:grid;place-items:center}
-.story .inner{width:78px;height:78px;border-radius:50%;overflow:hidden}
-.story img{width:100%;height:100%;object-fit:cover}
+
+.story .circle {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  background: #fff;
+  display: grid;
+  place-items: center;
+}
+
+.story .inner {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.story .inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
 .story .label{margin-top:6px}
 .story:hover .inner{transform:scale(1.03);transition:.2s}
 

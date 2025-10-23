@@ -8,59 +8,22 @@
   <section class="hero" id="hero">
     <div class="slider" id="heroSlider">
 
-      <section class="slide" data-idx="0">
-        <video autoplay muted playsinline
-               poster="{% static 'main_page/img/poster.jpg' %}">
-          <source src="{% static 'main_page/head_video/DamelyaOne.mp4' %}" type="video/mp4">
-        </video>
-        <div class="gradient"></div>
-        <div class="caption">
-          <div class="kicker">DESSO</div>
-          <h1 class="title">Цветы, как признание в любви</h1>
-          <p class="subtitle">Крупные, сочные композиции, премиум упаковка и доставка 24/7</p>
-          <a href="#" class="cta">Перейти в каталог</a>
-        </div>
-      </section>
-
-      <section class="slide" data-idx="1">
-        <video autoplay muted playsinline
-               poster="{% static 'main_page/img/poster.jpg' %}">
-          <source src="{% static 'main_page/head_video/DamelyaTwo.mp4' %}" type="video/mp4">
-        </video>
-        <div class="gradient"></div>
-        <div class="caption">
-          <div class="kicker">DESSO SWEETS</div>
-          <h2 class="title">Шоколадные клубники и наборы</h2>
-          <p class="subtitle">Идеальная пара к букету</p>
-          <a href="#" class="cta">Выбрать набор</a>
-        </div>
-      </section>
-
-      <section class="slide" data-idx="3">
-        <video autoplay muted playsinline
-               poster="{% static 'main_page/img/poster.jpg' %}">
-          <source src="{% static 'main_page/head_video/DamelyaThree.mp4' %}" type="video/mp4">
-        </video>
-        <div class="gradient"></div>
-        <div class="caption">
-          <div class="kicker">INSTAGRAM</div>
-          <h2 class="title">Ваши эмоции — наш вайб</h2>
-          <a class="cta" href="#">Подписаться</a>
-        </div>
-      </section>
-
-      <section class="slide" data-idx="4">
-        <video autoplay muted playsinline
-               poster="{% static 'main_page/img/poster.jpg' %}">
-          <source src="{% static 'main_page/head_video/DamelyaFour.mp4' %}" type="video/mp4">
-        </video>
-        <div class="gradient"></div>
-        <div class="caption">
-          <div class="kicker">INSTAGRAM</div>
-          <h2 class="title">Ваши эмоции — наш вайб</h2>
-          <a class="cta" href="#">Подписаться</a>
-        </div>
-      </section>
+      {% for slide in slides %}
+        <section class="slide" data-idx="{{ forloop.counter0 }}">
+          <video autoplay muted playsinline {% if slide.poster %}poster="{{ slide.poster.url }}"{% endif %}>
+            <source src="{{ slide.video.url }}" type="video/mp4">
+          </video>
+          <div class="gradient"></div>
+          <div class="caption">
+            {% if slide.kicker %}<div class="kicker">{{ slide.kicker }}</div>{% endif %}
+            <h1 class="title">{{ slide.title }}</h1>
+            {% if slide.subtitle %}<p class="subtitle">{{ slide.subtitle }}</p>{% endif %}
+            {% if slide.cta_text %}
+              <a href="{{ slide.cta_link }}" class="cta">{{ slide.cta_text }}</a>
+            {% endif %}
+          </div>
+        </section>
+      {% endfor %}
 
     </div>
 
@@ -72,92 +35,59 @@
     <div class="dots" id="heroDots"></div>
   </section>
 
-<!-- ===== STORIES (preview circles) ===== -->
-<section class="stories" aria-label="Сториз">
-  <div class="container">
-    <div class="track">
-      <button class="story" data-story="novinki" type="button">
-        <div class="ring"><div class="circle"><div class="inner">
-          <img src="{% static 'main_page/img/rings/magnifique.jpg' %}" alt="Новинки">
-        </div></div></div>
-        <div class="label">"Magnifique"</div>
-      </button>
 
-      <button class="story" data-story="sweets" type="button">
-        <div class="ring"><div class="circle"><div class="inner">
-          <img src="{% static 'main_page/img/rings/sweet.jpg' %}" alt="Букеты">
-        </div></div></div>
-        <div class="label">Desso Sweets</div>
-      </button>
-
-      <button class="story" data-story="Damelya" type="button">
-        <div class="ring"><div class="circle"><div class="inner">
-          <img src="{% static 'main_page/img/rings/logo.jpg' %}" alt="Сладости">
-        </div></div></div>
-        <div class="label">Damelya</div>
-      </button>
-
-      <button class="story" data-story="otzyvy" type="button">
-        <div class="ring"><div class="circle"><div class="inner">
-          <img src="{% static 'main_page/img/rings/logo.jpg' %}" alt="Отзывы">
-        </div></div></div>
-        <div class="label">Reviews</div>
-      </button>
-    </div>
-  </div>
-</section>
-
-<!-- ===== STORIES MODAL ===== -->
-<div class="stories-modal" id="storiesModal" aria-hidden="true">
-  <div class="stories-backdrop"></div>
-
-  <div class="stories-frame" role="dialog" aria-modal="true" aria-label="Истории">
-    <!-- progress segments -->
-    <div class="stories-progress" id="storiesProgress"></div>
-
-    <!-- media area (9:16) -->
-    <div class="stories-media" id="storiesMedia">
-      <!-- сюда будет подставляться <video> или <img> -->
-    </div>
-
-    <!-- overlay tap zones -->
-    <button class="stories-zone left"  id="storiesPrev" aria-label="Назад"></button>
-    <button class="stories-zone right" id="storiesNext" aria-label="Дальше"></button>
-
-    <!-- close -->
-    <button class="stories-close" id="storiesClose" aria-label="Закрыть">✕</button>
-  </div>
-</div>
-
-  <div class="container">
-    <div class="section-head"><h2>Коллекции</h2><a href="#">Смотреть все →</a></div>
-    <div class="grid">
-      <div class="product">
-        <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=1600&auto=format&fit=crop" alt="Букет 1">
-        <div class="body"><div class="brand">Desso</div><div class="name">Розы и гортензии</div><div class="price">25 500 ₸</div></div>
-      </div>
-      <div class="product">
-        <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=800&auto=format&fit=crop" alt="Букет 2">
-        <div class="body"><div class="brand">Desso</div><div class="name">Пионы и герберы</div><div class="price">28 500 ₸</div></div>
-      </div>
-      <div class="product">
-        <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=800&auto=format&fit=crop" alt="Букет 3">
-        <div class="body"><div class="brand">Desso</div><div class="name">Микс сезонных цветов</div><div class="price">30 000 ₸</div></div>
+  <!-- ===== STORIES (preview circles) ===== -->
+  <section class="stories" aria-label="Сториз">
+    <div class="container">
+      <div class="track">
+        {% for story in stories %}
+          <button class="story" data-story="{{ story.id }}" type="button">
+            <div class="ring">
+              <div class="circle">
+                <div class="inner">
+                  <img src="{{ story.cover_image.url }}" alt="{{ story.label }}">
+                </div>
+              </div>
+            </div>
+            <div class="label">{{ story.label }}</div>
+          </button>
+        {% endfor %}
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Banner stays and image opens in a new tab on click -->
-  <div class="container banner">
-    <a href="https://images.unsplash.com/photo-1607082349566-187342a456b1?q=80&w=1600&auto=format&fit=crop" target="_blank" rel="noopener" class="banner-link">
-      <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=1600&auto=format&fit=crop" alt="Сладкие подарки Desso">
-    </a>
-    <div class="inner">
-      <h3>Сладкие подарки Desso</h3>
-      <a href="#" class="cta">Выбрать набор</a>
+
+  <!-- ===== STORIES MODAL ===== -->
+  <div class="stories-modal" id="storiesModal" aria-hidden="true">
+    <div class="stories-backdrop"></div>
+
+    <div class="stories-frame" role="dialog" aria-modal="true" aria-label="Истории">
+      <div class="stories-progress" id="storiesProgress"></div>
+      <div class="stories-media" id="storiesMedia"></div>
+      <button class="stories-zone left"  id="storiesPrev" aria-label="Назад"></button>
+      <button class="stories-zone right" id="storiesNext" aria-label="Дальше"></button>
+      <button class="stories-close" id="storiesClose" aria-label="Закрыть">✕</button>
     </div>
   </div>
 
+
+  <!-- ===== BANNERS ===== -->
+  {% for banner in banners %}
+    <div class="container banner">
+      <a href="{{ banner.link }}" target="_blank" rel="noopener" class="banner-link">
+        <img src="{{ banner.image.url }}" alt="{{ banner.title }}">
+      </a>
+      <div class="inner">
+        <h3>{{ banner.title }}</h3>
+        {% if banner.link %}
+          <a href="{{ banner.link }}" class="cta">Перейти</a>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+
+
+  <!-- ===== FOOTER ===== -->
   <footer>
     <div class="container foot">
       <div>
@@ -166,84 +96,51 @@
       </div>
       <div>
         <h4>Навигация</h4>
-        <ul><li><a href="#">Каталог</a></li><li><a href="#">Доставка</a></li><li><a href="#">Контакты</a></li></ul>
+        <ul>
+          <li><a href="#">Каталог</a></li>
+          <li><a href="#">Доставка</a></li>
+          <li><a href="#">Контакты</a></li>
+        </ul>
       </div>
       <div>
         <h4>Компания</h4>
-        <ul><li><a href="#">О нас</a></li><li><a href="#">Вакансии</a></li><li><a href="#">Отзывы</a></li></ul>
+        <ul>
+          <li><a href="#">О нас</a></li>
+          <li><a href="#">Вакансии</a></li>
+          <li><a href="#">Отзывы</a></li>
+        </ul>
       </div>
       <div>
         <h4>Соцсети</h4>
-        <ul><li><a href="#">Instagram</a></li><li><a href="#">WhatsApp</a></li><li><a href="#">Telegram</a></li></ul>
+        <ul>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">WhatsApp</a></li>
+          <li><a href="#">Telegram</a></li>
+        </ul>
       </div>
     </div>
-    <div class="copyright">© 2023 DESSO Flowers</div>
+    <div class="copyright">© {{ now|date:"Y" }} DESSO Flowers</div>
   </footer>
-
 {% endblock %}
+
 
 {% block scripts %}
   <script src="{% static 'main_page/js/hero.js' %}"></script>
+
   <script>
     const STORIES = {
-      novinki: [
-        {
-          type: 'video',
-          src: "{% static 'main_page/stories_video/novinki/magnifiqueA.mp4' %}",
-          poster: "{% static 'main_page/img/flowers/magnifiqueA.jpg' %}"
-        },
-        { 
-          type:'image', 
-          src: "{% static 'main_page/img/flowers/magnifiqueA.jpg' %}", duration:5000 
-        },
-        {
-          type: 'video',
-          src: "{% static 'main_page/stories_video/novinki/magnifiqueB.mp4' %}",
-          // poster: "{% static 'main_page/img/flowers/magnifiqueB.jpg' %}"
-        },
-        { 
-          type:'image', 
-          src: "{% static 'main_page/img/flowers/magnifiqueB.jpg' %}", duration:5000 
-        },
-      ],
-      sweets: [
-        { 
-          type:'video', 
-          src:"{% static 'main_page/stories_video/sweets/sweetA.mp4' %}", 
-          poster:"{% static 'main_page/img/stories/buk-1-poster.jpg' %}" 
-        },
-        { 
-          type:'image', 
-          src:"{% static 'main_page/img/sweetA.jpg' %}", duration:5000 
-        },
-      ],
-      Damelya: [
-        { 
-          type:'video', 
-          src:"{% static 'main_page/stories_video/Damelya/storiesA.mp4' %}", 
-          poster:"{% static 'main_page/img/stories/sweets-2-poster.jpg' %}" 
-        },
-        { 
-          type:'video', 
-          src:"{% static 'main_page/stories_video/Damelya/storiesB.mp4' %}", 
-          poster:"{% static 'main_page/img/stories/sweets-2-poster.jpg' %}" 
-        },
-        { 
-          type:'video', 
-          src:"{% static 'main_page/stories_video/Damelya/storiesC.mp4' %}", 
-          poster:"{% static 'main_page/img/stories/sweets-2-poster.jpg' %}" 
-        },
-      ],
-      otzyvy: [
-        { 
-          type:'image', 
-          src:"{% static 'main_page/img/stories/otz-1.jpg' %}", duration:5000 
-        },
-        {  
-          type:'video', 
-          src:"{% static 'main_page/img/stories/otz-2.jpg' %}", duration:5000 
-        },
-      ],
+      {% for story in stories %}
+        "{{ story.id }}": [
+          {% for item in story.items.all %}
+            {
+              type: "{{ item.media_type }}",
+              src: "{{ item.file.url }}",
+              {% if item.poster %}poster: "{{ item.poster.url }}",{% endif %}
+              {% if item.duration %}duration: {{ item.duration }},{% endif %}
+            },
+          {% endfor %}
+        ],
+      {% endfor %}
     };
   </script>
   <script src="{% static 'main_page/js/stories.js' %}"></script>
