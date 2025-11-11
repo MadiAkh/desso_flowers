@@ -125,23 +125,24 @@
 
 
 {% block scripts %}
-  <script src="{% static 'main_page/js/hero.js' %}"></script>
+{{ block.super }} <!-- ДОБАВЬТЕ ЭТУ СТРОКУ! -->
+<script src="{% static 'main_page/js/hero.js' %}"></script>
 
-  <script>
-    const STORIES = {
-      {% for story in stories %}
-        "{{ story.id }}": [
-          {% for item in story.items.all %}
-            {
-              type: "{{ item.media_type }}",
-              src: "{{ item.file.url }}",
-              {% if item.poster %}poster: "{{ item.poster.url }}",{% endif %}
-              {% if item.duration %}duration: {{ item.duration }},{% endif %}
-            },
-          {% endfor %}
-        ],
-      {% endfor %}
-    };
-  </script>
-  <script src="{% static 'main_page/js/stories.js' %}"></script>
+<script>
+  const STORIES = {
+    {% for story in stories %}
+      "{{ story.id }}": [
+        {% for item in story.items.all %}
+          {
+            type: "{{ item.media_type }}",
+            src: "{{ item.file.url }}",
+            {% if item.poster %}poster: "{{ item.poster.url }}",{% endif %}
+            {% if item.duration %}duration: {{ item.duration }},{% endif %}
+          },
+        {% endfor %}
+      ],
+    {% endfor %}
+  };
+</script>
+<script src="{% static 'main_page/js/stories.js' %}"></script>
 {% endblock %}
