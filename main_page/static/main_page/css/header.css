@@ -1,0 +1,115 @@
+:root {
+  --brand-purple: #56348b;
+}
+
+/* БАЗОВЫЙ HEADER */
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+
+  /* ВОТ ЭТИ ОТСТУПЫ — ОСНОВНАЯ ВЫСОТА ХЕДЕРА */
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background: rgba(255,255,255,0);
+  backdrop-filter: blur(0px);
+
+  transition:
+    padding .35s ease,
+    background .35s ease,
+    backdrop-filter .35s ease,
+    box-shadow .35s ease;
+}
+
+/* ХОВЕР ДЛЯ ПРОЗРАЧНОЙ ШАПКИ */
+.site-header:not(.header--hidden):not(.header--scrolled):hover {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(14px);
+}
+
+/* КОГДА ПРОСКРОЛИЛИ → ПРИЖАТАЯ ШАПКА */
+.header--scrolled {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 2px 10px rgba(0,0,0,.05);
+}
+
+/* ВОТ ЭТО — УМЕНЬШАЕТ САМ ХЕДЕР */
+.header--compact {  
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+/* СЕКЦИЯ С ЛОГОТИПОМ */
+.logo {
+  font-size: 26px;
+  color: #fff;
+  transition: color .3s ease, font-size .35s ease;
+}
+
+/* ЛОГОТИП УМЕНЬШАЕТСЯ */
+.header--compact .logo {
+  font-size: 22px;
+}
+
+/* НА БЕЛОЙ ШАПКЕ ЛОГОТИП ФИОЛЕТОВЫЙ */
+.site-header:hover .logo,
+.header--scrolled .logo {
+  color: var(--brand-purple);
+}
+
+/* НИЖНЯЯ НАВИГАЦИЯ */
+.header-bottom {
+  /* БЛОК БЕЗ ЖЁСТКОЙ ВЫСОТЫ */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  overflow: hidden;                    /* важно: лишняя высота спрячется */
+  max-height: 40px;                    /* максимум, когда меню видно */
+
+  transition:
+    max-height .35s ease,
+    opacity .35s ease,
+    transform .35s ease;
+}
+
+
+/* ИСЧЕЗНОВЕНИЕ МЕНЮ */
+.header--hidden .header-bottom {
+  max-height: 0;                       /* <- высота = 0, блок схлопнулся */
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+/* КНОПКИ МЕНЮ */
+.nav-row {
+  display: flex;
+  gap: 18px;
+}
+
+.nav-row a {
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 12px;
+
+  transition: color .3s ease, background .3s ease;
+}
+
+/* НА БЕЛОЙ ШАПКЕ — ФИОЛЕТОВЫЕ */
+.site-header:hover .nav-row a,
+.header--scrolled .nav-row a {
+  color: var(--brand-purple);
+}
+
+/* HOVER */
+.nav-row a:hover {
+  background: #f2eef8;
+  color: var(--brand-purple);
+}
