@@ -1,10 +1,12 @@
 from django.contrib import admin
-from .models import Collection, Product
+from .models import Collection, Product, HeroSlideProducts
 
+
+# -------------Добавление товара-------------------------
 
 @admin.register(Collection)
 class CollectionAdmin(admin.ModelAdmin):
-    list_display = ("name", "slug", "is_active", "order")
+    list_display = ("name", "is_active", "order")
     list_editable = ("is_active", "order")
     search_fields = ("name",)
     ordering = ("order",)
@@ -16,5 +18,15 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ("is_new", "is_active", "order")
     search_fields = ("name",)
     list_filter = ("is_new", "is_active", "media_type", "collections")
-    filter_horizontal = ("collections",)  
+    filter_horizontal = ("collections",)
     ordering = ("order",)
+
+
+
+
+# ----------------- Добавление видео в hero страницы товара
+
+@admin.register(HeroSlideProducts)
+class HeroSlideProductsAdmin(admin.ModelAdmin):
+    list_display = ("title", "is_active", "order")
+    list_editable = ("is_active", "order")

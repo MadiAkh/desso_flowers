@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'base_page',
+    'flowers_catalog_page',
 ]
 
 MIDDLEWARE = [

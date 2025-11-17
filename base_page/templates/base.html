@@ -27,16 +27,17 @@
 
       <div class="header-bottom" id="headerBottom">
         <nav class="nav-row">
-          <a href="/">Главная</a>
-          <a href="#">Букеты</a>
-          <a href="#">Сладости</a>
+          <a href="{% url 'catalog_page' %}">Коллекции</a>
+          <a href="#">Клубника</a>
           <a href="#">Подарки</a>
           <a href="#">Контакты</a>
         </nav>
       </div>
 
     </header>
+  {% endblock header %}
 
+  {% block hero %}
       <!-- HERO -->
   <section class="hero" id="hero">
     <div class="slider" id="heroSlider">
@@ -60,50 +61,52 @@
 
     </div>
 
-    <!-- нав. зоны и точки -->
-    <div class="nav-zones" aria-hidden="true">
-      <button class="prev" id="heroPrev"></button>
-      <button class="next" id="heroNext"></button>
-    </div>
-    <div class="dots" id="heroDots"></div>
-  </section>
-  
+      <!-- нав. зоны и точки -->
+      <div class="nav-zones" aria-hidden="true">
+        <button class="prev" id="heroPrev"></button>
+        <button class="next" id="heroNext"></button>
+      </div>
+      <div class="dots" id="heroDots"></div>
+    </section>
+  {% endblock hero %}
+
+
+  {% block stories %}
     <!-- ===== STORIES (preview circles) ===== -->
-  <section class="stories" aria-label="Сториз">
-    <div class="container">
-      <div class="track">
-        {% for story in stories %}
-          <button class="story" data-story="{{ story.id }}" type="button">
-            <div class="ring">
-              <div class="circle">
-                <div class="inner">
-                  <img src="{{ story.cover_image.url }}" alt="{{ story.label }}">
+    <section class="stories" aria-label="Сториз">
+      <div class="container">
+        <div class="track">
+          {% for story in stories %}
+            <button class="story" data-story="{{ story.id }}" type="button">
+              <div class="ring">
+                <div class="circle">
+                  <div class="inner">
+                    <img src="{{ story.cover_image.url }}" alt="{{ story.label }}">
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="label">{{ story.label }}</div>
-          </button>
-        {% endfor %}
+              <div class="label">{{ story.label }}</div>
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===== STORIES MODAL ===== -->
+    <div class="stories-modal" id="storiesModal" aria-hidden="true">
+      <div class="stories-backdrop"></div>
+
+      <div class="stories-frame" role="dialog" aria-modal="true" aria-label="Истории">
+        <div class="stories-progress" id="storiesProgress"></div>
+        <div class="stories-media" id="storiesMedia"></div>
+        <button class="stories-zone left"  id="storiesPrev" aria-label="Назад"></button>
+        <button class="stories-zone right" id="storiesNext" aria-label="Дальше"></button>
+        <button class="stories-close" id="storiesClose" aria-label="Закрыть">✕</button>
       </div>
     </div>
-  </section>
+  {% endblock stories %}
 
-
-  <!-- ===== STORIES MODAL ===== -->
-  <div class="stories-modal" id="storiesModal" aria-hidden="true">
-    <div class="stories-backdrop"></div>
-
-    <div class="stories-frame" role="dialog" aria-modal="true" aria-label="Истории">
-      <div class="stories-progress" id="storiesProgress"></div>
-      <div class="stories-media" id="storiesMedia"></div>
-      <button class="stories-zone left"  id="storiesPrev" aria-label="Назад"></button>
-      <button class="stories-zone right" id="storiesNext" aria-label="Дальше"></button>
-      <button class="stories-close" id="storiesClose" aria-label="Закрыть">✕</button>
-    </div>
-  </div>
-
-
-  {% endblock %}
     <main>
         {% block content %}{% endblock %}
     </main>

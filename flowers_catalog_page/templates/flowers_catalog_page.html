@@ -6,8 +6,52 @@
 {# подключим свой css, но сохраним базовые стилі #}
 {% block extra_css %}
   {{ block.super }}
-  <link rel="stylesheet" href="{% static 'flowers_catalog_page/css/catalog.css' %}">
+  <link rel="stylesheet" href="{% static 'flowers_catalog_page/css/flowers_catalog_page.css' %}">
 {% endblock %}
+
+
+{% block hero %}
+<section class="hero hero--catalog" id="catalogHero">
+  <div class="slider" id="catalogHeroSlider">
+
+    {% for slide in catalog_slides %}
+      <section class="slide">
+        <video autoplay muted playsinline loop
+              {% if slide.poster %}poster="{{ slide.poster.url }}"{% endif %}>
+          <source src="{{ slide.video.url }}" type="video/mp4">
+        </video>
+
+        <div class="gradient"></div>
+        <div class="caption">
+          {% if slide.kicker %}
+            <div class="kicker">{{ slide.kicker }}</div>
+          {% endif %}
+
+          <h1 class="title">{{ slide.title }}</h1>
+
+          {% if slide.subtitle %}
+            <p class="subtitle">{{ slide.subtitle }}</p>
+          {% endif %}
+
+          {% if slide.cta_text %}
+            <a href="{{ slide.cta_link }}" class="cta">
+              {{ slide.cta_text }}
+            </a>
+          {% endif %}
+        </div>
+      </section>
+    {% endfor %}
+
+  </div>
+
+  <div class="nav-zones">
+    <button id="catalogHeroPrev"></button>
+    <button id="catalogHeroNext"></button>
+  </div>
+
+  <div class="dots" id="catalogHeroDots"></div>
+</section>
+{% endblock hero %}
 
 {% block content %}
 
@@ -66,8 +110,7 @@
 
           <div class="catalog-card-body">
             <div class="catalog-card-category">
-              ПАРФЮМИРОВАННАЯ ВОДА
-              {# тут потом можно подставлять тип товара из БД #}
+              {{ product.description }}
             </div>
             <h3 class="catalog-card-title">{{ product.name }}</h3>
 
@@ -116,7 +159,7 @@
 
             <div class="catalog-card-body">
               <div class="catalog-card-category">
-                ПАРФЮМИРОВАННАЯ ВОДА
+                {{ product.description }}
               </div>
               <h3 class="catalog-card-title">{{ product.name }}</h3>
 
@@ -145,8 +188,12 @@
 
 {% endblock %}
 
-{# важно не потерять hero/stories-скрипты из base.html #}
 {% block scripts %}
   {{ block.super }}
-  <script src="{% static 'flowers_catalog_page/js/catalog.js' %}"></script>
+  <script src="{% static 'base_page/js/hero.js' %}"></script>
+  <script src="{% static 'base_page/js/header.js' %}"></script>
+  ...
+  <script src="{% static 'flowers_catalog_page/js/catalog_hero.js' %}"></script>
+  <script src="{% static 'base_page/js/stories.js' %}"></script>
+  <script src="{% static 'flowers_catalog_page/js/flowers_catalog_page.js' %}"></script>
 {% endblock %}

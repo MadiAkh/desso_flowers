@@ -71,3 +71,88 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+
+
+
+//----------------- Добавление видео в hero страницы товара --
+
+
+// CATALOG HERO custom slider
+console.log('catalog_hero.js loaded');
+
+const catalogHero = document.getElementById('catalogHero');
+if (catalogHero) {
+    
+    const slider = document.getElementById('catalogHeroSlider');
+    const slides = [...slider.children];
+    const dotsWrap = document.getElementById('catalogHeroDots');
+
+    const btnNext = document.getElementById('catalogHeroNext');
+    const btnPrev = document.getElementById('catalogHeroPrev');
+
+    let index = 0;
+    const total = slides.length;
+    let timer = null;
+
+    // --- создаём точки ---
+    for (let i = 0; i < total; i++) {
+        const dot = document.createElement('button');
+        dot.onclick = () => go(i);
+        dotsWrap.appendChild(dot);
+    }
+
+    function clearVideoHandlers() {
+        slides.forEach(s => {
+            const v = s.querySelector('video');
+            if (v) {
+                v.onended = null;
+                try { v.pause(); } catch (e) {}
+            }
+        });
+    }
+
+    function bindActiveVideo() {
+        const v = slides[index].querySelector('video');
+        if (v) {
+            try { v.currentTime = 0; v.play(); } catch (e) {}
+            v.onended = () => next();
+            clearInterval(timer);
+            timer = null;
+        } else {
+            restart(6000);
+        }
+    }
+
+    function go(n) {
+        index = (n + total) % total;
+        slider.style.transform = `translateX(-${index * 100}%)`;
+
+        [...dotsWrap.children].forEach((d, i) =>
+            d.classList.toggle('active', i === index)
+        );
+
+        clearVideoHandlers();
+        bindActiveVideo();
+    }
+
+    const next = () => go(index + 1);
+    const prev = () => go(index - 1);
+
+    if (btnNext) btnNext.onclick = next;
+    if (btnPrev) btnPrev.onclick = prev;
+
+    function restart(ms = 6000) {
+        clearInterval(timer);
+        timer = setInterval(next, ms);
+    }
+
+    // Пауза таймера при наведении на hero (если видео нет)
+    catalogHero.addEventListener('mouseenter', () => clearInterval(timer));
+    catalogHero.addEventListener('mouseleave', () => {
+        const v = slides[index].querySelector('video');
+        if (!v) restart(6000);
+    });
+
+    go(0);
+}
