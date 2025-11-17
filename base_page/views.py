@@ -6,7 +6,7 @@ def home_page(request):
     stories = Story.objects.filter(is_active=True).prefetch_related("items")
     banners = Banner.objects.filter(is_active=True).order_by("order")
 
-    return render(request, "main_page.html", {
+    return render(request, "base.html", {
         "slides": slides,
         "stories": stories,
         "banners": banners,

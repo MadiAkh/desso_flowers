@@ -1,0 +1,299 @@
+/* ===== ОБЩИЙ КАТАЛОГ ===== */
+
+.catalog {
+  padding: 56px 0 80px;
+  background: #fff;
+}
+
+.catalog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+/* ----- вкладки ----- */
+
+.catalog-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.catalog-tab {
+  position: relative;
+  border: none;
+  background: transparent;
+  padding: 8px 0;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #888;
+  cursor: pointer;
+}
+
+.catalog-tab-count {
+  margin-left: 4px;
+  color: #b3b3b3;
+  font-size: 11px;
+}
+
+.catalog-tab::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0;
+  height: 2px;
+  background: #111;
+  transition: width 0.2s ease;
+}
+
+.catalog-tab.is-active {
+  color: #111;
+}
+
+.catalog-tab.is-active::after {
+  width: 100%;
+}
+
+/* ----- кнопка "Фильтр" ----- */
+
+.catalog-filter-toggle {
+  border: none;
+  background: transparent;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #111;
+  cursor: pointer;
+}
+
+/* ===== СЕТКА ТОВАРОВ ===== */
+
+.catalog-tabs-content {
+  margin-top: 16px;
+}
+
+.catalog-grid {
+  display: none;
+  gap: 24px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.catalog-grid.is-active {
+  display: grid;
+}
+
+/* карточка товара */
+
+.catalog-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+/* большая карточка */
+
+.catalog-card--large {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+/* избранное (иконка-сердце заглушка) */
+
+.catalog-card-fav {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+}
+
+.catalog-card-fav::before {
+  content: "♥";
+  display: block;
+  font-size: 10px;
+  line-height: 20px;
+  text-align: center;
+  color: #d0d0d0;
+}
+
+/* медиа (фото/видео) */
+
+.catalog-card-media {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.catalog-card-media img,
+.catalog-card-media video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* базовое соотношение сторон */
+
+.catalog-card:not(.catalog-card--large) .catalog-card-media {
+  aspect-ratio: 4 / 5;
+}
+
+.catalog-card--large .catalog-card-media {
+  aspect-ratio: 3 / 4;
+}
+
+/* бейджи NEW / НЕТ В НАЛИЧИИ */
+
+.catalog-card-badge {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  padding: 4px 8px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.catalog-card-badge--new {
+  background: #ff6a3c;
+  color: #fff;
+}
+
+.catalog-card-badge--out {
+  background: #ffffff;
+  color: #000;
+}
+
+/* текстовая часть */
+
+.catalog-card-body {
+  padding-top: 10px;
+}
+
+.catalog-card-category {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 4px;
+}
+
+.catalog-card-title {
+  font-family: "Playfair Display", "Times New Roman", serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+  color: #111;
+}
+
+/* футер карточки: цена + корзина */
+
+.catalog-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.catalog-card-price {
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.catalog-card-add {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #fff;
+  cursor: pointer;
+}
+
+.catalog-card-add::before {
+  content: "";
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin: 5px auto;
+  border: 2px solid #111;
+  border-radius: 2px;
+}
+
+/* пустое состояние */
+
+.catalog-empty {
+  grid-column: 1 / -1;
+  font-size: 14px;
+  color: #888;
+}
+
+/* кнопка "Показать ещё" */
+
+.catalog-more {
+  grid-column: 1 / -1;
+  margin: 24px auto 0;
+  padding: 10px 32px;
+  border-radius: 999px;
+  border: 1px solid #111;
+  background: transparent;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* скрытые карточки для пагинации по 12 */
+
+.catalog-card.is-hidden {
+  display: none;
+}
+
+/* ===== АДАПТИВ ===== */
+
+@media (max-width: 1199px) {
+  .catalog-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .catalog-card--large {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+}
+
+@media (max-width: 900px) {
+  .catalog-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .catalog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .catalog-card--large {
+    grid-column: span 2;
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .catalog-grid {
+    grid-template-columns: 1fr;
+  }
+}
