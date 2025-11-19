@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'base_page',
     'flowers_catalog_page',
+    'main_page',
 ]
 
 MIDDLEWARE = [

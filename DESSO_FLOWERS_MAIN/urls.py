@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from base_page.views import home_page
+from main_page.views import home_page
 from flowers_catalog_page.views import catalog_page
 from django.conf.urls.static import static
 from django.conf import settings

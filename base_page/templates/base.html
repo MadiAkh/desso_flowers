@@ -6,30 +6,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}DÉSSO FLOWERS{% endblock %}</title>
 
-  <!-- Шрифты -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <!-- Главные стили -->
   <link rel="stylesheet" href="{% static 'base_page/css/base.css' %}">
   <link rel="stylesheet" href="{% static 'base_page/css/header.css' %}">
   {% block extra_css %}{% endblock %}
 </head>
 <body>
   {% block header %}
-    <!-- Твой «взрослый» header -->
     <header class="site-header" id="siteHeader">
-
       <div class="header-top">
         <a href="/" class="logo">DÉSSO FLOWERS ®</a>
       </div>
-
       <div class="header-bottom" id="headerBottom">
         <nav class="nav-row">
           <a href="{% url 'catalog_page' %}">Коллекции</a>
           <a href="#">Клубника</a>
-          <a href="#">Подарки</a>
+          <a href="#">Магазины</a>
           <a href="#">Контакты</a>
         </nav>
       </div>
@@ -61,7 +56,6 @@
 
     </div>
 
-      <!-- нав. зоны и точки -->
       <div class="nav-zones" aria-hidden="true">
         <button class="prev" id="heroPrev"></button>
         <button class="next" id="heroNext"></button>

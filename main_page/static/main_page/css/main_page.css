@@ -1,0 +1,117 @@
+/* ===== НОВИНКИ НА ГЛАВНОЙ ===== */
+
+.home-new {
+  padding: 64px 0 80px;
+  background: #fff;
+}
+
+.home-new-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.home-new-title {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* ----- стрелки ----- */
+
+.home-new-controls {
+  display: flex;
+  gap: 12px;
+}
+
+.home-new-arrow {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.home-new-arrow::before {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-top: 1.5px solid #111;
+  border-right: 1.5px solid #111;
+  transform: rotate(45deg);
+}
+
+.home-new-arrow--prev::before {
+  transform: rotate(-135deg);
+}
+
+.home-new-arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.home-new-arrow:not(:disabled):hover {
+  border-color: rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+/* ----- горизонтальный слайдер ----- */
+
+.home-new-slider {
+  position: relative;
+}
+
+.home-new-scroller {
+  overflow-x: auto;
+  overflow-y: visible;
+  padding-bottom: 10px;          /* небольшой запас, чтобы тень карточек не обрезалась */
+  scrollbar-width: none;         /* Firefox */
+}
+
+.home-new-scroller::-webkit-scrollbar {
+  display: none;                 /* Chrome, Safari */
+}
+
+.home-new-track {
+  display: flex;
+  gap: 24px;
+}
+
+.home-new-card {
+  flex: 0 0 280px;             /* базовая ширина карточки */
+}
+
+/* адаптация под широкие экраны */
+@media (min-width: 1440px) {
+  .home-new-card {
+    flex-basis: 300px;
+  }
+}
+
+/* адаптация под планшет/мобилу */
+@media (max-width: 900px) {
+  .home-new-header {
+    margin-bottom: 16px;
+  }
+
+  .home-new-title {
+    font-size: 24px;
+  }
+
+  .home-new-card {
+    flex-basis: 220px;
+  }
+}
+
