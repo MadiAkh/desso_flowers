@@ -1,28 +1,22 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const slider = document.querySelector("[data-home-new-slider]");
-  if (!slider) return;
+  const scroller = document.querySelector("[data-home-new-scroller]");
+  const prev = document.querySelector("[data-home-new-prev]");
+  const next = document.querySelector("[data-home-new-next]");
 
-  const scroller = slider.querySelector("[data-home-new-scroller]");
-  const prevBtn = slider.querySelector("[data-home-new-prev]");
-  const nextBtn = slider.querySelector("[data-home-new-next]");
+  if (!scroller) return;
 
-  if (!scroller || !prevBtn || !nextBtn) return;
+  const step = scroller.clientWidth * 0.8;
 
-  function getStep() {
-    // прокручиваем примерно на 80% ширины видимой области
-    return scroller.clientWidth * 0.8;
-  }
-
-  nextBtn.addEventListener("click", () => {
+  next.addEventListener("click", () => {
     scroller.scrollBy({
-      left: getStep(),
+      left: step,
       behavior: "smooth",
     });
   });
 
-  prevBtn.addEventListener("click", () => {
+  prev.addEventListener("click", () => {
     scroller.scrollBy({
-      left: -getStep(),
+      left: -step,
       behavior: "smooth",
     });
   });

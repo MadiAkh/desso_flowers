@@ -115,3 +115,25 @@
   }
 }
 
+.home-new-track {
+  display: flex;
+  gap: 24px;
+}
+
+.home-new-scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  display: block;
+  scrollbar-width: none;
+}
+.home-new-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.home-new-card {
+  flex: 0 0 280px;
+  display: inline-block;
+}
+
+

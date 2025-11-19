@@ -14,10 +14,26 @@
 
 /* ----- вкладки ----- */
 
+/* Лента вкладок — внешний вид тот же, только поведение */
 .catalog-tabs {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;          /* не переносим на вторую строку */
   gap: 16px;
+
+  overflow-x: auto;           /* горизонтальный скролл */
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: none;      /* Firefox — скрыть полосу */
+  cursor: grab;
+}
+
+.catalog-tabs::-webkit-scrollbar {
+  display: none;              /* Chrome/Safari — скрыть полосу */
+}
+
+.catalog-tabs:active {
+  cursor: grabbing;
 }
 
 .catalog-tab {
@@ -296,4 +312,32 @@
   .catalog-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.catalog-card {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+/* лёгкий подъём и тень карточки */
+.catalog-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* чтобы картинка/видео “сидели” в рамке */
+.catalog-card-media {
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+/* плавная анимация самого изображения/видео */
+.catalog-card-media img,
+.catalog-card-media video {
+  transition: transform 0.45s ease;
+}
+
+/* лёгкое приближение при наведении */
+.catalog-card:hover .catalog-card-media img,
+.catalog-card:hover .catalog-card-media video {
+  transform: scale(1.06);
 }

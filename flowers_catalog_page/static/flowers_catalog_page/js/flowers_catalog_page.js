@@ -69,6 +69,74 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
     }
+    
+  const tabsContainer = document.querySelector(".catalog-tabs");
+
+  if (tabsContainer) {
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+    let isDragging = false;
+
+    const startDrag = (pageX) => {
+      isDown = true;
+      isDragging = false;
+      startX = pageX - tabsContainer.offsetLeft;
+      scrollLeft = tabsContainer.scrollLeft;
+    };
+
+    const moveDrag = (pageX) => {
+      if (!isDown) return;
+      const x = pageX - tabsContainer.offsetLeft;
+      const walk = x - startX;
+
+      if (Math.abs(walk) > 3) {
+        isDragging = true; // чтобы клик не срабатывал при перетаскивании
+      }
+
+      tabsContainer.scrollLeft = scrollLeft - walk;
+    };
+
+    const endDrag = () => {
+      isDown = false;
+      setTimeout(() => (isDragging = false), 0);
+    };
+
+    // мышь
+    tabsContainer.addEventListener("mousedown", (e) => {
+      startDrag(e.pageX);
+    });
+
+    tabsContainer.addEventListener("mousemove", (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      moveDrag(e.pageX);
+    });
+
+    tabsContainer.addEventListener("mouseup", endDrag);
+    tabsContainer.addEventListener("mouseleave", endDrag);
+
+    // тач
+    tabsContainer.addEventListener("touchstart", (e) => {
+      const touch = e.touches[0];
+      startDrag(touch.pageX);
+    });
+
+    tabsContainer.addEventListener("touchmove", (e) => {
+      const touch = e.touches[0];
+      moveDrag(touch.pageX);
+    });
+
+    tabsContainer.addEventListener("touchend", endDrag);
+
+    // если тащили — гасим клик по табу
+    tabsContainer.addEventListener("click", (e) => {
+      if (isDragging) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    });
+  }
   });
 });
 
