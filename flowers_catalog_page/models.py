@@ -57,6 +57,10 @@ class Product(models.Model):
     total_sales = models.PositiveIntegerField("Всего продаж", default=0)
     created_at = models.DateTimeField("Создан", auto_now_add=True)
 
+    def finalize_order(order):
+        for item in order.items.all():
+            Product.objects.filter(pk=item.product_id).update(total_sales=F('total_sales') + item.quantity)
+
     class Meta:
         ordering = ["order"]
 

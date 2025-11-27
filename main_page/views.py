@@ -10,11 +10,18 @@ def home_page(request):
     new_products = (
         Product.objects
         .filter(is_active=True, is_new=True)
-        .order_by("order")      
+        .order_by("order")
+    )
+
+    hits_qs = (
+        Product.objects
+        .filter(is_active=True, total_sales__gt=0)
+        .order_by('-total_sales')
     )
 
     context = {
         "new_products": new_products,
+        "hits": hits_qs,
         "slides": slides,
         "stories": stories,
     }

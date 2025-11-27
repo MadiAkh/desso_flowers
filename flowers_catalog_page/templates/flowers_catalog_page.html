@@ -190,10 +190,10 @@
 
 {% block scripts %}
   {{ block.super }}
-  <script src="{% static 'base_page/js/hero.js' %}"></script>
-  <script src="{% static 'base_page/js/header.js' %}"></script>
+  <script async src="{% static 'base_page/js/hero.js' %}"></script>
+  <script async src="{% static 'base_page/js/header.js' %}"></script>
   ...
-  <script src="{% static 'flowers_catalog_page/js/catalog_hero.js' %}"></script>
-  <script src="{% static 'base_page/js/stories.js' %}"></script>
-  <script src="{% static 'flowers_catalog_page/js/flowers_catalog_page.js' %}"></script>
+  <script async src="{% static 'flowers_catalog_page/js/catalog_hero.js' %}"></script>
+  <script async src="{% static 'base_page/js/stories.js' %}"></script>
+  <script async src="{% static 'flowers_catalog_page/js/flowers_catalog_page.js' %}"></script>
 {% endblock %}

@@ -13,32 +13,35 @@
 {% block content %}
 
   {% if new_products %}
+    <!-- ===== Новинки (замени существующий блок Новинки) ===== -->
   <section class="home-new">
     <div class="container">
 
+      <!-- header: только заголовок + стрелки справа -->
       <div class="home-new-header">
-        <h2 class="home-new-title">НОВИНКИ</h2>
+        <h2 class="home-new-title">Новинки DÉSSO</h2>
 
-        <div class="home-new-controls">
-          <button class="home-new-arrow home-new-arrow--prev"
-                  type="button"
-                  aria-label="Предыдущие новинки"
-                  data-home-new-prev></button>
-          <button class="home-new-arrow home-new-arrow--next"
-                  type="button"
-                  aria-label="Следующие новинки"
-                  data-home-new-next></button>
+        <div class="home-new-controls" style="margin-left:auto;">
+          <!-- стрелки: prev / next (только кнопки) -->
+          <button class="slider-arrow" data-prev aria-label="prev">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M15 6 L9 12 L15 18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <button class="slider-arrow" data-next aria-label="next">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </svg>
+          </button>
         </div>
       </div>
 
-      <div class="home-new-slider" data-home-new-slider>
-        <div class="home-new-scroller" data-home-new-scroller>
+      <!-- сам слайдер -->
+      <div class="home-new-slider js-slider" data-scroller>
+        <div class="home-new-scroller" data-scroller-inner>
           <div class="home-new-track">
-
             {% for product in new_products %}
               <article class="catalog-card home-new-card">
-                <button class="catalog-card-fav" type="button" aria-label="Добавить в избранное"></button>
-
                 <a href="#" class="catalog-card-media">
                   {% if product.media_type == "image" %}
                     <img src="{{ product.file.url }}" alt="{{ product.name }}">
@@ -47,34 +50,97 @@
                       <source src="{{ product.file.url }}" type="video/mp4">
                     </video>
                   {% endif %}
-
                   {% if not product.is_active %}
-                    <span class="catalog-card-badge catalog-card-badge--out">НЕТ В НАЛИЧИИ</span>
-                  {% elif product.is_new %}
-                    <span class="catalog-card-badge catalog-card-badge--new">NEW</span>
-                  {% endif %}
+                  <span class="catalog-card-badge catalog-card-badge--out">НЕТ В НАЛИЧИИ</span>
+                {% elif product.is_new %}
+                  <span class="catalog-card-badge catalog-card-badge--new">NEW</span>
+                {% endif %}
                 </a>
-
                 <div class="catalog-card-body">
-                  <div class="catalog-card-category">
-                    {{ product.description }}
-                  </div>
+                  <div class="catalog-card-category">{{ product.description }}</div>
                   <h3 class="catalog-card-title">{{ product.name }}</h3>
-
                   <div class="catalog-card-footer">
-                    <div class="catalog-card-price">
-                      {{ product.price }} ₸
-                    </div>
-                    <button class="catalog-card-add" type="button" aria-label="Добавить в корзину"></button>
+                    <div class="catalog-card-price">{{ product.price }} ₸</div>
                   </div>
                 </div>
               </article>
-          {% endfor %}
-
+            {% endfor %}
           </div>
         </div>
       </div>
 
+      <!-- ПРОГРЕСС-БАР: ПОД СЛАЙДЕРОМ -->
+      <div class="home-new-progress" aria-hidden="true" style="margin-top:18px;">
+        <div class="home-new-progress__bar">
+          <div class="home-new-progress__fill" style="width:0%"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======= ХИТЫ (та же структура: header + slider) ======= -->
+  <section id="hits" class="home-new" style="padding-top: 40px;">
+    <div class="container">
+
+      <!-- HEADER: стрелки + прогресс -->
+      <div class="home-new-header js-slider-header">
+        <h2 class="home-new-title">Хиты продаж</h2>
+
+        <div class="home-new-controls">
+          <button class="slider-arrow" data-prev aria-label="prev">
+            <svg viewBox="0 0 24 24" width="26" height="26">
+              <path d="M15 6 L9 12 L15 18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <button class="slider-arrow" data-next aria-label="next">
+            <svg viewBox="0 0 24 24" width="26" height="26">
+              <path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- SLIDER -->
+      <div class="home-new-slider js-slider" data-scroller>
+        <div class="home-new-scroller" data-scroller-inner>
+          <div class="home-new-track">
+
+            {% for product in hits %}
+            <article class="catalog-card home-new-card">
+
+              <a href="#" class="catalog-card-media">
+                {% if product.media_type == "image" %}
+                <img src="{{ product.file.url }}" alt="{{ product.name }}">
+                {% else %}
+                <video muted playsinline loop>
+                  <source src="{{ product.file.url }}" type="video/mp4">
+                </video>
+                {% endif %}
+              </a>
+
+              <div class="catalog-card-body">
+                <div class="catalog-card-category">{{ product.description }}</div>
+                <h3 class="catalog-card-title">{{ product.name }}</h3>
+
+                <div class="catalog-card-footer">
+                  <div class="catalog-card-price">{{ product.price }} ₸</div>
+                  <div class="small text-muted">Продано: {{ product.total_sales }}</div>
+                </div>
+              </div>
+
+            </article>
+            {% endfor %}
+
+          </div>
+        </div>
+      </div>
+      <!-- ПРОГРЕСС-БАР: ПОД СЛАЙДЕРОМ (для Хитов) -->
+      <div class="home-new-progress" aria-hidden="true" style="margin-top:18px;">
+        <div class="home-new-progress__bar">
+          <div class="home-new-progress__fill" style="width:0%"></div>
+        </div>
+      </div>
     </div>
   </section>
   {% endif %}
@@ -84,6 +150,5 @@
 
 {% block scripts %}
   {{ block.super }}
-  <script src="{% static 'main_page/js/main_page.js' %}"></script>
+  <script defer src="{% static 'main_page/js/main_page.js' %}"></script>
 {% endblock %}
-
