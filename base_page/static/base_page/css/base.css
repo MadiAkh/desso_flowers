@@ -232,3 +232,49 @@ footer{margin-top:40px;background:#faf6fb;border-top:1px solid #eee;color:#555}
 @media (max-width:920px){
   .foot{grid-template-columns:1fr 1fr}
 }
+
+
+/* ===== Floating Contact Button ===== */
+.floating-consult {
+  position: fixed;
+  right: 28px;
+  bottom: 32px;
+  padding: 16px 34px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #fff;
+  z-index: 999;
+  cursor: pointer;
+
+  background: linear-gradient(270deg, #d63384, #7b2cbf, #d63384);
+  background-size: 320% 320%;
+  animation: consultGradient 5s ease infinite;
+
+  box-shadow: 0 8px 25px rgba(214, 51, 132, 0.45),
+              0 3px 10px rgba(0,0,0,0.2);
+
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.floating-consult:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(123, 44, 191, 0.55),
+              0 5px 14px rgba(0,0,0,0.25);
+}
+
+@keyframes consultGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* MOBILE — уменьшим немного */
+@media (max-width: 600px) {
+  .floating-consult {
+    padding: 14px 26px;
+    font-size: 14px;
+    right: 20px;
+    bottom: 22px;
+  }
+}
