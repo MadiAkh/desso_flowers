@@ -1,4 +1,5 @@
 from django.db import models
+from urllib.parse import urlparse, parse_qs
 
 
 class HeroSlide(models.Model):
@@ -50,9 +51,33 @@ class StoryItem(models.Model):
 
 
 class Banner(models.Model):
-    title = models.CharField("Заголовок", max_length=255)
-    image = models.ImageField(upload_to="banners/")
-    link = models.URLField("Ссылка", blank=True)
+    title = models.CharField("Текст поверх баннера", max_length=255, blank=True)
+    image = models.ImageField("Картинка", upload_to="banners/")
+    url = models.URLField("Ссылка при клике", blank=True)
+    target_blank = models.BooleanField("Открывать в новом окне", default=False)
+    is_active = models.BooleanField("Активен", default=True)
+    order = models.PositiveIntegerField("Порядок", default=0)
+
+    class Meta:
+        ordering = ["order"]
+        verbose_name = "Баннер"
+        verbose_name_plural = "Баннеры"
+
+    def __str__(self):
+        return self.title or f"Banner {self.pk}"
+
+
+
+class YoutubeVideo(models.Model):
+    title = models.CharField("Заголовок", max_length=255, blank=True)
+    youtube_url = models.URLField("Обычная ссылка YouTube", blank=True)
+    embed_src = models.CharField(
+        "Embed SRC из YouTube (только src=...)",
+        max_length=500,
+        blank=True,
+        help_text="Например: https://www.youtube.com/embed/ID?si=XYZ"
+    )
+    poster = models.ImageField("Постер", upload_to="video_posters/", blank=True, null=True)
     is_active = models.BooleanField(default=True)
     order = models.PositiveIntegerField(default=0)
 
@@ -60,4 +85,51 @@ class Banner(models.Model):
         ordering = ["order"]
 
     def __str__(self):
-        return self.title
+        return self.title or f"Video {self.pk}"
+
+    @property
+    def youtube_id(self):
+        """Получаем ID видео из обычной ссылки"""
+        url = (self.youtube_url or "").strip()
+        if not url:
+            return ""
+
+        from urllib.parse import urlparse, parse_qs
+
+        p = urlparse(url)
+        hostname = (p.hostname or "").lower()
+
+        # youtu.be/<id>
+        if hostname.endswith("youtu.be"):
+            return p.path.lstrip("/")
+
+        # youtube.com/watch?v=<id>
+        if "youtube.com" in hostname:
+            qs = parse_qs(p.query)
+            if "v" in qs:
+                return qs["v"][0]
+
+            # youtube.com/embed/<id>
+            parts = p.path.split("/")
+            if "embed" in parts:
+                idx = parts.index("embed")
+                if len(parts) > idx + 1:
+                    return parts[idx + 1]
+
+        return ""
+
+    @property
+    def embed(self):
+        """
+        Возвращает src для iframe.
+        Приоритет:
+        1) embed_src из админки
+        2) youtube_id -> стандартный embed
+        """
+        if self.embed_src:
+            return self.embed_src.strip()
+
+        if self.youtube_id:
+            return f"https://www.youtube.com/embed/{self.youtube_id}?rel=0"
+
+        return ""

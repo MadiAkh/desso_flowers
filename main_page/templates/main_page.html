@@ -143,6 +143,96 @@
       </div>
     </div>
   </section>
+
+  <!-- ===== БАННЕРЫ FULL-BLEED (широкие) ===== -->
+  <section class="banners-wide">
+    <div class="banners-wide-scroller js-banners-scroller" data-scroller>
+      <div class="banners-wide-track">
+        {% for b in banners_wide %}
+          <div class="banners-wide-item">
+            <a href="{{ b.url|default:'#' }}" 
+              class="banner-link" 
+              {% if b.target_blank %} target="_blank" rel="noopener"{% endif %}>
+              <img src="{{ b.image.url }}" alt="{{ b.title }}">
+              {% if b.title %}
+                <div class="banner-overlay">
+                  <div class="banner-title">{{ b.title }}</div>
+                </div>
+              {% endif %}
+            </a>
+          </div>
+        {% empty %}
+          <!-- Заглушка -->
+          <div class="banners-wide-item">
+            <a href="#" class="banner-link">
+              <img src="{% static 'main_page/img/banner-placeholder-wide.jpg' %}" alt="banner">
+              <div class="banner-overlay"><div class="banner-title">Акция</div></div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- прогресс -->
+    <div class="banners-wide-progress">
+      <div class="banners-wide-progress__bar">
+        <div class="banners-wide-progress__fill" style="width:0%"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== КАРУСЕЛЬ ВИДЕО (YouTube cards), СХОЖА С НОВИНКАМИ/ХИТАМИ ====== -->
+  <section class="home-new" style="padding-top: 10px; padding-bottom: 40px;">
+    <div class="container">
+      <div class="home-new-header">
+        <h2 class="home-new-title">Рубрика</h2>
+        <div class="home-new-controls" style="margin-left:auto;">
+          <button class="slider-arrow" data-prev aria-label="prev">
+            <svg viewBox="0 0 24 24"><path d="M15 6 L9 12 L15 18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          </button>
+          <button class="slider-arrow" data-next aria-label="next">
+            <svg viewBox="0 0 24 24"><path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- слайдер: используем ту же структуру .js-slider / data-scroller -->
+      <div class="home-new-slider js-slider video-slider" data-scroller>
+        <div class="home-new-scroller" data-scroller-inner>
+          <div class="home-new-track">
+            {% for v in video_cards %}
+              <article class="catalog-card home-new-card video-card">
+                <a href="javascript:void(0)"
+                  class="catalog-card-media video-poster"
+                  data-embed-src="{{ v.embed }}"
+                  data-youtube-id="{{ v.youtube_id }}">
+                  {% if v.poster %}
+                    <img src="{{ v.poster.url }}" alt="{{ v.title }}">
+                  {% else %}
+                    <img src="https://img.youtube.com/vi/{{ v.youtube_id }}/hqdefault.jpg" alt="{{ v.title }}">
+                  {% endif %}
+                  <span class="play-circle" aria-hidden="true">▶</span>
+                </a>
+
+                <div class="catalog-card-body">
+                  <div class="catalog-card-category">Видео</div>
+                  <h3 class="catalog-card-title">{{ v.title }}</h3>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- ПРОГРЕСС-БАР (как у других слайдеров) -->
+      <div class="home-new-progress" aria-hidden="true" style="margin-top:18px;">
+        <div class="home-new-progress__bar">
+          <div class="home-new-progress__fill" style="width:0%"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
   {% endif %}
 
 {% endblock %}
