@@ -13,9 +13,12 @@ class StoryAdmin(admin.ModelAdmin):
 
 @admin.register(StoryItem)
 class StoryItemAdmin(admin.ModelAdmin):
-    list_display = ("story", "media_type", "order")
-    list_editable = ("order",)
-    list_filter = ("story",)
+    list_display = ("story", "media_type", "order", "cta_enabled")
+    list_editable = ("order", "cta_enabled")
+    fields = (
+        "story", "media_type", "file", "poster", "duration", "order",
+        ("cta_enabled", "cta_text", "cta_link"),
+    )
 
 @admin.register(Banner)
 class BannerAdmin(admin.ModelAdmin):

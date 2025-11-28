@@ -1,6 +1,6 @@
 from django.db import models
 from urllib.parse import urlparse, parse_qs
-
+from django.db.models import JSONField
 
 class HeroSlide(models.Model):
     title = models.CharField("Заголовок", max_length=255)
@@ -40,8 +40,15 @@ class StoryItem(models.Model):
     media_type = models.CharField(max_length=10, choices=MEDIA_TYPES)
     file = models.FileField(upload_to="stories/")
     poster = models.ImageField(upload_to="stories_posters/", blank=True)
-    duration = models.PositiveIntegerField("Длительность (мс)", blank=True, null=True)
+    duration = models.PositiveIntegerField(blank=True, null=True)
     order = models.PositiveIntegerField(default=0)
+
+    # CTA
+    cta_enabled = models.BooleanField("Показывать CTA", default=False)
+    cta_text = models.CharField("Текст кнопки (CTA)", max_length=120, blank=True)
+    cta_link = models.URLField("Ссылка для CTA", blank=True)
+
+    # we removed poll fields as requested
 
     class Meta:
         ordering = ["order"]
