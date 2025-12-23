@@ -1,0 +1,465 @@
+:root {
+  --brand-purple: #56348b;
+}
+
+/* БАЗОВЫЙ HEADER */
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+
+  /* ВОТ ЭТИ ОТСТУПЫ — ОСНОВНАЯ ВЫСОТА ХЕДЕРА */
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background: rgba(255,255,255,0);
+  backdrop-filter: blur(0px);
+
+  transition:
+    padding .35s ease,
+    background .35s ease,
+    backdrop-filter .35s ease,
+    box-shadow .35s ease;
+}
+
+:root {
+  --brand-purple: #56348b;
+}
+
+/* БАЗОВЫЙ HEADER */
+/* Обновляем header-top для позиционирования */
+.header-top {
+    width: 100%;
+    max-width: var(--max); /* Используем вашу переменную из base.css */
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+/* Блоки по бокам логотипа для центровки */
+.header-actions-spacer, 
+.header-actions {
+    flex: 1; /* Растягиваются одинаково */
+    display: flex;
+    justify-content: flex-end; /* Иконки вправо */
+    gap: 15px;
+}
+
+/* Стили иконок */
+.action-btn {
+    color: #fff;
+    transition: color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.action-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Изменение цвета иконок при ховере на шапку или скролле */
+.site-header:hover .action-btn,
+.header--scrolled .action-btn {
+    color: var(--brand-purple);
+}
+
+/* Мобильная адаптация: если экран узкий, уменьшим расстояние */
+@media (max-width: 600px) {
+    .header-actions {
+        gap: 10px;
+    }
+    .action-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* ХОВЕР ДЛЯ ПРОЗРАЧНОЙ ШАПКИ */
+.site-header:not(.header--hidden):not(.header--scrolled):hover {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(14px);
+}
+
+/* КОГДА ПРОСКРОЛИЛИ → ПРИЖАТАЯ ШАПКА */
+.header--scrolled {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 2px 10px rgba(0,0,0,.05);
+}
+
+/* ВОТ ЭТО — УМЕНЬШАЕТ САМ ХЕДЕР */
+.header--compact {  
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+/* СЕКЦИЯ С ЛОГОТИПОМ */
+.logo {
+  font-size: 26px;
+  color: #fff;
+  transition: color .3s ease, font-size .35s ease;
+}
+
+/* ЛОГОТИП УМЕНЬШАЕТСЯ */
+.header--compact .logo {
+  font-size: 22px;
+}
+
+/* НА БЕЛОЙ ШАПКЕ ЛОГОТИП ФИОЛЕТОВЫЙ */
+.site-header:hover .logo,
+.header--scrolled .logo {
+  color: var(--brand-purple);
+}
+
+/* НИЖНЯЯ НАВИГАЦИЯ */
+.header-bottom {
+  /* БЛОК БЕЗ ЖЁСТКОЙ ВЫСОТЫ */
+  margin-top: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* overflow: hidden;                    важно: лишняя высота спрячется */
+  max-height: 40px;                    /* максимум, когда меню видно */
+
+  transition:
+    max-height .35s ease,
+    opacity .35s ease,
+    transform .35s ease;
+}
+
+
+/* ИСЧЕЗНОВЕНИЕ МЕНЮ */
+.header--hidden .header-bottom {
+  max-height: 0;                       /* <- высота = 0, блок схлопнулся */
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+/* КНОПКИ МЕНЮ */
+.nav-row {
+  display: flex;
+  gap: 18px;
+}
+
+.nav-row a {
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 12px;
+
+  transition: color .3s ease, background .3s ease;
+}
+
+/* НА БЕЛОЙ ШАПКЕ — ФИОЛЕТОВЫЕ */
+.site-header:hover .nav-row a,
+.header--scrolled .nav-row a {
+  color: var(--brand-purple);
+}
+
+/* HOVER */
+.nav-row a:hover {
+  background: #f2eef8;
+  color: var(--brand-purple);
+}
+
+
+
+
+
+
+/* ВЫПАДАЮЩЕЕ МЕНЮ */
+/* Контейнер выпадающего списка */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Стилизация кнопки "Каталог" (совпадает с вашими ссылками .nav-row a) */
+.dropbtn {
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 12px;
+  transition: color .3s ease, background .3s ease;
+  cursor: default;
+}
+
+/* На белой шапке текст становится фиолетовым */
+.site-header:hover .dropbtn,
+.header--scrolled .dropbtn {
+  color: var(--brand-purple);
+}
+
+/* Выпадающее меню */
+.dropdown-content {
+  display: none; /* Скрыто по умолчанию */
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.98);
+  min-width: 220px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  border-radius: 15px;
+  padding: 8px 0;
+  z-index: 300;
+  backdrop-filter: blur(10px);
+  margin-top: 5px; /* Отступ от хедера */
+}
+
+/* Уголки кнопок выпадающего меню */
+.dropdown-content a:first-child {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.dropdown-content a:last-child {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+/* Стрелочка сверху меню */
+.dropdown-content::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid rgba(255, 255, 255, 0.98);
+}
+
+/* Ссылки внутри выпадающего меню */
+.dropdown-content a {
+  color: var(--brand-purple) !important; /* Всегда фиолетовые на белом фоне */
+  padding: 10px 20px;
+  text-decoration: none;
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s ease;
+  border-radius: 0; /* Убираем радиус внутри */
+}
+
+/* Ховер на пункты списка */
+.dropdown-content a:hover {
+  background-color: #f2eef8;
+  color: var(--brand-purple) !important;
+}
+
+/* Показ при наведении */
+.dropdown:hover .dropdown-content {
+  display: block;
+  animation: fadeInDown 0.3s ease;
+}
+
+/* Плавное появление */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* ХОВЕР ДЛЯ ПРОЗРАЧНОЙ ШАПКИ */
+.site-header:not(.header--hidden):not(.header--scrolled):hover {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(14px);
+}
+
+/* КОГДА ПРОСКРОЛИЛИ → ПРИЖАТАЯ ШАПКА */
+.header--scrolled {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 2px 10px rgba(0,0,0,.05);
+}
+
+/* ВОТ ЭТО — УМЕНЬШАЕТ САМ ХЕДЕР */
+.header--compact {  
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+/* СЕКЦИЯ С ЛОГОТИПОМ */
+.logo {
+  font-size: 26px;
+  color: #fff;
+  transition: color .3s ease, font-size .35s ease;
+}
+
+/* ЛОГОТИП УМЕНЬШАЕТСЯ */
+.header--compact .logo {
+  font-size: 22px;
+}
+
+/* НА БЕЛОЙ ШАПКЕ ЛОГОТИП ФИОЛЕТОВЫЙ */
+.site-header:hover .logo,
+.header--scrolled .logo {
+  color: var(--brand-purple);
+}
+
+/* НИЖНЯЯ НАВИГАЦИЯ */
+.header-bottom {
+  /* БЛОК БЕЗ ЖЁСТКОЙ ВЫСОТЫ */
+  margin-top: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* overflow: hidden;                    важно: лишняя высота спрячется */
+  max-height: 40px;                    /* максимум, когда меню видно */
+
+  transition:
+    max-height .35s ease,
+    opacity .35s ease,
+    transform .35s ease;
+}
+
+
+/* ИСЧЕЗНОВЕНИЕ МЕНЮ */
+.header--hidden .header-bottom {
+  max-height: 0;                       /* <- высота = 0, блок схлопнулся */
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+/* КНОПКИ МЕНЮ */
+.nav-row {
+  display: flex;
+  gap: 18px;
+}
+
+.nav-row a {
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 12px;
+
+  transition: color .3s ease, background .3s ease;
+}
+
+/* НА БЕЛОЙ ШАПКЕ — ФИОЛЕТОВЫЕ */
+.site-header:hover .nav-row a,
+.header--scrolled .nav-row a {
+  color: var(--brand-purple);
+}
+
+/* HOVER */
+.nav-row a:hover {
+  background: #f2eef8;
+  color: var(--brand-purple);
+}
+
+
+
+
+
+
+/* ВЫПАДАЮЩЕЕ МЕНЮ */
+/* Контейнер выпадающего списка */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Стилизация кнопки "Каталог" (совпадает с вашими ссылками .nav-row a) */
+.dropbtn {
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 12px;
+  transition: color .3s ease, background .3s ease;
+  cursor: default;
+}
+
+/* На белой шапке текст становится фиолетовым */
+.site-header:hover .dropbtn,
+.header--scrolled .dropbtn {
+  color: var(--brand-purple);
+}
+
+/* Выпадающее меню */
+.dropdown-content {
+  display: none; /* Скрыто по умолчанию */
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.98);
+  min-width: 220px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  border-radius: 15px;
+  padding: 8px 0;
+  z-index: 300;
+  backdrop-filter: blur(10px);
+  margin-top: 5px; /* Отступ от хедера */
+}
+
+/* Уголки кнопок выпадающего меню */
+.dropdown-content a:first-child {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.dropdown-content a:last-child {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+/* Стрелочка сверху меню */
+.dropdown-content::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid rgba(255, 255, 255, 0.98);
+}
+
+/* Ссылки внутри выпадающего меню */
+.dropdown-content a {
+  color: var(--brand-purple) !important; /* Всегда фиолетовые на белом фоне */
+  padding: 10px 20px;
+  text-decoration: none;
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s ease;
+  border-radius: 0; /* Убираем радиус внутри */
+}
+
+/* Ховер на пункты списка */
+.dropdown-content a:hover {
+  background-color: #f2eef8;
+  color: var(--brand-purple) !important;
+}
+
+/* Показ при наведении */
+.dropdown:hover .dropdown-content {
+  display: block;
+  animation: fadeInDown 0.3s ease;
+}
+
+/* Плавное появление */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}

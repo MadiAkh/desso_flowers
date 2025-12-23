@@ -1,6 +1,4 @@
 // HERO custom slider
-console.log('hero.js loaded');
-
 const slider = document.getElementById('heroSlider');
 const slides = [...slider.children];
 const dotsWrap = document.getElementById('heroDots');

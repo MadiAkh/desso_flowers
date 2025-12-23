@@ -3,145 +3,242 @@
 
 {% block title %}Главная — DÉSSO FLOWERS{% endblock %}
 
+{% block extra_css %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'flowers_catalog_page/css/flowers_catalog_page.css' %}">
+  <link rel="stylesheet" href="{% static 'main_page/css/main_page.css' %}">
+{% endblock %}
+
+
 {% block content %}
-  <!-- HERO -->
-  <section class="hero" id="hero">
-    <div class="slider" id="heroSlider">
 
-      {% for slide in slides %}
-        <section class="slide" data-idx="{{ forloop.counter0 }}">
-          <video autoplay muted playsinline {% if slide.poster %}poster="{{ slide.poster.url }}"{% endif %}>
-            <source src="{{ slide.video.url }}" type="video/mp4">
-          </video>
-          <div class="gradient"></div>
-          <div class="caption">
-            {% if slide.kicker %}<div class="kicker">{{ slide.kicker }}</div>{% endif %}
-            <h1 class="title">{{ slide.title }}</h1>
-            {% if slide.subtitle %}<p class="subtitle">{{ slide.subtitle }}</p>{% endif %}
-            {% if slide.cta_text %}
-              <a href="{{ slide.cta_link }}" class="cta">{{ slide.cta_text }}</a>
-            {% endif %}
+  {% if new_products %}
+    <!-- ===== Новинки (замени существующий блок Новинки) ===== -->
+  <section class="home-new">
+    <div class="container">
+
+      <!-- header: только заголовок + стрелки справа -->
+      <div class="home-new-header">
+        <h2 class="home-new-title">Новинки DÉSSO</h2>
+
+        <div class="home-new-controls" style="margin-left:auto;">
+          <!-- стрелки: prev / next (только кнопки) -->
+          <button class="slider-arrow" data-prev aria-label="prev">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M15 6 L9 12 L15 18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <button class="slider-arrow" data-next aria-label="next">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- сам слайдер -->
+      <div class="home-new-slider js-slider" data-scroller>
+        <div class="home-new-scroller" data-scroller-inner>
+          <div class="home-new-track">
+            {% for product in new_products %}
+              <article class="catalog-card home-new-card">
+                <a href="#" class="catalog-card-media">
+                  {% if product.media_type == "image" %}
+                    <img src="{{ product.file.url }}" alt="{{ product.name }}">
+                  {% else %}
+                    <video muted playsinline loop>
+                      <source src="{{ product.file.url }}" type="video/mp4">
+                    </video>
+                  {% endif %}
+                  {% if not product.is_active %}
+                  <span class="catalog-card-badge catalog-card-badge--out">НЕТ В НАЛИЧИИ</span>
+                {% elif product.is_new %}
+                  <span class="catalog-card-badge catalog-card-badge--new">NEW</span>
+                {% endif %}
+                </a>
+                <div class="catalog-card-body">
+                  <div class="catalog-card-category">{{ product.description }}</div>
+                  <h3 class="catalog-card-title">{{ product.name }}</h3>
+                  <div class="catalog-card-footer">
+                    <div class="catalog-card-price">{{ product.price }} ₸</div>
+                  </div>
+                </div>
+              </article>
+            {% endfor %}
           </div>
-        </section>
-      {% endfor %}
+        </div>
+      </div>
+
+      <!-- ПРОГРЕСС-БАР: ПОД СЛАЙДЕРОМ -->
+      <div class="home-new-progress" aria-hidden="true" style="margin-top:18px;">
+        <div class="home-new-progress__bar">
+          <div class="home-new-progress__fill" style="width:0%"></div>
+        </div>
+      </div>
 
     </div>
-
-    <!-- нав. зоны и точки -->
-    <div class="nav-zones" aria-hidden="true">
-      <button class="prev" id="heroPrev"></button>
-      <button class="next" id="heroNext"></button>
-    </div>
-    <div class="dots" id="heroDots"></div>
   </section>
 
-
-  <!-- ===== STORIES (preview circles) ===== -->
-  <section class="stories" aria-label="Сториз">
+  <!-- ======= ХИТЫ (та же структура: header + slider) ======= -->
+  <section id="hits" class="home-new" style="padding-top: 40px;">
     <div class="container">
-      <div class="track">
-        {% for story in stories %}
-          <button class="story" data-story="{{ story.id }}" type="button">
-            <div class="ring">
-              <div class="circle">
-                <div class="inner">
-                  <img src="{{ story.cover_image.url }}" alt="{{ story.label }}">
+
+      <!-- HEADER: стрелки + прогресс -->
+      <div class="home-new-header js-slider-header">
+        <h2 class="home-new-title">Хиты продаж</h2>
+
+        <div class="home-new-controls">
+          <button class="slider-arrow" data-prev aria-label="prev">
+            <svg viewBox="0 0 24 24" width="26" height="26">
+              <path d="M15 6 L9 12 L15 18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <button class="slider-arrow" data-next aria-label="next">
+            <svg viewBox="0 0 24 24" width="26" height="26">
+              <path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- SLIDER -->
+      <div class="home-new-slider js-slider" data-scroller>
+        <div class="home-new-scroller" data-scroller-inner>
+          <div class="home-new-track">
+
+            {% for product in hits %}
+            <article class="catalog-card home-new-card">
+
+              <a href="#" class="catalog-card-media">
+                {% if product.media_type == "image" %}
+                <img src="{{ product.file.url }}" alt="{{ product.name }}">
+                {% else %}
+                <video muted playsinline loop>
+                  <source src="{{ product.file.url }}" type="video/mp4">
+                </video>
+                {% endif %}
+              </a>
+
+              <div class="catalog-card-body">
+                <div class="catalog-card-category">{{ product.description }}</div>
+                <h3 class="catalog-card-title">{{ product.name }}</h3>
+
+                <div class="catalog-card-footer">
+                  <div class="catalog-card-price">{{ product.price }} ₸</div>
+                  <div class="small text-muted">Продано: {{ product.total_sales }}</div>
                 </div>
               </div>
-            </div>
-            <div class="label">{{ story.label }}</div>
-          </button>
+
+            </article>
+            {% endfor %}
+
+          </div>
+        </div>
+      </div>
+      <!-- ПРОГРЕСС-БАР: ПОД СЛАЙДЕРОМ (для Хитов) -->
+      <div class="home-new-progress" aria-hidden="true" style="margin-top:18px;">
+        <div class="home-new-progress__bar">
+          <div class="home-new-progress__fill" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== БАННЕРЫ FULL-BLEED (широкие) ===== -->
+  <section class="banners-wide">
+    <div class="banners-wide-scroller js-banners-scroller" data-scroller>
+      <div class="banners-wide-track">
+        {% for b in banners_wide %}
+          <div class="banners-wide-item">
+            <a href="{{ b.url|default:'#' }}" 
+              class="banner-link" 
+              {% if b.target_blank %} target="_blank" rel="noopener"{% endif %}>
+              <img src="{{ b.image.url }}" alt="{{ b.title }}">
+              {% if b.title %}
+                <div class="banner-overlay">
+                  <div class="banner-title">{{ b.title }}</div>
+                </div>
+              {% endif %}
+            </a>
+          </div>
+        {% empty %}
+          <!-- Заглушка -->
+          <div class="banners-wide-item">
+            <a href="#" class="banner-link">
+              <img src="{% static 'main_page/img/banner-placeholder-wide.jpg' %}" alt="banner">
+              <div class="banner-overlay"><div class="banner-title">Акция</div></div>
+            </a>
+          </div>
         {% endfor %}
       </div>
     </div>
+
+    <!-- прогресс -->
+    <div class="banners-wide-progress">
+      <div class="banners-wide-progress__bar">
+        <div class="banners-wide-progress__fill" style="width:0%"></div>
+      </div>
+    </div>
   </section>
 
+  <!-- ====== КАРУСЕЛЬ ВИДЕО (YouTube cards), СХОЖА С НОВИНКАМИ/ХИТАМИ ====== -->
+  <section class="home-new" style="padding-top: 10px; padding-bottom: 40px;">
+    <div class="container">
+      <div class="home-new-header">
+        <h2 class="home-new-title">Рубрика</h2>
+        <div class="home-new-controls" style="margin-left:auto;">
+          <button class="slider-arrow" data-prev aria-label="prev">
+            <svg viewBox="0 0 24 24"><path d="M15 6 L9 12 L15 18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          </button>
+          <button class="slider-arrow" data-next aria-label="next">
+            <svg viewBox="0 0 24 24"><path d="M9 6 L15 12 L9 18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
 
-  <!-- ===== STORIES MODAL ===== -->
-  <div class="stories-modal" id="storiesModal" aria-hidden="true">
-    <div class="stories-backdrop"></div>
+      <!-- слайдер: используем ту же структуру .js-slider / data-scroller -->
+      <div class="home-new-slider js-slider video-slider" data-scroller>
+        <div class="home-new-scroller" data-scroller-inner>
+          <div class="home-new-track">
+            {% for v in video_cards %}
+              <article class="catalog-card home-new-card video-card">
+                <a href="javascript:void(0)"
+                  class="catalog-card-media video-poster"
+                  data-embed-src="{{ v.embed }}"
+                  data-youtube-id="{{ v.youtube_id }}">
+                  {% if v.poster %}
+                    <img src="{{ v.poster.url }}" alt="{{ v.title }}">
+                  {% else %}
+                    <img src="https://img.youtube.com/vi/{{ v.youtube_id }}/hqdefault.jpg" alt="{{ v.title }}">
+                  {% endif %}
+                  <span class="play-circle" aria-hidden="true">▶</span>
+                </a>
 
-    <div class="stories-frame" role="dialog" aria-modal="true" aria-label="Истории">
-      <div class="stories-progress" id="storiesProgress"></div>
-      <div class="stories-media" id="storiesMedia"></div>
-      <button class="stories-zone left"  id="storiesPrev" aria-label="Назад"></button>
-      <button class="stories-zone right" id="storiesNext" aria-label="Дальше"></button>
-      <button class="stories-close" id="storiesClose" aria-label="Закрыть">✕</button>
+                <div class="catalog-card-body">
+                  <div class="catalog-card-category">Видео</div>
+                  <h3 class="catalog-card-title">{{ v.title }}</h3>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- ПРОГРЕСС-БАР (как у других слайдеров) -->
+      <div class="home-new-progress" aria-hidden="true" style="margin-top:18px;">
+        <div class="home-new-progress__bar">
+          <div class="home-new-progress__fill" style="width:0%"></div>
+        </div>
+      </div>
+
     </div>
-  </div>
+  </section>
+  {% endif %}
 
-
-  <!-- ===== BANNERS ===== -->
-  {% for banner in banners %}
-    <div class="container banner">
-      <a href="{{ banner.link }}" target="_blank" rel="noopener" class="banner-link">
-        <img src="{{ banner.image.url }}" alt="{{ banner.title }}">
-      </a>
-      <div class="inner">
-        <h3>{{ banner.title }}</h3>
-        {% if banner.link %}
-          <a href="{{ banner.link }}" class="cta">Перейти</a>
-        {% endif %}
-      </div>
-    </div>
-  {% endfor %}
-
-
-  <!-- ===== FOOTER ===== -->
-  <footer>
-    <div class="container foot">
-      <div>
-        <h4>DESSO</h4>
-        <p>Источник гормонов счастья. Цветы и подарки 24/7.</p>
-      </div>
-      <div>
-        <h4>Навигация</h4>
-        <ul>
-          <li><a href="#">Каталог</a></li>
-          <li><a href="#">Доставка</a></li>
-          <li><a href="#">Контакты</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Компания</h4>
-        <ul>
-          <li><a href="#">О нас</a></li>
-          <li><a href="#">Вакансии</a></li>
-          <li><a href="#">Отзывы</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Соцсети</h4>
-        <ul>
-          <li><a href="#">Instagram</a></li>
-          <li><a href="#">WhatsApp</a></li>
-          <li><a href="#">Telegram</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="copyright">© {{ now|date:"Y" }} DESSO Flowers</div>
-  </footer>
 {% endblock %}
 
 
 {% block scripts %}
-  <script src="{% static 'main_page/js/hero.js' %}"></script>
-
-  <script>
-    const STORIES = {
-      {% for story in stories %}
-        "{{ story.id }}": [
-          {% for item in story.items.all %}
-            {
-              type: "{{ item.media_type }}",
-              src: "{{ item.file.url }}",
-              {% if item.poster %}poster: "{{ item.poster.url }}",{% endif %}
-              {% if item.duration %}duration: {{ item.duration }},{% endif %}
-            },
-          {% endfor %}
-        ],
-      {% endfor %}
-    };
-  </script>
-  <script src="{% static 'main_page/js/stories.js' %}"></script>
+  {{ block.super }}
+  <script defer src="{% static 'main_page/js/main_page.js' %}"></script>
 {% endblock %}

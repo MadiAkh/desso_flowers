@@ -1,0 +1,569 @@
+/* ===== НОВИНКИ НА ГЛАВНОЙ ===== */
+
+.home-new {
+  padding: 64px 0 80px;
+  background: #fff;
+}
+
+.home-new-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.home-new-title {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* ----- горизонтальный слайдер ----- */
+
+.home-new-slider {
+  position: relative;
+}
+
+.home-new-scroller {
+  overflow-x: auto;
+  overflow-y: visible;
+  padding-bottom: 10px;          /* небольшой запас, чтобы тень карточек не обрезалась */
+  scrollbar-width: none;         /* Firefox */
+}
+
+.home-new-scroller::-webkit-scrollbar {
+  display: none;                 /* Chrome, Safari */
+}
+
+
+.home-new-card {
+  flex: 0 0 280px;             /* базовая ширина карточки */
+}
+
+/* адаптация под широкие экраны */
+@media (min-width: 1440px) {
+  .home-new-card {
+    flex-basis: 300px;
+  }
+}
+
+/* адаптация под планшет/мобилу */
+@media (max-width: 900px) {
+  .home-new-header {
+    margin-bottom: 16px;
+  }
+
+  .home-new-title {
+    font-size: 24px;
+  }
+
+  .home-new-card {
+    flex-basis: 220px;
+  }
+}
+
+
+.home-new-scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  display: block;
+  scrollbar-width: none;
+}
+.home-new-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.home-new-card {
+  flex: 0 0 280px;
+  display: inline-block;
+}
+
+
+/* ===== ХИТЫ (стабильная CSS Grid реализация) ===== */
+.hits-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  margin-top: 24px;
+  align-items: start;
+}
+
+/* карточка */
+.hits-item {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(8, 15, 26, 0.06);
+  display: flex;
+  flex-direction: column;
+}
+
+/* область медиа (изображение/видео) */
+.hits-media {
+  display: block;
+  width: 100%;
+  height: 260px;               /* высота превью */
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.hits-media img,
+.hits-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* информация под картинкой */
+.hits-info {
+  padding: 12px 14px 16px;
+}
+
+.hits-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #111;
+}
+
+.hits-card-price {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 6px;
+}
+
+.hits-card-sold {
+  font-size: 12px;
+  color: #6b6b6b;
+}
+
+/* ----- адаптив ----- */
+@media (max-width: 1200px) {
+  .hits-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .hits-media { height: 240px; }
+}
+
+@media (max-width: 900px) {
+  .hits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .hits-media { height: 220px; }
+}
+
+@media (max-width: 600px) {
+  .hits-grid {
+    grid-template-columns: 1fr;
+  }
+  .hits-media { height: 320px; } /* вертикальный вид — чуть выше */
+}
+
+/* Чтобы кнопки были справа в одну линию */
+.home-new-controls {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+}
+
+/* ===== Тонкий прогресс-бар ===== */
+.home-new-progress {
+  width: 100%;
+  margin: 18px 0 0;
+}
+
+.home-new-progress__bar {
+  height: 3px;
+  background: #e5e5e5;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.home-new-progress__fill {
+  height: 100%;
+  width: 0%;
+  background: #000;
+  border-radius: 999px;
+  transition: width .15s linear;
+}
+
+
+.home-new-scroller {
+  scroll-snap-type: none !important;
+  -webkit-overflow-scrolling: touch;
+}
+.home-new-track > * {
+  scroll-snap-align: none !important;
+}
+
+
+
+
+/* Быстрая правка: стрелки поверх всего, прогресс не блокирует клики */
+.home-new-controls {
+  position: relative; /* чтобы z-index работал */
+  z-index: 50;
+  display: flex;
+  gap: 22px;
+  align-items: center;
+}
+
+/* ===== НОВИНКИ НА ГЛАВНОЙ ===== */
+.home-new {
+  padding: 64px 0 80px;
+  background: #fff;
+}
+
+.home-new-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.home-new-title {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* ========== Контролы (стрелки) ========== */
+.home-new-controls {
+  position: relative; /* чтобы z-index работал */
+  z-index: 50;
+  display: flex;
+  gap: 22px;
+  align-items: center;
+}
+
+/* Единый стиль для стрелок */
+.slider-arrow {
+  position: relative;
+  z-index: 60;          /* выше, чем прогресс и слайдер */
+  width: 46px;          /* кликабельная зона */
+  height: 46px;
+  display: inline-grid;
+  place-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #222;
+  transition: transform .12s ease, color .12s ease;
+}
+.slider-arrow svg { width: 22px; height: 22px; display:block; }
+.slider-arrow:hover { transform: translateY(-2px); }
+.slider-arrow:disabled { color: #cfcfcf; opacity: .6; cursor: default; transform: none; }
+
+/* ========== Слайдер и трек ========== */
+.home-new-slider { position: relative; }
+
+.home-new-scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 10px;          /* небольшой запас, чтобы тень карточек не обрезалась */
+  white-space: nowrap;
+  display: block;
+  scrollbar-width: none;         /* Firefox */
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+  z-index: 5;
+}
+.home-new-scroller::-webkit-scrollbar { display: none; }
+
+.home-new-track {
+  display: flex;
+  gap: 24px;
+}
+
+.home-new-card {
+  flex: 0 0 280px;
+  display: inline-block;
+}
+
+/* адаптация под широкие экраны */
+@media (min-width: 1440px) {
+  .home-new-card { flex-basis: 300px; }
+}
+
+/* адаптация под планшет/мобилу */
+@media (max-width: 900px) {
+  .home-new-header { margin-bottom: 16px; }
+  .home-new-title { font-size: 24px; }
+  .home-new-card { flex-basis: 220px; }
+}
+
+/* ========== Прогресс бар ========== */
+.home-new-progress { width: 100%; margin: 18px 0 0; position: relative; z-index: 10; }
+.home-new-progress__bar {
+  height: 3px;
+  background: #e5e5e5;
+  border-radius: 999px;
+  overflow: hidden;
+  pointer-events: none; /* чтобы не перехватывал клики */
+}
+.home-new-progress__fill {
+  height: 100%;
+  width: 0%;
+  background: #000;
+  border-radius: 999px;
+  transition: width .15s linear;
+}
+
+/* Отключаем scroll-snap (на случай, если где-то включён) */
+.home-new-scroller { scroll-snap-type: none !important; }
+.home-new-track > * { scroll-snap-align: none !important; }
+
+/* Состояние drag */
+.home-new-scroller.is-dragging { cursor: grabbing; }
+
+
+.home-new > .container {
+  max-width: 2000px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+
+
+
+/* ===== BANNERS WIDE (full-bleed carousel) ===== */
+.banners-wide {
+  width: 100%;
+  background: #fff;
+  padding: 40px 0; /* отступы сверху/снизу секции */
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* делаем так, чтобы трек был широким и картинка выходила к краям экрана */
+.banners-wide-scroller {
+  overflow-x: auto;
+  overflow-y: visible;
+  padding: 10px 24px;      /* внутренние отступы контейнера */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.banners-wide-scroller::-webkit-scrollbar { display: none; }
+
+.banners-wide-track {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  width: auto;
+}
+
+/* каждая карточка занимает большую ширину (регулируй) */
+.banners-wide-item {
+  flex: 0 0 880px; /* <- ширина баннера, изменяй на 1000/800 по макету */
+  max-width: 880px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fafafa;
+  box-shadow: 0 6px 24px rgba(8,15,26,0.06);
+}
+
+/* картинка растягивается по элементу */
+.banners-wide-item img {
+  width: 100%;
+  height: 380px; /* высота баннера — настраиваемая */
+  object-fit: cover;
+  display: block;
+}
+
+/* Overlay текст поверх баннера (по центру) */
+.banner-overlay {
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events: none;
+}
+.banner-title {
+  color: #fff;
+  font-size: 28px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align:center;
+  text-shadow: 0 6px 18px rgba(0,0,0,0.4);
+  padding: 10px 20px;
+}
+
+/* поправим ссылку */
+.banner-link { display:block; position:relative; }
+
+/* прогрессбар */
+.banners-wide-progress { margin-top: 18px; padding: 0 24px; }
+.banners-wide-progress__bar {
+  height: 3px; background:#eee; border-radius:999px; overflow:hidden;
+}
+.banners-wide-progress__fill {
+  height:100%; width:0%; background:#111; transition: width .15s linear;
+}
+
+/* адаптив */
+@media (max-width: 1200px) {
+  .banners-wide-item { flex: 0 0 720px; max-width:720px; }
+  .banners-wide-item img { height: 340px; }
+}
+@media (max-width: 900px) {
+  .banners-wide-item { flex: 0 0 86vw; max-width:86vw; }
+  .banners-wide-item img { height: 260px; }
+}
+@media (max-width: 480px) {
+  .banners-wide-item { flex: 0 0 92vw; max-width:92vw; }
+  .banners-wide-item img { height: 200px; }
+}
+
+
+
+
+/* ====== Стили для блока Рубрика (видео) — делаем как на макете ====== */
+
+.video-slider .home-new-track {
+  display: flex;
+  gap: 28px;
+  align-items: stretch;
+  /* убираем возможные лишние ограничения */
+}
+
+.video-slider .video-card {
+  width: calc(50% - 14px); /* 2 карточки в ряд с gap 28px */
+  box-sizing: border-box;
+  border-radius: 8px;
+  overflow: visible;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+.video-slider .catalog-card-media {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 8px;
+  flex: 0 0 auto;
+  height: 400px; /* большой формат как в рубриках */
+}
+
+@media (max-width: 1100px) {
+  .video-slider .catalog-card-media { height: 320px; }
+  .video-slider .video-card { width: calc(50% - 10px); }
+}
+@media (max-width: 780px) {
+  .video-slider .catalog-card-media { height: 220px; }
+  .video-slider .video-card { width: 100%; }
+}
+
+/* ===== ШИРИНА ВИДЕО-КАРТОЧЕК (шире, но остаются в карусели) ===== */
+.video-slider .video-card {
+    flex: 0 0 420px;          /* ← здесь регулируешь ширину */
+    max-width: 420px;         /* опционально */
+}
+
+.video-slider .catalog-card-media {
+    height: 280px;            /* ← если хочешь повыше – поставь 320/360/400 */
+}
+
+@media (min-width: 1440px) {
+    .video-slider .video-card {
+        flex-basis: 460px;    /* на широких экранах ещё шире */
+        max-width: 460px;
+    }
+}
+
+@media (max-width: 900px) {
+    .video-slider .video-card {
+        flex-basis: 85vw;     /* на мобилке почти на весь экран */
+        max-width: 85vw;
+    }
+}
+
+/* картинка/thumbnail внутри */
+.video-slider .catalog-card-media img,
+.video-slider .catalog-card-media video,
+.video-slider .catalog-card-media iframe {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Play-иконка центрированная */
+.video-slider .play-circle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.95);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  font-weight:700;
+  color: #111;
+  pointer-events: none; /* чтобы клик шел на .catalog-card-media */
+}
+
+/* тело карточки под превью */
+.video-slider .catalog-card-body {
+  margin-top: 16px;
+  padding-bottom: 6px;
+}
+
+/* заголовок и категория стиль как в рубрике */
+.video-slider .catalog-card-category {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #777;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.video-slider .catalog-card-title {
+  font-size: 16px;
+  font-weight:700;
+  margin:0;
+}
+
+/* стрелки у этого блока — чтобы визуально совпадали */
+.video-slider + .home-new-progress { margin-top: 18px; }
+
+/* если в другом месте стрелки показываются справа — ничего менять не нужно,
+   но на всякий случай делаем кнопки небольшими */
+.video-slider .slider-arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background: transparent;
+  border: none;
+}
+
+/* прогрессбар - совпадает с остальными, но убедимся в стилях */
+.home-new-progress__bar {
+  height: 2px;
+  background: #eee;
+  position: relative;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.home-new-progress__fill {
+  height: 100%;
+  background: #111;
+  width: 0%;
+  transition: width 300ms ease;
+}

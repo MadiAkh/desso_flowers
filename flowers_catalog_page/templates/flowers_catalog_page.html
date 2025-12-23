@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Каталог — DÉSSO FLOWERS{% endblock %}
+
+{# подключим свой css, но сохраним базовые стилі #}
+{% block extra_css %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'flowers_catalog_page/css/flowers_catalog_page.css' %}">
+{% endblock %}
+
+
+{% block hero %}
+<section class="hero hero--catalog" id="catalogHero">
+  <div class="slider" id="catalogHeroSlider">
+
+    {% for slide in catalog_slides %}
+      <section class="slide">
+        <video autoplay muted playsinline loop
+              {% if slide.poster %}poster="{{ slide.poster.url }}"{% endif %}>
+          <source src="{{ slide.video.url }}" type="video/mp4">
+        </video>
+
+        <div class="gradient"></div>
+        <div class="caption">
+          {% if slide.kicker %}
+            <div class="kicker">{{ slide.kicker }}</div>
+          {% endif %}
+
+          <h1 class="title">{{ slide.title }}</h1>
+
+          {% if slide.subtitle %}
+            <p class="subtitle">{{ slide.subtitle }}</p>
+          {% endif %}
+
+          {% if slide.cta_text %}
+            <a href="{{ slide.cta_link }}" class="cta">
+              {{ slide.cta_text }}
+            </a>
+          {% endif %}
+        </div>
+      </section>
+    {% endfor %}
+
+  </div>
+
+  <div class="nav-zones">
+    <button id="catalogHeroPrev"></button>
+    <button id="catalogHeroNext"></button>
+  </div>
+
+  <div class="dots" id="catalogHeroDots"></div>
+</section>
+{% endblock hero %}
+
+{% block content %}
+
+<section class="catalog" id="catalog">
+  <div class="catalog-header container">
+    <div class="catalog-tabs">
+      {# Вкладка "Все букеты" #}
+      <button class="catalog-tab is-active" data-target="tab-all" type="button">
+        Все букеты
+        {% if products_all %}
+          <span class="catalog-tab-count">({{ products_all|length }})</span>
+        {% endif %}
+      </button>
+
+      {# Остальные вкладки — коллекции из БД #}
+      {% for collection in collections %}
+        <button class="catalog-tab" data-target="tab-{{ collection.id }}" type="button">
+          {{ collection.name }}
+          {% with count=collection.products.count %}
+            {% if count %}
+              <span class="catalog-tab-count">({{ count }})</span>
+            {% endif %}
+          {% endwith %}
+        </button>
+      {% endfor %}
+    </div>
+
+    <button class="catalog-filter-toggle" type="button">
+      ФИЛЬТР
+    </button>
+  </div>
+
+  <div class="catalog-tabs-content container">
+
+    {# ===== ВКЛАДКА "ВСЕ БУКЕТЫ" ===== #}
+    <div class="catalog-grid is-active" id="tab-all">
+      {% for product in products_all|slice:":12" %}
+        <article class="catalog-card {% if forloop.first %}catalog-card--large{% endif %}">
+          <button class="catalog-card-fav" type="button" aria-label="Добавить в избранное"></button>
+
+          <a href="#" class="catalog-card-media">
+            {% if product.media_type == "image" %}
+              <img src="{{ product.file.url }}" alt="{{ product.name }}">
+            {% else %}
+              <video muted playsinline loop>
+                <source src="{{ product.file.url }}" type="video/mp4">
+              </video>
+            {% endif %}
+
+            {% if not product.is_active %}
+              <span class="catalog-card-badge catalog-card-badge--out">НЕТ В НАЛИЧИИ</span>
+            {% elif product.is_new %}
+              <span class="catalog-card-badge catalog-card-badge--new">NEW</span>
+            {% endif %}
+          </a>
+
+          <div class="catalog-card-body">
+            <div class="catalog-card-category">
+              {{ product.description }}
+            </div>
+            <h3 class="catalog-card-title">{{ product.name }}</h3>
+
+            <div class="catalog-card-footer">
+              <div class="catalog-card-price">
+                {{ product.price }} ₸
+              </div>
+              <button class="catalog-card-add" type="button" aria-label="Добавить в корзину"></button>
+            </div>
+          </div>
+        </article>
+      {% empty %}
+        <p class="catalog-empty">Товары пока не добавлены.</p>
+      {% endfor %}
+
+      {# если товаров больше 12 — тут потом можно прикрутить слайдер/«показать ещё» #}
+      {% if products_all|length > 12 %}
+        <button class="catalog-more" data-source="all" type="button">
+          Показать ещё
+        </button>
+      {% endif %}
+    </div>
+
+    {# ===== ОТДЕЛЬНЫЕ ВКЛАДКИ ДЛЯ КАЖДОЙ КОЛЛЕКЦИИ ===== #}
+    {% for collection in collections %}
+      <div class="catalog-grid" id="tab-{{ collection.id }}">
+        {% for product in collection.products.all|slice:":12" %}
+          <article class="catalog-card {% if forloop.first %}catalog-card--large{% endif %}">
+            <button class="catalog-card-fav" type="button" aria-label="Добавить в избранное"></button>
+
+            <a href="#" class="catalog-card-media">
+              {% if product.media_type == "image" %}
+                <img src="{{ product.file.url }}" alt="{{ product.name }}">
+              {% else %}
+                <video muted playsinline loop>
+                  <source src="{{ product.file.url }}" type="video/mp4">
+                </video>
+              {% endif %}
+
+              {% if not product.is_active %}
+                <span class="catalog-card-badge catalog-card-badge--out">НЕТ В НАЛИЧИИ</span>
+              {% elif product.is_new %}
+                <span class="catalog-card-badge catalog-card-badge--new">NEW</span>
+              {% endif %}
+            </a>
+
+            <div class="catalog-card-body">
+              <div class="catalog-card-category">
+                {{ product.description }}
+              </div>
+              <h3 class="catalog-card-title">{{ product.name }}</h3>
+
+              <div class="catalog-card-footer">
+                <div class="catalog-card-price">
+                  {{ product.price }} ₸
+                </div>
+                <button class="catalog-card-add" type="button" aria-label="Добавить в корзину"></button>
+              </div>
+            </div>
+          </article>
+        {% empty %}
+          <p class="catalog-empty">В этой коллекции пока нет товаров.</p>
+        {% endfor %}
+
+        {% if collection.products.count > 12 %}
+          <button class="catalog-more" data-source="collection-{{ collection.id }}" type="button">
+            Показать ещё
+          </button>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script async src="{% static 'base_page/js/hero.js' %}"></script>
+  <script async src="{% static 'base_page/js/header.js' %}"></script>
+  ...
+  <script async src="{% static 'flowers_catalog_page/js/catalog_hero.js' %}"></script>
+  <script async src="{% static 'base_page/js/stories.js' %}"></script>
+  <script async src="{% static 'flowers_catalog_page/js/flowers_catalog_page.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  {% load static %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}DÉSSO FLOWERS{% endblock %}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'base_page/css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'base_page/css/header.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  {% block header %}
+    <header class="site-header" id="siteHeader">
+      <div class="header-top">
+          <div class="header-actions-spacer"></div>
+
+          <a href="/" class="logo">DÉSSO FLOWERS ®</a>
+
+          <div class="header-actions">
+              <a href="#" class="action-btn" aria-label="Избранное">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+              </a>
+              <a href="#" class="action-btn" aria-label="Личный кабинет">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              </a>
+              <a href="#" class="action-btn" aria-label="Корзина">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+              </a>
+          </div>
+      </div>
+      
+      <div class="header-bottom" id="headerBottom">
+        <nav class="nav-row">
+          
+          <div class="dropdown">
+            <a href="#" class="dropbtn">Каталог</a> 
+            <div class="dropdown-content">
+              <a href="{% url 'catalog_page' %}">Коллекции DÉSSO</a>
+              <a href="#">Клубника в шоколаде</a>
+            </div>
+          </div>
+
+          <div class="dropdown">
+            <a href="#" class="dropbtn">Магазины</a> 
+            <div class="dropdown-content">
+              <a href="#">Алматы</a>
+              <a href="#">Астана</a>
+              <a href="#">Караганда</a>
+              <a href="#">Шымкент</a>
+              <a href="#">Семей</a>
+              <a href="#">Атырау</a>
+              <a href="#">Каскелен</a>
+              <a href="#">Тараз</a>
+              <a href="#">Актау</a>
+              <a href="#">Талдыкорган</a>
+            </div>
+          </div>
+
+          <div class="dropdown">
+            <a href="#" class="dropbtn">Контакты</a> 
+            <div class="dropdown-content">
+              <a href="#">Адреса магазиинов</a>
+              <a href="https://api.whatsapp.com/send?phone=77007077701">Служба поддержки</a>
+            </div>
+          </div>
+
+        </nav>
+      </div>
+    </header>
+  {% endblock header %}
+
+  {% block hero %}
+      <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="slider" id="heroSlider">
+
+      {% for slide in slides %}
+        <section class="slide" data-idx="{{ forloop.counter0 }}">
+          <video autoplay muted playsinline {% if slide.poster %}poster="{{ slide.poster.url }}"{% endif %}>
+            <source src="{{ slide.video.url }}" type="video/mp4">
+          </video>
+          <div class="gradient"></div>
+          <div class="caption">
+            {% if slide.kicker %}<div class="kicker">{{ slide.kicker }}</div>{% endif %}
+            <h1 class="title">{{ slide.title }}</h1>
+            {% if slide.subtitle %}<p class="subtitle">{{ slide.subtitle }}</p>{% endif %}
+            {% if slide.cta_text %}
+              <a href="{{ slide.cta_link }}" class="cta">{{ slide.cta_text }}</a>
+            {% endif %}
+          </div>
+        </section>
+      {% endfor %}
+
+    </div>
+
+      <div class="nav-zones" aria-hidden="true">
+        <button class="prev" id="heroPrev"></button>
+        <button class="next" id="heroNext"></button>
+      </div>
+      <div class="dots" id="heroDots"></div>
+    </section>
+  {% endblock hero %}
+
+
+  {% block stories %}
+    <!-- ===== STORIES (preview circles) ===== -->
+    <section class="stories" aria-label="Сториз">
+      <div class="container">
+        <div class="track">
+          {% for story in stories %}
+            <button class="story" data-story="{{ story.id }}" type="button">
+              <div class="ring">
+                <div class="circle">
+                  <div class="inner">
+                    <img src="{{ story.cover_image.url }}" alt="{{ story.label }}">
+                  </div>
+                </div>
+              </div>
+              <div class="label">{{ story.label }}</div>
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ===== STORIES MODAL ===== -->
+    <div class="stories-modal" id="storiesModal" aria-hidden="true">
+      <div class="stories-backdrop"></div>
+
+      <div class="stories-frame" role="dialog" aria-modal="true" aria-label="Истории">
+        <div class="stories-progress" id="storiesProgress"></div>
+        <div class="stories-media" id="storiesMedia"></div>
+        <button class="stories-zone left"  id="storiesPrev" aria-label="Назад"></button>
+        <button class="stories-zone right" id="storiesNext" aria-label="Дальше"></button>
+        <button class="stories-close" id="storiesClose" aria-label="Закрыть">✕</button>
+      </div>
+    </div>
+  {% endblock stories %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+  
+  <!-- Floating CTA (Contact button) -->
+  <a href="https://api.whatsapp.com/send?phone=77007077701" class="floating-consult">
+      Связаться с консультантом
+  </a>
+    <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="container foot">
+      <div>
+        <h4>DÉSSO FLOWERS ®</h4>
+        <p>Источник гормонов счастья. Цветы и подарки 24/7.</p>
+      </div>
+      <div>
+        <h4>Навигация</h4>
+        <ul>
+          <li><a href="#">Каталог</a></li>
+          <li><a href="#">Доставка</a></li>
+          <li><a href="#">Контакты</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Компания</h4>
+        <ul>
+          <li><a href="#">О нас</a></li>
+          <li><a href="#">Вакансии</a></li>
+          <li><a href="#">Отзывы</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Соцсети</h4>
+        <ul>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">WhatsApp</a></li>
+          <li><a href="#">Telegram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="copyright">{{ now|date:"Y" }} DESSO Flowers ® </div>
+  </footer>
+
+  <!-- Скрипты страницы -->
+  {% block scripts %}
+  <script src="{% static 'base_page/js/hero.js' %}"></script>
+  <script src="{% static 'base_page/js/header.js' %}"></script>
+  <script>
+    const STORIES = {
+      {% for story in stories %}
+        "{{ story.id }}": [
+          {% for item in story.items.all %} 
+            {
+              type: "{{ item.media_type }}",
+              src: "{{ item.file.url }}",
+              {% if item.poster %}poster: "{{ item.poster.url }}",{% endif %}
+              {% if item.duration %}duration: {{ item.duration }},{% endif %}
+
+              /* CTA-данные (обязательно экранируем текст для JS) */
+              {% if item.cta_enabled %}cta_enabled: true,{% else %}cta_enabled: false,{% endif %}
+              {% if item.cta_text %}cta_text: "{{ item.cta_text|escapejs }}",{% endif %}
+              {% if item.cta_link %}cta_link: "{{ item.cta_link }}",{% endif %}
+          },
+          {% endfor %}
+        ],
+      {% endfor %}
+    };
+  </script>
+  <script async src="{% static 'base_page/js/stories.js' %}"></script>
+  {% endblock %}
+
+</body>
+</html>
