@@ -34,18 +34,26 @@ img{max-width:100%;display:block}
 .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .hero .gradient{position:absolute;inset:0;background:
   linear-gradient(90deg,rgba(0,0,0,.55),rgba(0,0,0,.15),rgba(0,0,0,.55))}
-.hero .caption{
-  position:absolute;
-  left:8%;
-  top:50%;
-  transform:translateY(-50%);
-  color:#fff;
-  max-width:560px;
-  z-index:10; /* добавь эту строку */
+
+
+.hero .caption {
+  position: absolute;
+  /* Отодвигаем от левого края, чтобы не попадать в зону кнопки 'Назад' */
+  left: 12%; 
+  top: 50%;
+  transform: translateY(-50%);
+  color: #fff;
+  max-width: 560px;
+  /* Устанавливаем самый высокий приоритет над всеми слоями */
+  z-index: 100; 
+  /* Разрешаем клики по всему контейнеру капшена */
+  pointer-events: auto; 
 }
+
 .hero .kicker{letter-spacing:.18em;text-transform:uppercase;font-size:12px;opacity:.9;margin-bottom:6px}
 .hero .title{font-family:"Playfair Display",serif;font-weight:700;font-size:48px;line-height:1.05;margin:0 0 14px}
 .hero .subtitle{opacity:.95;margin-bottom:18px}
+
 .hero .cta {
   display: inline-block;
   padding: 14px 32px;
@@ -57,12 +65,14 @@ img{max-width:100%;display:block}
   animation: gradientFlow 6s ease infinite;
   box-shadow: 0 4px 15px rgba(123, 44, 191, 0.5);
   transition: transform 0.3s ease;
+  
+  /* Важно: Удаляем старые z-index 11 и 25, ставим один четкий */
+  position: relative;
+  z-index: 110; 
+  pointer-events: auto;
+  cursor: pointer;
 }
 
-.hero .cta{
-  position:relative;
-  z-index:11;
-}
 .hero .cta:hover {
   transform: scale(1.06);
 }
@@ -72,29 +82,42 @@ img{max-width:100%;display:block}
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-.hero .nav-zones{
-  position:absolute;
-  inset:0;
-  display:flex;
-  justify-content:space-between;
-  pointer-events:none; /* важное изменение */
-  z-index:5;
+
+.hero .nav-zones {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-between;
+  /* Контейнер полностью игнорирует клики, пропуская их к кнопке */
+  pointer-events: none; 
+  z-index: 50; 
 }
-.hero .nav-zones button{
-  appearance:none;
-  background:transparent;
-  border:0;
-  width:35%;
-  cursor:pointer;
-  pointer-events:auto; /* кликабельны только стрелки по бокам */
+
+.hero .nav-zones button {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  /* Уменьшаем ширину до 10%, чтобы зоны переключения были только по самым краям */
+  width: 10%; 
+  height: 100%;
+  cursor: pointer;
+  /* Сами кнопки перехватывают клик только в своих 10% */
+  pointer-events: auto; 
 }
+
+
 .hero .dots{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:8px}
 .hero .dots button{width:10px;height:10px;border-radius:50%;border:0;background:#ffffff55}
 .hero .dots button.active{background:#fff}
 
-@media (max-width:920px){
-  .hero{height:65dvh;min-height:320px}
-  .hero .title{font-size:34px}
+@media (max-width: 600px) {
+  .hero .caption {
+    left: 5%;
+    max-width: 90%;
+  }
+  .hero .nav-zones button {
+    width: 8%;
+  }
 }
 
 /* ===== STORIES (центр + «кольца») ===== */
