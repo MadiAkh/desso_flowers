@@ -22,8 +22,8 @@
       </div>
       <div class="header-bottom" id="headerBottom">
         <nav class="nav-row">
-          <a href="{% url 'catalog_page' %}">Коллекции</a>
-          <a href="#">Клубника</a>
+          <a href="{% url 'catalog_page' %}">Каталог цветов</a>
+          <a href="#">Клубника в шоколаде</a>
           <a href="#">Магазины</a>
           <a href="#">Контакты</a>
         </nav>
@@ -113,7 +113,7 @@
   <footer>
     <div class="container foot">
       <div>
-        <h4>DESSO</h4>
+        <h4>DÉSSO FLOWERS ®</h4>
         <p>Источник гормонов счастья. Цветы и подарки 24/7.</p>
       </div>
       <div>
@@ -158,7 +158,12 @@
               src: "{{ item.file.url }}",
               {% if item.poster %}poster: "{{ item.poster.url }}",{% endif %}
               {% if item.duration %}duration: {{ item.duration }},{% endif %}
-            },
+
+              /* CTA-данные (обязательно экранируем текст для JS) */
+              {% if item.cta_enabled %}cta_enabled: true,{% else %}cta_enabled: false,{% endif %}
+              {% if item.cta_text %}cta_text: "{{ item.cta_text|escapejs }}",{% endif %}
+              {% if item.cta_link %}cta_link: "{{ item.cta_link }}",{% endif %}
+          },
           {% endfor %}
         ],
       {% endfor %}

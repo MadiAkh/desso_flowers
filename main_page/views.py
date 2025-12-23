@@ -4,8 +4,17 @@ from flowers_catalog_page.models import Product
 
 
 def home_page(request):
-    slides = HeroSlide.objects.filter(is_active=True).order_by("order")
-    stories = Story.objects.filter(is_active=True).order_by("order")
+
+    slides = (
+        HeroSlide.objects
+        .filter(is_active=True)
+        .order_by("order")
+        )
+    stories = (
+        Story.objects
+        .filter(is_active=True)
+        .order_by("order")
+        )
 
     new_products = (
         Product.objects
