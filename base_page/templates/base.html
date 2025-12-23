@@ -20,15 +20,44 @@
       <div class="header-top">
         <a href="/" class="logo">DÉSSO FLOWERS ®</a>
       </div>
+      
       <div class="header-bottom" id="headerBottom">
         <nav class="nav-row">
-          <a href="{% url 'catalog_page' %}">Каталог цветов</a>
-          <a href="#">Клубника в шоколаде</a>
-          <a href="#">Магазины</a>
-          <a href="#">Контакты</a>
+          
+          <div class="dropdown">
+            <a href="#" class="dropbtn">Каталог</a> 
+            <div class="dropdown-content">
+              <a href="{% url 'catalog_page' %}">Каталог цветов</a>
+              <a href="#">Клубника в шоколаде</a>
+            </div>
+          </div>
+
+          <div class="dropdown">
+            <a href="#" class="dropbtn">Магазины</a> 
+            <div class="dropdown-content">
+              <a href="#">Алматы</a>
+              <a href="#">Астана</a>
+              <a href="#">Караганда</a>
+              <a href="#">Шымкент</a>
+              <a href="#">Семей</a>
+              <a href="#">Атырау</a>
+              <a href="#">Каскелен</a>
+              <a href="#">Тараз</a>
+              <a href="#">Актау</a>
+              <a href="#">Талдыкорган</a>
+            </div>
+          </div>
+
+          <div class="dropdown">
+            <a href="#" class="dropbtn">Контакты</a> 
+            <div class="dropdown-content">
+              <a href="#">Адреса магазиинов</a>
+              <a href="https://api.whatsapp.com/send?phone=77007077701">Связаться с DÉSSO</a>
+            </div>
+          </div>
+
         </nav>
       </div>
-
     </header>
   {% endblock header %}
 
