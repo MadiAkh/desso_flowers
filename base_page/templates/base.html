@@ -18,7 +18,31 @@
   {% block header %}
     <header class="site-header" id="siteHeader">
       <div class="header-top">
-          <div class="header-actions-spacer"></div>
+          <div class="header-settings">
+            <div class="dropdown" id="cityDropdown">
+                <div class="action-btn dropbtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: -2px;"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <span class="btn-label" id="currentCity" style="margin-left: 5px; font-size: 13px;">АЛМАТЫ</span>
+                </div>
+                <div class="dropdown-content">
+                    <a href="#" data-value="Алматы">Алматы</a>
+                    <a href="#" data-value="Астана">Астана</a>
+                    <a href="#" data-value="Шымкент">Шымкент</a>
+                    <a href="#" data-value="Караганда">Караганда</a>
+                </div>
+            </div>
+
+            <div class="dropdown" id="langDropdown">
+                <div class="action-btn dropbtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: -1px;"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                    <span class="btn-label" id="currentLang" style="margin-left: 5px; font-size: 13px;">RU</span>
+                </div>
+                <div class="dropdown-content">
+                    <a href="#" data-value="RU">RU</a>
+                    <a href="#" data-value="KZ">KZ</a>
+                </div>
+            </div>
+        </div>
 
           <a href="/" class="logo">DÉSSO FLOWERS ®</a>
 
