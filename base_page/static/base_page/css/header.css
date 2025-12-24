@@ -463,3 +463,97 @@
     transform: translateX(-50%) translateY(0);
   }
 }
+
+
+/* 1. Выравнивание левого блока */
+.header-settings {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+}
+
+/* 2. Текст рядом с иконками */
+.btn-label {
+    font-size: 13px;
+    font-weight: 500;
+    margin-left: 6px;
+    font-family: 'Inter', sans-serif;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+/* 3. ФИКСАЦИЯ ВЫПАДАЮЩЕГО СПИСКА (для верхних иконок) */
+/* Убираем "двойное появление": позиционируем строго от левого края кнопки */
+.header-dropdown .dropdown-content {
+    left: 0 !important;
+    transform: none !important;
+    margin-top: 0; /* Убираем щель, чтобы не терялся hover */
+    padding-top: 10px; /* Компенсируем отсутствие отступа для красоты */
+}
+
+/* Сдвигаем стрелочку, чтобы она была под иконкой, а не по центру экрана */
+.header-dropdown .dropdown-content::before {
+    left: 20px !important;
+    transform: none !important;
+}
+
+/* 4. СТАБИЛЬНОСТЬ (Hover Bridge) */
+/* Создаем невидимую зону между кнопкой и списком, чтобы меню не закрывалось при движении мыши */
+.header-dropdown .dropdown-content::after {
+    content: "";
+    position: absolute;
+    top: -20px;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: transparent;
+}
+
+/* Ограничение ширины для языка */
+.dropdown-content.mini {
+    min-width: 80px;
+}
+
+/* 5. АДАПТИВНОСТЬ */
+@media (max-width: 850px) {
+    .btn-label { display: none; }
+    .header-settings { gap: 12px; }
+}
+
+/* Специфичные правки для выбора города и языка */
+.header-settings .dropdown-content {
+    min-width: 150px;       /* Уменьшаем ширину (было 220px) */
+    left: 0 !important;      /* Выравниваем по левому краю иконки */
+    transform: none !important; /* Отменяем общее центрирование */
+    margin-top: 0;          /* Убираем щель, чтобы не терялся ховер */
+}
+
+/* Компактный список для выбора языка */
+.header-settings #langDropdown .dropdown-content {
+    min-width: 70px;        /* Еще уже для RU/KZ */
+}
+
+/* Сдвигаем треугольник-стрелочку под иконку */
+.header-settings .dropdown-content::before {
+    left: 15px !important;
+    transform: none !important;
+}
+
+/* Стабильность перехода: невидимый фон под кнопками */
+.header-settings .dropdown {
+    padding-bottom: 10px;   /* Создает "зону безопасности" под иконкой */
+    margin-bottom: -10px;
+}
+
+/* Чтобы при навигации от города к языку меню работало плавно */
+.header-settings {
+    gap: 25px;              /* Чуть увеличим расстояние для визуальной чистоты */
+}
+
+/* Убираем лишние анимации, если они вызывали "двойной прыжок" */
+.header-settings .dropdown:hover .dropdown-content {
+    display: block;
+    animation: fadeInDown 0.2s ease-out; /* Более быстрая и четкая анимация */
+}
