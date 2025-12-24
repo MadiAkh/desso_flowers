@@ -299,19 +299,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { passive: true });
 
     // Wheel handling: translate vertical wheel -> horizontal scroll while mouse over scroller
-    scroller.addEventListener('wheel', function (e) {
-      // only intercept when horizontal scrolling is possible
-      const maxScroll = scroller.scrollWidth - scroller.clientWidth;
-      const atStart = scroller.scrollLeft <= 0;
-      const atEnd = scroller.scrollLeft >= maxScroll - 1;
+    scroller.addEventListener('wheel', (e) => {
+        // 1. Проверяем, есть ли вообще куда скроллить горизонтально
+        const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+        if (maxScroll <= 0) return;
 
-      // if vertical wheel, prevent default and scroll horizontally
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        e.preventDefault();
-        // small multiplier to feel natural
-        scroller.scrollLeft += e.deltaY;
-        updateProgress();
-      }
+        const isAtStart = scroller.scrollLeft <= 1;
+        const isAtEnd = scroller.scrollLeft >= maxScroll - 1;
+        const isVertical = Math.abs(e.deltaY) > Math.abs(e.deltaX);
+
+        // 2. Если пользователь скроллит колесиком (вертикально)
+        if (isVertical) {
+            // Если мы крутим ВНИЗ и уже в КОНЦЕ списка — НЕ блокируем скролл страницы
+            if (e.deltaY > 0 && isAtEnd) return;
+            
+            // Если мы крутим ВВЕРХ и уже в НАЧАЛЕ списка — НЕ блокируем скролл страницы
+            if (e.deltaY < 0 && isAtStart) return;
+
+            // В остальных случаях (мы внутри диапазона) — прокручиваем слайдер и СТОПИМ страницу
+            e.preventDefault();
+            scroller.scrollLeft += e.deltaY;
+            updateProgress();
+        }
     }, { passive: false });
 
     // touch fallback: for some browsers pointer events may not be enabled; these are safe no-op if pointer events exist
