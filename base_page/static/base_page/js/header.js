@@ -25,4 +25,25 @@ window.addEventListener("scroll", () => {
 
     lastScroll = current;
 });
-    
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    function setupDropdown(dropdownId, labelId) {
+        const container = document.getElementById(dropdownId);
+        const label = document.getElementById(labelId);
+        
+        if (container && label) {
+            container.querySelectorAll('.dropdown-content a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    // Если это просто выбор (без перехода по ссылке)
+                    if (link.getAttribute('href') === '#') {
+                        e.preventDefault();
+                        label.textContent = link.getAttribute('data-value');
+                    }
+                });
+            });
+        }
+    }
+    setupDropdown('cityDropdown', 'currentCity');
+    setupDropdown('langDropdown', 'currentLang');
+});
