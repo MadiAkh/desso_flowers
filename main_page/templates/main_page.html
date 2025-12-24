@@ -50,11 +50,27 @@
                       <source src="{{ product.file.url }}" type="video/mp4">
                     </video>
                   {% endif %}
+
+                  <div class="card-actions">
+                    <button class="btn-action btn-wishlist" title="В избранное" onclick="event.preventDefault(); /* логика */">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                      </svg>
+                    </button>
+                    <button class="btn-action btn-add-cart" title="В корзину" onclick="event.preventDefault(); /* логика */">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                      </svg>
+                    </button>
+                  </div>
+
                   {% if not product.is_active %}
-                  <span class="catalog-card-badge catalog-card-badge--out">НЕТ В НАЛИЧИИ</span>
-                {% elif product.is_new %}
-                  <span class="catalog-card-badge catalog-card-badge--new">NEW</span>
-                {% endif %}
+                    <span class="catalog-card-badge catalog-card-badge--out">НЕТ В НАЛИЧИИ</span>
+                  {% elif product.is_new %}
+                    <span class="catalog-card-badge catalog-card-badge--new">NEW</span>
+                  {% endif %}
                 </a>
                 <div class="catalog-card-body">
                   <div class="catalog-card-category">{{ product.description }}</div>
@@ -111,12 +127,27 @@
 
               <a href="#" class="catalog-card-media">
                 {% if product.media_type == "image" %}
-                <img src="{{ product.file.url }}" alt="{{ product.name }}">
+                  <img src="{{ product.file.url }}" alt="{{ product.name }}">
                 {% else %}
-                <video muted playsinline loop>
-                  <source src="{{ product.file.url }}" type="video/mp4">
-                </video>
+                  <video muted playsinline loop>
+                    <source src="{{ product.file.url }}" type="video/mp4">
+                  </video>
                 {% endif %}
+
+                <div class="card-actions">
+                  <button class="btn-action btn-wishlist" title="В избранное" onclick="event.preventDefault();">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                  </button>
+                  <button class="btn-action btn-add-cart" title="В корзину" onclick="event.preventDefault();">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                      <line x1="3" y1="6" x2="21" y2="6"></line>
+                      <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                  </button>
+                </div>
               </a>
 
               <div class="catalog-card-body">

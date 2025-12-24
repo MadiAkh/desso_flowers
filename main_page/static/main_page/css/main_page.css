@@ -28,10 +28,18 @@
 
 .home-new-scroller {
   overflow-x: auto;
-  overflow-y: visible;
-  padding-bottom: 10px;          /* небольшой запас, чтобы тень карточек не обрезалась */
-  scrollbar-width: none;         /* Firefox */
+  overflow-y: hidden; /* Измените с visible на hidden, чтобы исключить паразитный вертикальный скролл */
+  padding-bottom: 10px;
+  scrollbar-width: none;
+  
+  /* ВАЖНО: разрешает скролл страницы по вертикали, но блокирует его при горизонтальном сдвиге */
+  touch-action: pan-y; 
+  
+  /* Делает прокрутку инерционной и плавной */
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
+
 
 .home-new-scroller::-webkit-scrollbar {
   display: none;                 /* Chrome, Safari */
@@ -445,12 +453,17 @@
 }
 
 .video-slider .catalog-card-media {
-  position: relative;
-  display: block;
-  overflow: hidden;
-  border-radius: 8px;
-  flex: 0 0 auto;
-  height: 400px; /* большой формат как в рубриках */
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: 8px;
+    flex: 0 0 auto;
+    height: 400px;
+    
+    /* ДОБАВЬТЕ ЭТО СЮДА ТОЖЕ */
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0);
 }
 
 @media (max-width: 1100px) {
@@ -566,4 +579,109 @@
   background: #111;
   width: 0%;
   transition: width 300ms ease;
+}
+
+.js-slider [data-scroller-inner].is-dragging {
+    scroll-behavior: auto;
+    cursor: grabbing;
+    user-select: none;
+}
+
+
+/* Контейнер для кнопок */
+.catalog-card-media {
+    position: relative;
+    display: block;
+    aspect-ratio: 3 / 4;
+    border-radius: 12px;
+    overflow: hidden;
+    
+    /* Эти 3 строки фиксируют скругление при анимации */
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0); 
+    
+    background: #f5f5f5;
+}
+
+/* Плавный зум картинки */
+.catalog-card-media img, 
+.catalog-card-media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    /* Увеличиваем время с 0.3s до 0.6s и добавляем мягкую кривую */
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: transform;
+}
+
+/* Эффект при наведении */
+.catalog-card:hover .catalog-card-media img,
+.catalog-card:hover .catalog-card-media video {
+    transform: scale(1.08); /* Чуть уменьшили масштаб для мягкости */
+}
+
+.card-actions {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 10;
+    opacity: 0;
+    transform: translateX(10px);
+    /* Заменяем на более мягкую анимацию */
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Показываем кнопки при наведении на карточку */
+.catalog-card:hover .card-actions {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Общий стиль кнопок */
+.btn-action {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+}
+
+.btn-action:hover {
+    background: #111;
+    color: #fff;
+    transform: scale(1.1);
+}
+
+/* Состояние "активно/в избранном" (для JS) */
+.btn-wishlist.active {
+    color: #e74c3c;
+}
+.btn-wishlist.active svg {
+    fill: #e74c3c;
+}
+
+/* Адаптив для мобильных: всегда показывать кнопки */
+@media (max-width: 768px) {
+    .card-actions {
+        opacity: 1;
+        transform: translateX(0);
+        bottom: 8px;
+        right: 8px;
+    }
+    .btn-action {
+        width: 34px;
+        height: 34px;
+    }
 }
