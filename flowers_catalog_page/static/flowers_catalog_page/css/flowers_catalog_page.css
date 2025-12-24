@@ -341,3 +341,72 @@
 .catalog-card:hover .catalog-card-media video {
   transform: scale(1.06);
 }
+
+
+/* Контейнер для кнопок внутри медиа-блока */
+.catalog-card-media {
+    position: relative;
+}
+
+.card-actions {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 10;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Показываем кнопки при наведении на всю карточку */
+.catalog-card:hover .card-actions {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Общий стиль кнопок-кружков */
+.btn-action {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+    color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+}
+
+.btn-action svg {
+    width: 18px;
+    height: 18px;
+}
+
+.btn-action:hover {
+    background: #111;
+    color: #fff;
+    transform: scale(1.1);
+}
+
+/* Адаптив для мобильных: кнопки видны всегда */
+@media (max-width: 768px) {
+    .card-actions {
+        opacity: 1;
+        transform: translateX(0);
+        bottom: 8px;
+        right: 8px;
+    }
+    .btn-action {
+        width: 34px;
+        height: 34px;
+    }
+}
+
+/* Удалите старые стили .catalog-card-fav и .catalog-card-add, чтобы они не конфликтовали */
+.catalog-card-fav, .catalog-card-add { display: none; }
