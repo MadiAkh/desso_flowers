@@ -122,8 +122,35 @@ img{max-width:100%;display:block}
 
 /* ===== STORIES (центр + «кольца») ===== */
 .stories{background:#fff;padding:18px 0 6px;border-bottom:1px solid #eee}
-.stories .track{display:flex;justify-content:center;gap:26px}
-.story{flex:0 0 auto;text-align:center;color:#555;font-size:13px}
+/* Внеси правки в .stories .track */
+.stories .track {
+  display: flex;
+  gap: 26px;
+  overflow-x: auto; /* Позволяет листать */
+  padding: 10px 20px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; /* Плавность на iOS */
+  justify-content: center;
+}
+/* Скрой полосу прокрутки, чтобы было чисто */
+.stories .track::-webkit-scrollbar {
+  display: none;
+}
+
+.story {
+  flex: 0 0 auto;
+  display: flex;         /* Добавлено */
+  flex-direction: column; /* Добавлено */
+  align-items: center;    /* Добавлено: центрирует всё внутри кнопки по горизонтали */
+  text-align: center;
+  color: #555;
+  font-size: 13px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;             /* Убираем дефолтные отступы кнопки */
+}
+
 .story .ring {
   width: 90px;
   height: 90px;
@@ -155,7 +182,13 @@ img{max-width:100%;display:block}
   object-fit: cover;
   border-radius: 50%;
 }
-.story .label{margin-top:6px}
+
+.story .label {
+  margin-top: 8px;
+  width: 100%;           /* Чтобы текст мог занимать всю ширину кнопки */
+  line-height: 1.2;
+}
+
 .story:hover .inner{transform:scale(1.03);transition:.2s}
 
 /* ===== Stories modal (lightbox) ===== */
@@ -241,12 +274,34 @@ img{max-width:100%;display:block}
 .stories-zone.right{ left:50%; }
 
 /* close */
-.stories-close{
-  position:absolute; top:16px; right:calc(50% - min(420px, 92vw)/2);
-  transform:translateX(50%);
-  background:rgba(0,0,0,.5); color:#fff; border:0;
-  width:36px; height:36px; border-radius:50%; cursor:pointer;
+.stories-close {
+  position: absolute;
+  top: 16px;
+  /* Увеличиваем отступ от края контента. 
+     Было: calc(50% - контент/2)
+     Стало: вычитаем еще 40-50px, чтобы отодвинуть вправо */
+  right: calc(50% - min(420px, 92vw)/2 - 50px); 
+  
+  /* Убираем transform, так как мы теперь точнее позиционируем через right, 
+     либо ставим translateX(0), чтобы не путаться */
+  transform: none; 
+  
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  border: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
   backdrop-filter: blur(2px);
+  z-index: 1100; /* Убедимся, что он выше всех элементов */
+}
+
+@media (max-width: 600px) {
+  .stories-close {
+    right: 15px; /* На мобилках просто фиксированный отступ от края экрана */
+    top: 15px;
+  }
 }
 
 /* превью-круги чуть кликабельнее */
