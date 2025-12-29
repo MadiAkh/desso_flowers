@@ -161,8 +161,7 @@
       <div class="catalog-grid" id="tab-{{ collection.id }}">
         {% for product in collection.products.all|slice:":12" %}
           <article class="catalog-card {% if forloop.first %}catalog-card--large{% endif %}">
-            <button class="catalog-card-fav" type="button" aria-label="Добавить в избранное"></button>
-
+            
             <a href="#" class="catalog-card-media">
               {% if product.media_type == "image" %}
                 <img src="{{ product.file.url }}" alt="{{ product.name }}">
@@ -172,6 +171,21 @@
                 </video>
               {% endif %}
 
+              <div class="card-actions">
+                <button class="btn-action btn-wishlist" type="button" aria-label="В избранное">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                </button>
+                <button class="btn-action btn-cart" type="button" aria-label="В корзину">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                  </svg>
+                </button>
+              </div>
+
               {% if not product.is_active %}
                 <span class="catalog-card-badge catalog-card-badge--out">НЕТ В НАЛИЧИИ</span>
               {% elif product.is_new %}
@@ -180,28 +194,11 @@
             </a>
 
             <div class="catalog-card-body">
-              <div class="catalog-card-category">
-                {{ product.description }}
-              </div>
-              <h3 class="catalog-card-title">{{ product.name }}</h3>
-
-              <div class="catalog-card-footer">
-                <div class="catalog-card-price">
-                  {{ product.price }} ₸
-                </div>
-                <button class="catalog-card-add" type="button" aria-label="Добавить в корзину"></button>
-              </div>
+                ...
             </div>
           </article>
-        {% empty %}
-          <p class="catalog-empty">В этой коллекции пока нет товаров.</p>
         {% endfor %}
-
-        {% if collection.products.count > 12 %}
-          <button class="catalog-more" data-source="collection-{{ collection.id }}" type="button">
-            Показать ещё
-          </button>
-        {% endif %}
+        ...
       </div>
     {% endfor %}
 

@@ -148,14 +148,14 @@
   cursor: pointer;
 } */
 
-.catalog-card-fav::before {
+/* .catalog-card-fav::before {
   content: "♥";
   display: block;
   font-size: 10px;
   line-height: 20px;
   text-align: center;
   color: #d0d0d0;
-}
+} */
 
 /* медиа (фото/видео) */
 
