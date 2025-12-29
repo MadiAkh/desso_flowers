@@ -47,13 +47,16 @@
 
 
 .home-new-card {
-  flex: 0 0 280px;             /* базовая ширина карточки */
+  flex: 0 0 280px;
+  display: 0 0 280px;
+  width: 280px;
 }
 
 /* адаптация под широкие экраны */
 @media (min-width: 1440px) {
   .home-new-card {
-    flex-basis: 300px;
+    flex: 0 0 220px;
+    width: 220px;
   }
 }
 
@@ -93,10 +96,10 @@
 /* ===== ХИТЫ (стабильная CSS Grid реализация) ===== */
 .hits-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  /* 4 колонки одинакового размера */
+  grid-template-columns: repeat(4, 1fr); 
   gap: 28px;
   margin-top: 24px;
-  align-items: start;
 }
 
 /* карточка */
