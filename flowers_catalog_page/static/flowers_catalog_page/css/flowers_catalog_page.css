@@ -208,20 +208,29 @@
 /* бейджи NEW / НЕТ В НАЛИЧИИ */
 
 .catalog-card-badge {
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  border-radius: 2px;
-  font-weight: 500;
+    position: absolute; /* Абсолютное позиционирование относительно .catalog-card-media */
+    top: 12px;          /* Отступ сверху */
+    left: 12px;         /* Отступ слева */
+    z-index: 20;        /* Выше, чем видео и кнопки действий */
+    
+    padding: 6px 10px;  /* Внутренние отступы для красоты */
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 2px;
+    font-weight: 500;
 }
 
 .catalog-card-badge--new {
-  background: #ff6a3c;
+  background: #56348b;
   color: #fff;
 }
 
 .catalog-card-badge--out {
-  background: #ffffff;
-  color: #000;
+    background: rgba(255, 255, 255, 0.9);
+    color: #000;
 }
 
 /* текстовая часть */
