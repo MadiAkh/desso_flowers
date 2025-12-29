@@ -5,27 +5,33 @@ let lastScroll = 0;
 window.addEventListener("scroll", () => {
     const current = window.scrollY;
 
-    // Если немного прокрутил → шапка становится "стиковой"
     if (current > 40) {
-        header.classList.add("header--scrolled");
-        header.classList.add("header--compact");
+        header.classList.add("header--scrolled", "header--compact");
     } else {
-        header.classList.remove("header--scrolled");
-        header.classList.remove("header--compact");
+        header.classList.remove("header--scrolled", "header--compact");
     }
 
-    // Скролл вниз — спрятать нижнее меню
-    if (current > lastScroll && current > 120) {
+    // Скрываем только если мышь НЕ над хедером
+    if (current > lastScroll && current > 120 && !header.matches(':hover')) {
         header.classList.add("header--hidden");
-    }
-    // Скролл вверх — показать меню
-    else if (current < lastScroll) {
+    } else if (current < lastScroll) {
         header.classList.remove("header--hidden");
     }
 
     lastScroll = current;
 });
 
+// ПРИНУДИТЕЛЬНОЕ ПОКАЗАНИЕ ПРИ НАВЕДЕНИИ
+header.addEventListener("mouseenter", () => {
+    header.classList.remove("header--hidden");
+});
+
+// Возвращаем скрытие при уходе мыши, если страница прокручена вниз
+header.addEventListener("mouseleave", () => {
+    if (window.scrollY > 120) {
+        header.classList.add("header--hidden");
+    }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     function setupDropdown(dropdownId, labelId) {
@@ -35,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (container && label) {
             container.querySelectorAll('.dropdown-content a').forEach(link => {
                 link.addEventListener('click', (e) => {
-                    // Если это просто выбор (без перехода по ссылке)
                     if (link.getAttribute('href') === '#') {
                         e.preventDefault();
                         label.textContent = link.getAttribute('data-value');
