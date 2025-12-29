@@ -58,30 +58,51 @@
 <section class="catalog" id="catalog">
   <div class="catalog-header container">
     <div class="catalog-tabs">
-      {# Вкладка "Все букеты" #}
-      <button class="catalog-tab is-active" data-target="tab-all" type="button">
-        Все букеты
-        {% if products_all %}
-          <span class="catalog-tab-count">({{ products_all|length }})</span>
-        {% endif %}
-      </button>
-
-      {# Остальные вкладки — коллекции из БД #}
-      {% for collection in collections %}
-        <button class="catalog-tab" data-target="tab-{{ collection.id }}" type="button">
-          {{ collection.name }}
-          {% with count=collection.products.count %}
-            {% if count %}
-              <span class="catalog-tab-count">({{ count }})</span>
-            {% endif %}
-          {% endwith %}
+        {# Вкладка "Все букеты" #}
+        <button class="catalog-tab is-active" data-target="tab-all" type="button">
+            Все букеты
+            {% if products_all %}<span class="catalog-tab-count">({{ products_all|length }})</span>{% endif %}
         </button>
-      {% endfor %}
+
+        {# Коллекции #}
+        {% for collection in collections %}
+            <button class="catalog-tab" data-target="tab-{{ collection.id }}" type="button">
+                {{ collection.name }}
+                {% with count=collection.products.count %}
+                    {% if count %}<span class="catalog-tab-count">({{ count }})</span>{% endif %}
+                {% endwith %}
+            </button>
+        {% endfor %}
     </div>
 
-    <button class="catalog-filter-toggle" type="button">
-      ФИЛЬТР
-    </button>
+    <button class="catalog-filter-toggle" type="button">ФИЛЬТР</button>
+  </div>
+
+  <div class="filter-aside" id="filterAside">
+      <div class="filter-aside__overlay"></div>
+      <div class="filter-aside__content">
+          <div class="filter-aside__header">
+              <h3>Фильтры</h3>
+              <button class="filter-aside__close" id="filterClose">&times;</button>
+          </div>
+          <div class="filter-aside__body">
+              <div class="filter-group">
+                  <h4 class="filter-group__title">Цена (₸)</h4>
+                  <div class="price-inputs">
+                      <input type="number" id="priceMin" placeholder="От" min="0">
+                      <input type="number" id="priceMax" placeholder="До" min="0">
+                  </div>
+                  <div class="price-slider-container">
+                      <input type="range" id="priceRange" min="0" max="500000" step="1000">
+                  </div>
+              </div>
+          </div>
+          <div class="filter-aside__footer">
+              <button class="btn-filter btn-filter--apply" id="filterApply">Применить</button>
+              <button class="btn-filter btn-filter--reset" id="filterReset">Убрать фильтр</button>
+              <button class="btn-filter btn-filter--cancel" id="filterCancel">Отменить</button>
+          </div>
+      </div>
   </div>
 
   <div class="catalog-tabs-content container">
