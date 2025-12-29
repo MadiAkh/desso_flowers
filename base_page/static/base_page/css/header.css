@@ -119,7 +119,6 @@
 
 /* НИЖНЯЯ НАВИГАЦИЯ */
 .header-bottom {
-  /* БЛОК БЕЗ ЖЁСТКОЙ ВЫСОТЫ */
   margin-top: 6px;
   display: flex;
   justify-content: center;
@@ -129,9 +128,7 @@
   max-height: 40px;                    /* максимум, когда меню видно */
 
   transition:
-    max-height .35s ease,
-    opacity .35s ease,
-    transform .35s ease;
+    all .35s ease;
 }
 
 
@@ -139,7 +136,7 @@
 .header--hidden .header-bottom {
   max-height: 0;                       /* <- высота = 0, блок схлопнулся */
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateY(-20px);
   pointer-events: none;
 }
 
