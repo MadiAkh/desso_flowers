@@ -1,185 +1,155 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Константы
     const PAGE_SIZE = 12;
+
+    // Кэшируем элементы
+    const TABS_CONTAINER = document.querySelector(".catalog-tabs");
     const TABS = document.querySelectorAll(".catalog-tab");
     const GRIDS = document.querySelectorAll(".catalog-grid");
-    const tabsContainer = document.querySelector(".catalog-tabs");
+    const FILTER_ASIDE = document.getElementById('filterAside');
 
-    /* ===== 1. УМНЫЕ ВКЛАДКИ И СЕТКИ ===== */
-    TABS.forEach((tab) => {
-      tab.addEventListener("click", () => {
-        const targetId = tab.dataset.target;
+    /* --- ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ДЛЯ ПЛАВНОСТИ (Throttle) --- */
+    const rafUpdate = (fn) => {
+        let ticking = false;
+        return (...args) => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    fn(...args);
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        };
+    };
 
-        TABS.forEach((t) => t.classList.remove("is-active"));
-        tab.classList.add("is-active");
+    /* ===== 1. ТАБЫ И СЕТКИ (ОПТИМИЗИРОВАНО) ===== */
+    TABS.forEach(tab => {
+        tab.addEventListener("click", () => {
+            if (tab.classList.contains('is-active')) return;
 
-        GRIDS.forEach((grid) => {
-          // 1. Сначала убираем видимость и активный класс
-          grid.classList.remove("is-active");
-          grid.style.opacity = "0";
+            const targetId = tab.dataset.target;
 
-          // 2. Если это нужная сетка — включаем её
-          if (grid.id === targetId) {
-            grid.classList.add("is-active");
-            // Минимальная задержка, чтобы браузер успел отрисовать display: grid
-            setTimeout(() => {
-              grid.style.opacity = "1";
-            }, 50);
-          }
+            // 1. Смена табов
+            TABS.forEach(t => t.classList.toggle("is-active", t === tab));
+
+            // 2. Смена сеток через opacity и pointer-events (чтобы не фризило display)
+            GRIDS.forEach(grid => {
+                if (grid.id === targetId) {
+                    grid.classList.add("is-active");
+                    updateGridVisibility(grid);
+                } else {
+                    grid.classList.remove("is-active");
+                }
+            });
         });
-      });
     });
 
-    /* ===== 2. УЛУЧШЕННЫЙ DRAG-SCROLL (ДЛЯ ВКЛАДОК) ===== */
-    if (tabsContainer) {
-        let state = { isDown: false, startX: 0, scrollLeft: 0, isDragging: false };
+    /* ===== 2. DRAG-SCROLL (УБРАНЫ ФРИЗЫ) ===== */
+    if (TABS_CONTAINER) {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+        let isDragging = false;
 
-        const startDrag = (e) => {
-            state.isDown = true;
-            state.isDragging = false;
-            state.startX = (e.pageX || e.touches[0].pageX) - tabsContainer.offsetLeft;
-            state.scrollLeft = tabsContainer.scrollLeft;
+        TABS_CONTAINER.addEventListener("mousedown", (e) => {
+            isDown = true;
+            isDragging = false;
+            startX = e.pageX - TABS_CONTAINER.offsetLeft;
+            scrollLeft = TABS_CONTAINER.scrollLeft;
+        });
+
+        const handleMove = (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = (e.pageX || e.touches[0].pageX) - TABS_CONTAINER.offsetLeft;
+            const walk = (x - startX) * 2;
+            if (Math.abs(walk) > 5) isDragging = true;
+            TABS_CONTAINER.scrollLeft = scrollLeft - walk;
         };
 
-        const moveDrag = (e) => {
-            if (!state.isDown) return;
-            const x = (e.pageX || e.touches[0].pageX) - tabsContainer.offsetLeft;
-            const walk = (x - state.startX) * 1.5; // Коэффициент скорости
+        const stopDragging = () => { isDown = false; };
 
-            if (Math.abs(walk) > 5) state.isDragging = true;
-            
-            // Используем requestAnimationFrame для идеальной плавности
-            requestAnimationFrame(() => {
-                tabsContainer.scrollLeft = state.scrollLeft - walk;
-            });
-        };
+        TABS_CONTAINER.addEventListener("mousemove", rafUpdate(handleMove));
+        TABS_CONTAINER.addEventListener("touchstart", (e) => {
+            isDown = true;
+            startX = e.touches[0].pageX - TABS_CONTAINER.offsetLeft;
+            scrollLeft = TABS_CONTAINER.scrollLeft;
+        }, {passive: true});
+        TABS_CONTAINER.addEventListener("touchmove", handleMove, {passive: true});
+        
+        window.addEventListener("mouseup", stopDragging);
+        window.addEventListener("touchend", stopDragging);
 
-        const endDrag = () => {
-            state.isDown = false;
-            setTimeout(() => state.isDragging = false, 50);
-        };
-
-        tabsContainer.addEventListener("mousedown", startDrag);
-        window.addEventListener("mousemove", moveDrag);
-        window.addEventListener("mouseup", endDrag);
-
-        tabsContainer.addEventListener("touchstart", startDrag, {passive: true});
-        tabsContainer.addEventListener("touchmove", moveDrag, {passive: true});
-        tabsContainer.addEventListener("touchend", endDrag);
-
-        // Блокируем клик при перетаскивании
-        tabsContainer.addEventListener("click", (e) => {
-            if (state.isDragging) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
+        TABS_CONTAINER.addEventListener("click", (e) => {
+            if (isDragging) { e.preventDefault(); e.stopPropagation(); }
         }, true);
     }
 
-    /* ===== 3. ПАГИНАЦИЯ И ВИДЕО В КАРТОЧКАХ ===== */
-    GRIDS.forEach((grid) => {
-        const cards = Array.from(grid.querySelectorAll(".catalog-card"));
+    /* ===== 3. ПАГИНАЦИЯ И ВИДЕО (Lazy Load) ===== */
+    function updateGridVisibility(grid) {
+        const cards = grid.querySelectorAll(".catalog-card");
         const moreBtn = grid.querySelector(".catalog-more");
-        let currentPage = 1;
+        const currentPage = parseInt(grid.dataset.page || 1);
+        const limit = currentPage * PAGE_SIZE;
 
-        if (!cards.length) return;
-
-        const updateVisible = () => {
-            const maxIndex = currentPage * PAGE_SIZE - 1;
-            cards.forEach((card, index) => {
-                if (index <= maxIndex) {
-                    card.classList.remove("is-hidden");
-                    // Запускаем видео только в видимых карточках при ховере
-                    setupCardVideo(card);
-                } else {
-                    card.classList.add("is-hidden");
+        cards.forEach((card, index) => {
+            if (index < limit) {
+                card.classList.remove("is-hidden");
+                // Видео инициализируем только если оно нужно
+                const video = card.querySelector('video');
+                if (video && !video.dataset.initialized) {
+                    card.addEventListener('mouseenter', () => video.play());
+                    card.addEventListener('mouseleave', () => {
+                        video.pause();
+                        video.currentTime = 0;
+                    });
+                    video.dataset.initialized = "true";
                 }
-            });
-
-            if (moreBtn) {
-                moreBtn.style.display = (currentPage >= Math.ceil(cards.length / PAGE_SIZE)) ? "none" : "block";
-            }
-        };
-
-        const setupCardVideo = (card) => {
-            const video = card.querySelector('video');
-            if (!video || video.dataset.initialized) return;
-
-            card.addEventListener('mouseenter', () => video.play());
-            card.addEventListener('mouseleave', () => {
-                video.pause();
-                video.currentTime = 0;
-            });
-            video.dataset.initialized = "true";
-        };
-
-        updateVisible();
-
-        if (moreBtn) {
-            moreBtn.addEventListener("click", () => {
-                currentPage++;
-                updateVisible();
-            });
-        }
-    });
-});
-
-/* ===== 4. CATALOG HERO SLIDER (ОПТИМИЗИРОВАННЫЙ) ===== */
-const catalogHero = document.getElementById('catalogHero');
-if (catalogHero) {
-    const slider = document.getElementById('catalogHeroSlider');
-    const slides = [...slider.children];
-    const dotsWrap = document.getElementById('catalogHeroDots');
-    let index = 0;
-    let timer = null;
-
-    const go = (n) => {
-        index = (n + slides.length) % slides.length;
-        slider.style.transform = `translateX(-${index * 100}%)`;
-
-        // Обновление точек
-        const dots = dotsWrap.querySelectorAll('button');
-        dots.forEach((d, i) => d.classList.toggle('active', i === index));
-
-        // Работа с видео
-        slides.forEach((s, i) => {
-            const v = s.querySelector('video');
-            if (!v) return;
-            if (i === index) {
-                v.currentTime = 0;
-                v.play().catch(() => {});
-                v.onended = next;
-                stopTimer();
             } else {
-                v.pause();
+                card.classList.add("is-hidden");
             }
         });
 
-        // Если на слайде нет видео — запускаем обычный таймер
-        if (!slides[index].querySelector('video')) {
-            startTimer();
-        }
-    };
+        if (moreBtn) moreBtn.style.display = limit >= cards.length ? "none" : "block";
+    }
 
-    const next = () => go(index + 1);
-    const prev = () => go(index - 1);
-
-    const startTimer = () => {
-        stopTimer();
-        timer = setInterval(next, 6000);
-    };
-
-    const stopTimer = () => clearInterval(timer);
-
-    // Инициализация точек
-    slides.forEach((_, i) => {
-        const dot = document.createElement('button');
-        dot.addEventListener('click', () => go(i));
-        dotsWrap.appendChild(dot);
+    // Инициализация кнопок "Показать еще"
+    document.querySelectorAll(".catalog-more").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const grid = btn.closest('.catalog-grid');
+            grid.dataset.page = parseInt(grid.dataset.page || 1) + 1;
+            updateGridVisibility(grid);
+        });
     });
 
-    document.getElementById('catalogHeroNext')?.addEventListener('click', next);
-    document.getElementById('catalogHeroPrev')?.addEventListener('click', prev);
+    // Инициализация первой активной сетки
+    const activeGrid = document.querySelector('.catalog-grid.is-active');
+    if (activeGrid) updateGridVisibility(activeGrid);
 
-    go(0);
-}
+    /* ===== 4. ФИЛЬТР (УСКОРЕННЫЙ) ===== */
+    const toggleBtn = document.querySelector('.catalog-filter-toggle');
+    if (toggleBtn) {
+        const toggleFilter = () => FILTER_ASIDE.classList.toggle('is-open');
+        toggleBtn.addEventListener('click', toggleFilter);
+        document.getElementById('filterClose').addEventListener('click', toggleFilter);
+        document.getElementById('filterCancel').addEventListener('click', toggleFilter);
+        FILTER_ASIDE.querySelector('.filter-aside__overlay').addEventListener('click', toggleFilter);
+
+        document.getElementById('filterApply').addEventListener('click', () => {
+            const min = parseInt(document.getElementById('priceMin').value) || 0;
+            const max = parseInt(document.getElementById('priceMax').value) || Infinity;
+            const activeGrid = document.querySelector('.catalog-grid.is-active');
+            
+            activeGrid.querySelectorAll('.catalog-card').forEach(card => {
+                const price = parseInt(card.querySelector('.catalog-card-price').textContent.replace(/\D/g, ''));
+                card.style.display = (price >= min && price <= max) ? "" : "none";
+            });
+            toggleFilter();
+        });
+
+        document.getElementById('filterReset').addEventListener('click', () => {
+            const activeGrid = document.querySelector('.catalog-grid.is-active');
+            activeGrid.querySelectorAll('.catalog-card').forEach(card => card.style.display = "");
+            toggleFilter();
+        });
+    }
+});
