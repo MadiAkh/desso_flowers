@@ -1,5 +1,5 @@
 /* --- STORIES (classic single-card) --- */
-
+{
 const smodal   = document.getElementById('storiesModal');
 const sframe   = smodal.querySelector('.stories-frame');
 const mediaBox = document.getElementById('storiesMedia');
@@ -210,3 +210,5 @@ document.querySelectorAll(".story[data-story]").forEach((btn) => {
     if (STORIES[id]?.length) openStory(id, 0);
   });
 });
+
+}
