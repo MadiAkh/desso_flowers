@@ -125,31 +125,100 @@ document.addEventListener("DOMContentLoaded", () => {
     const activeGrid = document.querySelector('.catalog-grid.is-active');
     if (activeGrid) updateGridVisibility(activeGrid);
 
-    /* ===== 4. ФИЛЬТР (УСКОРЕННЫЙ) ===== */
-    const toggleBtn = document.querySelector('.catalog-filter-toggle');
-    if (toggleBtn) {
-        const toggleFilter = () => FILTER_ASIDE.classList.toggle('is-open');
-        toggleBtn.addEventListener('click', toggleFilter);
-        document.getElementById('filterClose').addEventListener('click', toggleFilter);
-        document.getElementById('filterCancel').addEventListener('click', toggleFilter);
-        FILTER_ASIDE.querySelector('.filter-aside__overlay').addEventListener('click', toggleFilter);
 
-        document.getElementById('filterApply').addEventListener('click', () => {
+/* ===== 4. ФИЛЬТР (УСКОРЕННЫЙ) ===== */
+const toggleBtn = document.querySelector('.catalog-filter-toggle');
+const filterAside = document.getElementById('filterAside');
+
+// Функция открытия/закрытия
+const toggleFilter = () => {
+    if (filterAside) filterAside.classList.toggle('is-open');
+};
+
+if (toggleBtn && filterAside) {
+    // Слушатели на открытие и закрытие
+    toggleBtn.addEventListener('click', toggleFilter);
+    document.getElementById('filterClose')?.addEventListener('click', toggleFilter);
+    document.getElementById('filterCancel')?.addEventListener('click', toggleFilter);
+    
+    const overlay = filterAside.querySelector('.filter-aside__overlay');
+    if (overlay) overlay.addEventListener('click', toggleFilter);
+
+    // Элементы ввода
+    const priceMinInput = document.getElementById('priceMin');
+    const priceMaxInput = document.getElementById('priceMax');
+    const priceRange = document.getElementById('priceRange');
+
+    // Получаем границы из Django атрибутов (с защитой от NaN)
+    const ABSOLUTE_MIN = parseInt(priceMinInput.getAttribute('min')) || 0;
+    const ABSOLUTE_MAX = parseInt(priceMaxInput.getAttribute('max')) || 500000;
+
+    // 1. Связываем бегунок с текстовым полем "До"
+    priceRange.addEventListener('input', (e) => {
+        priceMaxInput.value = e.target.value;
+    });
+
+    // 2. Обновляем бегунок при ручном вводе
+    priceMaxInput.addEventListener('change', (e) => {
+        let val = parseInt(e.target.value);
+        if (val > ABSOLUTE_MAX) val = ABSOLUTE_MAX;
+        if (val < ABSOLUTE_MIN) val = ABSOLUTE_MIN;
+        priceRange.value = val;
+        priceMaxInput.value = val;
+    });
+
+
+// 3. Логика кнопки "Применить"
+    const applyBtn = document.getElementById('filterApply');
+    if (applyBtn) {
+        applyBtn.addEventListener('click', () => {
             const min = parseInt(document.getElementById('priceMin').value) || 0;
-            const max = parseInt(document.getElementById('priceMax').value) || Infinity;
-            const activeGrid = document.querySelector('.catalog-grid.is-active');
+            const max = parseInt(document.getElementById('priceMax').value) || 1000000;
             
-            activeGrid.querySelectorAll('.catalog-card').forEach(card => {
-                const price = parseInt(card.querySelector('.catalog-card-price').textContent.replace(/\D/g, ''));
-                card.style.display = (price >= min && price <= max) ? "" : "none";
-            });
-            toggleFilter();
-        });
+            // Фильтруем все карточки во всех сетках
+            const allCards = document.querySelectorAll('.catalog-card');
+            
+            allCards.forEach(card => {
+                const priceElement = card.querySelector('.catalog-card-price');
+                if (priceElement) {
+                    // Очистка: "15 000 ₸" -> "15000"
+                    const priceText = priceElement.textContent.replace(/\D/g, '');
+                    const price = parseInt(priceText);
 
-        document.getElementById('filterReset').addEventListener('click', () => {
-            const activeGrid = document.querySelector('.catalog-grid.is-active');
-            activeGrid.querySelectorAll('.catalog-card').forEach(card => card.style.display = "");
-            toggleFilter();
+                    if (!isNaN(price)) {
+                        if (price >= min && price <= max) {
+                            // Принудительно показываем
+                            card.style.setProperty('display', 'block', 'important');
+                            card.classList.remove('is-hidden');
+                        } else {
+                            // Принудительно скрываем
+                            card.style.setProperty('display', 'none', 'important');
+                        }
+                    }
+                }
+            });
+            
+            toggleFilter(); // Закрываем шторку фильтра
         });
     }
-});
+
+    // 4. Логика кнопки "Сбросить"
+
+        const resetBtn = document.getElementById('filterReset');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                priceMinInput.value = ABSOLUTE_MIN;
+                priceMaxInput.value = ABSOLUTE_MAX;
+                priceRange.value = ABSOLUTE_MAX;
+                
+                const activeGrid = document.querySelector('.catalog-grid.is-active');
+                if (activeGrid) {
+                    activeGrid.querySelectorAll('.catalog-card').forEach(card => {
+                        card.style.display = "";
+                    });
+                }
+                toggleFilter();
+            });
+        }
+    } // закрывает if (toggleBtn && filterAside)
+}); // закрывает document.addEventListener("DOMContentLoaded", ...)

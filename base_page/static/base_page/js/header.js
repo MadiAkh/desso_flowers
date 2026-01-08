@@ -1,3 +1,4 @@
+{
 const header = document.getElementById("siteHeader");
 const bottom = document.getElementById("headerBottom");
 let lastScroll = 0;
@@ -52,3 +53,5 @@ document.addEventListener('DOMContentLoaded', () => {
     setupDropdown('cityDropdown', 'currentCity');
     setupDropdown('langDropdown', 'currentLang');
 });
+
+}
