@@ -86,24 +86,39 @@
               <button class="filter-aside__close" id="filterClose">&times;</button>
           </div>
           <div class="filter-aside__body">
-              <div class="filter-group">
-                  <h4 class="filter-group__title">Цена (₸)</h4>
-                  <div class="price-inputs">
-                      <input type="number" id="priceMin" placeholder="От" 
-                            min="{{ min_price }}" max="{{ max_price }}" value="{{ min_price }}">
-                      
-                      <input type="number" id="priceMax" placeholder="До" 
-                            min="{{ min_price }}" max="{{ max_price }}" value="{{ max_price }}">
-                  </div>
-                  <div class="price-slider-container">
-                      <input type="range" id="priceRange" 
-                            min="{{ min_price }}" 
-                            max="{{ max_price }}" 
-                            value="{{ max_price }}" 
-                            step="100">
-                  </div>
-              </div>
-          </div>
+            <div class="filter-group">
+                <h4 class="filter-group__title">Цена (₸)</h4>
+
+                <div class="price-inputs">
+                    <input type="number" 
+                          id="priceMin" 
+                          value="{{ min_price }}" 
+                          readonly>
+                    
+                    <input type="number" 
+                          id="priceMax" 
+                          value="{{ max_price }}" 
+                          readonly>
+                </div>
+
+                <div class="price-slider-container">
+                    <div class="slider-track-bg"></div>
+                    <div class="slider-track-fill" id="sliderTrackFill"></div>
+
+                    <input type="range" id="rangeMin" 
+                          min="{{ min_price }}" 
+                          max="{{ max_price }}" 
+                          value="{{ min_price }}" 
+                          step="100">
+                          
+                    <input type="range" id="rangeMax" 
+                          min="{{ min_price }}" 
+                          max="{{ max_price }}" 
+                          value="{{ max_price }}" 
+                          step="100">
+                </div>
+            </div>
+        </div>
           <div class="filter-aside__footer">
               <button class="btn-filter btn-filter--apply" id="filterApply">Применить</button>
               <button class="btn-filter btn-filter--reset" id="filterReset">Убрать фильтр</button>
@@ -117,7 +132,8 @@
     {# ===== ВКЛАДКА "ВСЕ БУКЕТЫ" ===== #}
     <div class="catalog-grid is-active" id="tab-all">
       {% for product in products_all|slice:":12" %}
-        <article class="catalog-card {% if forloop.first %}catalog-card--large{% endif %}">
+        <article class="catalog-card {% if forloop.first %}catalog-card--large{% endif %}" 
+             data-price="{{ product.price|stringformat:'d' }}">
           <a href="#" class="catalog-card-media">
             {% if product.media_type == "image" %}
               <img src="{{ product.file.url }}" alt="{{ product.name }}">
@@ -167,7 +183,7 @@
     {% for collection in collections %}
       <div class="catalog-grid" id="tab-{{ collection.id }}">
         {% for product in collection.products.all %}
-          <article class="catalog-card">
+          <article class="catalog-card" data-price="{{ product.price|stringformat:'d' }}">
             <a href="#" class="catalog-card-media">
               {% if product.media_type == "image" %}
                 <img src="{{ product.file.url }}" alt="{{ product.name }}">
