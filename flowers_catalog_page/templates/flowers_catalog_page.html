@@ -86,17 +86,39 @@
               <button class="filter-aside__close" id="filterClose">&times;</button>
           </div>
           <div class="filter-aside__body">
-              <div class="filter-group">
-                  <h4 class="filter-group__title">Цена (₸)</h4>
-                  <div class="price-inputs">
-                      <input type="number" id="priceMin" placeholder="От" min="0">
-                      <input type="number" id="priceMax" placeholder="До" min="0">
-                  </div>
-                  <div class="price-slider-container">
-                      <input type="range" id="priceRange" min="0" max="500000" step="1000">
-                  </div>
-              </div>
-          </div>
+            <div class="filter-group">
+                <h4 class="filter-group__title">Цена (₸)</h4>
+
+                <div class="price-inputs">
+                    <input type="number" 
+                          id="priceMin" 
+                          value="{{ min_price }}" 
+                          readonly>
+                    
+                    <input type="number" 
+                          id="priceMax" 
+                          value="{{ max_price }}" 
+                          readonly>
+                </div>
+
+                <div class="price-slider-container">
+                    <div class="slider-track-bg"></div>
+                    <div class="slider-track-fill" id="sliderTrackFill"></div>
+
+                    <input type="range" id="rangeMin" 
+                          min="{{ min_price }}" 
+                          max="{{ max_price }}" 
+                          value="{{ min_price }}" 
+                          step="100">
+                          
+                    <input type="range" id="rangeMax" 
+                          min="{{ min_price }}" 
+                          max="{{ max_price }}" 
+                          value="{{ max_price }}" 
+                          step="100">
+                </div>
+            </div>
+        </div>
           <div class="filter-aside__footer">
               <button class="btn-filter btn-filter--apply" id="filterApply">Применить</button>
               <button class="btn-filter btn-filter--reset" id="filterReset">Убрать фильтр</button>
@@ -110,7 +132,8 @@
     {# ===== ВКЛАДКА "ВСЕ БУКЕТЫ" ===== #}
     <div class="catalog-grid is-active" id="tab-all">
       {% for product in products_all|slice:":12" %}
-        <article class="catalog-card {% if forloop.first %}catalog-card--large{% endif %}">
+        <article class="catalog-card {% if forloop.first %}catalog-card--large{% endif %}" 
+             data-price="{{ product.price|stringformat:'d' }}">
           <a href="#" class="catalog-card-media">
             {% if product.media_type == "image" %}
               <img src="{{ product.file.url }}" alt="{{ product.name }}">
@@ -140,7 +163,7 @@
             <div class="catalog-card-category">{{ product.description }}</div>
             <h3 class="catalog-card-title">{{ product.name }}</h3>
             <div class="catalog-card-footer">
-              <div class="catalog-card-price">{{ product.price }} ₸</div>
+              <span class="catalog-card-price">{{ product.price }} ₸</span>
               </div>
           </div>
         </article>
@@ -159,9 +182,8 @@
     {# ===== ОТДЕЛЬНЫЕ ВКЛАДКИ ДЛЯ КАЖДОЙ КОЛЛЕКЦИИ ===== #}
     {% for collection in collections %}
       <div class="catalog-grid" id="tab-{{ collection.id }}">
-        {% for product in collection.products.all|slice:":12" %}
-          <article class="catalog-card {% if forloop.first %}catalog-card--large{% endif %}">
-            
+        {% for product in collection.products.all %}
+          <article class="catalog-card" data-price="{{ product.price|stringformat:'d' }}">
             <a href="#" class="catalog-card-media">
               {% if product.media_type == "image" %}
                 <img src="{{ product.file.url }}" alt="{{ product.name }}">
@@ -170,21 +192,8 @@
                   <source src="{{ product.file.url }}" type="video/mp4">
                 </video>
               {% endif %}
-
-              <div class="card-actions">
-                <button class="btn-action btn-wishlist" type="button" aria-label="В избранное">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                  </svg>
-                </button>
-                <button class="btn-action btn-cart" type="button" aria-label="В корзину">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <path d="M16 10a4 4 0 0 1-8 0"></path>
-                  </svg>
-                </button>
-              </div>
+              
+              {# ... тут ваши кнопки wishlist/cart ... #}
 
               {% if not product.is_active %}
                 <span class="catalog-card-badge catalog-card-badge--out">НЕТ В НАЛИЧИИ</span>
@@ -194,11 +203,18 @@
             </a>
 
             <div class="catalog-card-body">
-                ...
+                <div class="catalog-card-category">{{ product.description }}</div>
+                <h3 class="catalog-card-title">{{ product.name }}</h3>
+                <div class="catalog-card-footer">
+                    <span class="catalog-card-price">{{ product.price }} ₸</span>
+                </div>
             </div>
           </article>
         {% endfor %}
-        ...
+        
+        {% if collection.products.count > 12 %}
+          <button class="catalog-more" type="button">Показать ещё</button>
+        {% endif %}
       </div>
     {% endfor %}
 
@@ -212,7 +228,6 @@
   <script async src="{% static 'base_page/js/hero.js' %}"></script>
   <script async src="{% static 'base_page/js/header.js' %}"></script>
   ...
-  <script async src="{% static 'flowers_catalog_page/js/catalog_hero.js' %}"></script>
   <script async src="{% static 'base_page/js/stories.js' %}"></script>
   <script async src="{% static 'flowers_catalog_page/js/flowers_catalog_page.js' %}"></script>
 {% endblock %}

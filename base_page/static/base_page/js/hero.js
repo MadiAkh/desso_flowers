@@ -1,4 +1,5 @@
 // HERO custom slider
+{
 const slider = document.getElementById('heroSlider');
 const slides = [...slider.children];
 const dotsWrap = document.getElementById('heroDots');
@@ -58,5 +59,4 @@ hero.addEventListener('mouseleave', () => {
 
 go(0);
 
-
-
+}
