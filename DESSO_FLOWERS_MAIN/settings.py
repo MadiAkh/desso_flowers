@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'base_page',
     'flowers_catalog_page',
     'main_page',
+    'personal_account',
 ]
 
 MIDDLEWARE = [

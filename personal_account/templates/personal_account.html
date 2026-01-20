@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Личный кабинет — DÉSSO FLOWERS{% endblock %}
+
+{% block extra_css %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'personal_account/css/personal_account.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="profile-section">
+  <div class="container">
+    
+    <h1 class="page-title">Личный кабинет</h1>
+
+    <div class="profile-layout">
+      
+      <aside class="profile-sidebar">
+        <div class="user-brief">
+          <div class="user-avatar">
+            <span>{{ user_info.first_name|first }}{{ user_info.last_name|first }}</span>
+          </div>
+          <div class="user-name">{{ user_info.first_name }} {{ user_info.last_name }}</div>
+          <div class="user-email">{{ user_info.email }}</div>
+        </div>
+
+        <nav class="profile-nav">
+          <button class="nav-item active" data-tab="profile">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Мои данные
+          </button>
+          <button class="nav-item" data-tab="orders">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            История заказов
+          </button>
+          <button class="nav-item" data-tab="favorites">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            Избранное
+          </button>
+          <a href="#" class="nav-item logout">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Выйти
+          </a>
+        </nav>
+      </aside>
+
+      <main class="profile-content">
+        
+        <div class="tab-pane active" id="profile">
+          <h2 class="pane-title">Личные данные</h2>
+          <form class="profile-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Имя</label>
+                <input type="text" value="{{ user_info.first_name }}" placeholder="Ваше имя">
+              </div>
+              <div class="form-group">
+                <label>Фамилия</label>
+                <input type="text" value="{{ user_info.last_name }}" placeholder="Ваша фамилия">
+              </div>
+              <div class="form-group">
+                <label>Телефон</label>
+                <input type="tel" value="{{ user_info.phone }}" placeholder="+7 (___) ___-__-__">
+              </div>
+              <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" value="{{ user_info.email }}" placeholder="example@mail.com">
+              </div>
+              <div class="form-group full-width">
+                <label>Город доставки</label>
+                <select>
+                  <option {% if user_info.city == 'Алматы' %}selected{% endif %}>Алматы</option>
+                  <option {% if user_info.city == 'Астана' %}selected{% endif %}>Астана</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="btn-save">Сохранить изменения</button>
+          </form>
+        </div>
+
+        <div class="tab-pane" id="orders">
+          <h2 class="pane-title">История заказов</h2>
+          {% if orders %}
+            <div class="orders-list">
+              {% for order in orders %}
+                <div class="order-card">
+                  <div class="order-header">
+                    <span class="order-id">Заказ №{{ order.id }}</span>
+                    <span class="order-date">{{ order.date }}</span>
+                  </div>
+                  <div class="order-body">
+                    <div class="order-status status-{{ order.color }}">{{ order.status }}</div>
+                    <div class="order-total">{{ order.total }}</div>
+                  </div>
+                  <div class="order-footer">
+                    <a href="#" class="btn-outline">Подробнее</a>
+                    <a href="#" class="btn-repeat">Повторить</a>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="empty-state">У вас пока нет заказов.</p>
+          {% endif %}
+        </div>
+
+        <div class="tab-pane" id="favorites">
+          <h2 class="pane-title">Избранное</h2>
+          <p class="empty-state">Список избранных товаров пуст. Перейдите в <a href="/" style="color:var(--accent); text-decoration:underline;">каталог</a>.</p>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+</section>
+
+<script src="{% static 'personal_account/js/personal_account.js' %}"></script>
+{% endblock %}
