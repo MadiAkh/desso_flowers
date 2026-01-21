@@ -142,11 +142,11 @@
                        <span>Итого</span>
                        <span id="summary-total">{{ cart_total|add:delivery_cost }} ₸</span>
                    </div>
-                   <button class="btn-checkout">Оформить заказ</button>
+                   <a href="{% url 'checkout' %}" class="btn-checkout">Оформить заказ</a>
                </div>
            </div>
            {% else %}
-               <p class="empty-state">Ваша корзина пуста. <a href="{% url 'catalog_page' %}" style="color:var(--accent); text-decoration:underline;">Перейти к покупкам</a></p>
+               <p class="empty-state">Ваша корзина пуста. <a href="http://127.0.0.1:8000/checkout/" style="color:var(--accent); text-decoration:underline;">Перейти к покупкам</a></p>
            {% endif %}
         </div>
 
@@ -178,7 +178,7 @@
 
         <div class="tab-pane" id="favorites">
           <h2 class="pane-title">Избранное</h2>
-          <p class="empty-state">Список избранных товаров пуст.</p>
+          <p class="empty-state">У вас пока нет избранных товаров. <a href="{% url 'catalog_page' %}" style="color:var(--accent); text-decoration:underline;">Выбрать избранный товар</a></p>
         </div>
 
       </main>
