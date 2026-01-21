@@ -20,6 +20,26 @@ def profile_view(request):
         'orders': [
             {'id': '10234', 'date': '20.10.2023', 'status': 'Доставлен', 'total': '15 000 ₸', 'color': 'green'},
             {'id': '10255', 'date': '25.01.2024', 'status': 'В обработке', 'total': '24 500 ₸', 'color': 'orange'},
-        ]
+        ],
+        'cart_items': [
+            {
+                'id': 1,
+                'name': 'Букет "Нежность"',
+                'price': 12000,
+                'quantity': 1,
+                'image_url': '', # Если есть фото, вставь URL, иначе будет цветной квадрат
+                'total_price': 12000
+            },
+            {
+                'id': 2,
+                'name': 'Тюльпаны (15 шт)',
+                'price': 9500,
+                'quantity': 2,
+                'image_url': '',
+                'total_price': 19000
+            }
+        ],
+        'cart_total': 31000,
+        'delivery_cost': 1500
     }
     return render(request, 'personal_account.html', context)
