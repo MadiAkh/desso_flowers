@@ -8,6 +8,9 @@
   <link rel="stylesheet" href="{% static 'personal_account/css/personal_account.css' %}">
 {% endblock %}
 
+{% block hero %}{% endblock %}
+{% block stories %}{% endblock %}
+
 {% block content %}
 <section class="profile-section">
   <div class="container">
@@ -30,8 +33,21 @@
             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             Мои данные
           </button>
+          
+          <button class="nav-item" data-tab="cart">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            Корзина
+            {% if cart_items %}
+               <span class="badge-count">{{ cart_items|length }}</span>
+            {% endif %}
+          </button>
+
           <button class="nav-item" data-tab="orders">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
             История заказов
           </button>
           <button class="nav-item" data-tab="favorites">
@@ -79,6 +95,61 @@
           </form>
         </div>
 
+        <div class="tab-pane" id="cart">
+           <h2 class="pane-title">Корзина</h2>
+           {% if cart_items %}
+           <div class="cart-layout">
+               <div class="cart-items">
+                   {% for item in cart_items %}
+                   <div class="cart-item" data-price="{{ item.price }}">
+                       <div class="cart-img">
+                           {% if item.image_url %}
+                               <img src="{{ item.image_url }}" alt="{{ item.name }}">
+                           {% else %}
+                               <div class="no-img">🌸</div>
+                           {% endif %}
+                       </div>
+                       <div class="cart-info">
+                           <h3 class="cart-name">{{ item.name }}</h3>
+                           <p class="cart-price-single">{{ item.price }} ₸ / шт.</p>
+                       </div>
+                       <div class="cart-controls">
+                           <button class="qty-btn minus" type="button">−</button>
+                           <input type="text" class="qty-input" value="{{ item.quantity }}" readonly>
+                           <button class="qty-btn plus" type="button">+</button>
+                       </div>
+                       <div class="cart-total-price">
+                           <span>{{ item.total_price }}</span> ₸
+                       </div>
+                       <button class="cart-remove" type="button" aria-label="Удалить">
+                           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                       </button>
+                   </div>
+                   {% endfor %}
+               </div>
+
+               <div class="cart-summary">
+                   <div class="summary-row">
+                       <span>Товары</span>
+                       <span id="summary-goods">{{ cart_total }} ₸</span>
+                   </div>
+                   <div class="summary-row">
+                       <span>Доставка</span>
+                       <span id="summary-delivery">{{ delivery_cost }} ₸</span>
+                   </div>
+                   <hr>
+                   <div class="summary-row total">
+                       <span>Итого</span>
+                       <span id="summary-total">{{ cart_total|add:delivery_cost }} ₸</span>
+                   </div>
+                   <button class="btn-checkout">Оформить заказ</button>
+               </div>
+           </div>
+           {% else %}
+               <p class="empty-state">Ваша корзина пуста. <a href="{% url 'catalog_page' %}" style="color:var(--accent); text-decoration:underline;">Перейти к покупкам</a></p>
+           {% endif %}
+        </div>
+
         <div class="tab-pane" id="orders">
           <h2 class="pane-title">История заказов</h2>
           {% if orders %}
@@ -107,14 +178,15 @@
 
         <div class="tab-pane" id="favorites">
           <h2 class="pane-title">Избранное</h2>
-          <p class="empty-state">Список избранных товаров пуст. Перейдите в <a href="/" style="color:var(--accent); text-decoration:underline;">каталог</a>.</p>
+          <p class="empty-state">Список избранных товаров пуст.</p>
         </div>
 
       </main>
-
     </div>
   </div>
 </section>
+{% endblock content %}
 
-<script src="{% static 'personal_account/js/personal_account.js' %}"></script>
+{% block scripts %}
+  <script src="{% static 'personal_account/js/personal_account.js' %}"></script>
 {% endblock %}
