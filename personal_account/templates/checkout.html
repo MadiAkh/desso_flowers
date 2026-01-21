@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Оформление заказа — DÉSSO FLOWERS{% endblock %}
+
+{% block extra_css %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'personal_account/css/checkout.css' %}">
+{% endblock %}
+
+{% block hero %}{% endblock %}
+{% block stories %}{% endblock %}
+
+{% block content %}
+<section class="checkout-section">
+  <div class="container">
+    
+    <h1 class="page-title">Оформление заказа</h1>
+
+    <form class="checkout-grid" id="checkoutForm">
+      
+      <div class="checkout-steps">
+        
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-number">01</span>
+            <h2 class="step-title">Контактные данные</h2>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Ваше имя</label>
+              <input type="text" name="name" value="{{ user_info.name }}" placeholder="Как к вам обращаться?" required>
+            </div>
+            <div class="form-group">
+              <label>Телефон</label>
+              <input type="tel" name="phone" value="{{ user_info.phone }}" placeholder="+7 (___) ___-__-__" required>
+            </div>
+            <div class="form-group full-width checkbox-group">
+              <input type="checkbox" id="another_recipient">
+              <label for="another_recipient">Получатель — другой человек</label>
+            </div>
+            
+            <div class="recipient-fields hidden" id="recipientFields">
+               <div class="form-grid inner">
+                 <div class="form-group">
+                   <label>Имя получателя</label>
+                   <input type="text" name="recipient_name" placeholder="Имя">
+                 </div>
+                 <div class="form-group">
+                   <label>Телефон получателя</label>
+                   <input type="tel" name="recipient_phone" placeholder="+7 (___) ...">
+                 </div>
+               </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-number">02</span>
+            <h2 class="step-title">Доставка</h2>
+          </div>
+          
+          <div class="delivery-tabs">
+            <label class="tab-radio">
+              <input type="radio" name="delivery_type" value="courier" checked>
+              <span class="tab-box">Курьером</span>
+            </label>
+            <label class="tab-radio">
+              <input type="radio" name="delivery_type" value="pickup">
+              <span class="tab-box">Самовывоз</span>
+            </label>
+          </div>
+
+          <div id="courierFields">
+             <div class="form-grid">
+               <div class="form-group full-width">
+                 <label>Город</label>
+                 <select name="city">
+                   <option>Алматы</option>
+                   <option>Астана</option>
+                 </select>
+               </div>
+               <div class="form-group full-width">
+                 <label>Адрес</label>
+                 <input type="text" name="address" placeholder="Улица, дом">
+               </div>
+               <div class="form-group">
+                 <label>Квартира / Офис</label>
+                 <input type="text" name="apt" placeholder="№">
+               </div>
+               <div class="form-group">
+                 <label>Подъезд / Этаж</label>
+                 <input type="text" name="floor" placeholder="Не обязательно">
+               </div>
+             </div>
+          </div>
+
+          <div class="form-grid" style="margin-top: 20px;">
+             <div class="form-group">
+               <label>Дата</label>
+               <input type="date" name="date" required>
+             </div>
+             <div class="form-group">
+               <label>Время</label>
+               <select name="time">
+                 <option>Как можно скорее</option>
+                 <option>10:00 - 12:00</option>
+                 <option>12:00 - 15:00</option>
+                 <option>15:00 - 18:00</option>
+                 <option>18:00 - 21:00</option>
+               </select>
+             </div>
+             <div class="form-group full-width">
+               <label>Текст открытки (бесплатно)</label>
+               <textarea name="postcard" rows="2" placeholder="Напишем от руки красивым почерком..."></textarea>
+             </div>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-header">
+            <span class="step-number">03</span>
+            <h2 class="step-title">Оплата</h2>
+          </div>
+          
+          <div class="payment-methods">
+            <label class="payment-option">
+              <input type="radio" name="payment" value="card">
+              <div class="payment-box">
+                <span class="icon">💳</span>
+                <span class="name">Картой онлайн</span>
+              </div>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="payment" value="cash">
+              <div class="payment-box">
+                <span class="icon">💵</span>
+                <span class="name">Наличными</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <aside class="checkout-sidebar">
+        <div class="order-summary sticky">
+          <h3 class="summary-title">Ваш заказ</h3>
+          
+          <div class="summary-items">
+            {% for item in cart_items %}
+              <div class="summary-item">
+                <div class="item-info">
+                  <div class="item-name">{{ item.name }}</div>
+                  <div class="item-qty">{{ item.quantity }} шт.</div>
+                </div>
+                <div class="item-price">{{ item.price }} ₸</div>
+              </div>
+            {% endfor %}
+          </div>
+          
+          <hr class="summary-divider">
+          
+          <div class="summary-row">
+            <span>Товары</span>
+            <span>{{ subtotal }} ₸</span>
+          </div>
+          <div class="summary-row">
+            <span>Доставка</span>
+            <span id="deliveryCost">{{ delivery_cost }} ₸</span>
+          </div>
+          
+          <div class="summary-total">
+            <span>Итого к оплате</span>
+            <span class="total-price">{{ total }} ₸</span>
+          </div>
+
+          <button type="submit" class="btn-place-order">Оплатить заказ</button>
+          
+          <p class="policy-text">
+            Нажимая кнопку, вы соглашаетесь с <a href="#">условиями оферты</a>.
+          </p>
+        </div>
+      </aside>
+
+    </form>
+  </div>
+</section>
+
+<script src="{% static 'personal_account/js/checkout.js' %}"></script>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'personal_account/js/checkout.js' %}"></script>
+{% endblock %}

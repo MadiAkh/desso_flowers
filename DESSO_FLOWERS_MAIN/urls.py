@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_page, name="home"),
     path('catalog/', catalog_page, name="catalog_page"),
-    path('profile/', account_views.profile_view, name='profile')
+    path('profile/', account_views.profile_view, name='profile'),
+    path('checkout/', account_views.checkout_view, name='checkout'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

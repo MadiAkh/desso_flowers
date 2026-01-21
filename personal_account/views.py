@@ -43,3 +43,24 @@ def profile_view(request):
         'delivery_cost': 1500
     }
     return render(request, 'personal_account.html', context)
+
+
+
+def checkout_view(request):
+    context = {
+        # Имитация товаров в корзине для отображения справа
+        'cart_items': [
+            {'name': 'Букет "Нежность"', 'price': 12000, 'quantity': 1},
+            {'name': 'Тюльпаны (15 шт)', 'price': 9500, 'quantity': 1},
+        ],
+        'subtotal': 21500,
+        'delivery_cost': 1500,
+        'total': 23000,
+        
+        # Предзаполненные данные (если пользователь авторизован)
+        'user_info': {
+            'name': 'Алина',
+            'phone': '+7 (700) 123-45-67'
+        }
+    }
+    return render(request, 'checkout.html', context)
