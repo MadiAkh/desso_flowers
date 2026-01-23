@@ -16,7 +16,7 @@ class StoryItemAdmin(admin.ModelAdmin):
     list_display = ("story", "media_type", "order", "cta_enabled")
     list_editable = ("order", "cta_enabled")
     fields = (
-        "story", "media_type", "file", "poster", "duration", "order",
+        "story", "media_type", "file", "duration", "order",
         ("cta_enabled", "cta_text", "cta_link"),
     )
 
@@ -30,4 +30,4 @@ class BannerAdmin(admin.ModelAdmin):
 class YoutubeVideoAdmin(admin.ModelAdmin):
     list_display = ("title", "is_active", "order")
     list_editable = ("is_active", "order")
-    fields = ("title", "youtube_url", "embed_src", "poster", "is_active", "order")
+    fields = ("title", "youtube_url", "embed_src", "is_active", "order")
