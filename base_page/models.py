@@ -9,7 +9,6 @@ class HeroSlide(models.Model):
     cta_text = models.CharField("Текст кнопки", max_length=100, blank=True)
     cta_link = models.URLField("Ссылка кнопки", blank=True)
     video = models.FileField("Видео", upload_to="hero_videos/")
-    poster = models.ImageField("Постер", upload_to="hero_posters/", blank=True)
     is_active = models.BooleanField("Активен", default=True)
     order = models.PositiveIntegerField("Порядок", default=0)
 
@@ -39,7 +38,6 @@ class StoryItem(models.Model):
     MEDIA_TYPES = (("image", "Изображение"), ("video", "Видео"))
     media_type = models.CharField(max_length=10, choices=MEDIA_TYPES)
     file = models.FileField(upload_to="stories/")
-    poster = models.ImageField(upload_to="stories_posters/", blank=True)
     duration = models.PositiveIntegerField(blank=True, null=True)
     order = models.PositiveIntegerField(default=0)
 
@@ -84,7 +82,6 @@ class YoutubeVideo(models.Model):
         blank=True,
         help_text="Например: https://www.youtube.com/embed/ID?si=XYZ"
     )
-    poster = models.ImageField("Постер", upload_to="video_posters/", blank=True, null=True)
     is_active = models.BooleanField(default=True)
     order = models.PositiveIntegerField(default=0)
 
