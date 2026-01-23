@@ -41,7 +41,6 @@ class Product(models.Model):
 
     MEDIA_TYPES = (
         ("image", "Изображение"),
-        ("video", "Видео"),
     )
     media_type = models.CharField(
         "Тип медиа",
