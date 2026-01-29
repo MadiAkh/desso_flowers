@@ -28,6 +28,10 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+AUTH_USER_MODEL = 'personal_account.DessoUser'
+
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,6 +45,7 @@ INSTALLED_APPS = [
     'flowers_catalog_page',
     'main_page',
     'personal_account',
+    'orders'
 ]
 
 MIDDLEWARE = [
