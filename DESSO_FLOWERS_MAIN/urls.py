@@ -21,6 +21,7 @@ from flowers_catalog_page.views import catalog_page
 from django.conf.urls.static import static
 from django.conf import settings
 from personal_account import views as account_views
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,5 +29,9 @@ urlpatterns = [
     path('catalog/', catalog_page, name="catalog_page"),
     path('profile/', account_views.profile_view, name='profile'),
     path('checkout/', account_views.checkout_view, name='checkout'),
+    path(
+        "personal-account/",
+        include("personal_account.urls", namespace="personal_account")
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
