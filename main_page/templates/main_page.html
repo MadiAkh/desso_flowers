@@ -42,24 +42,44 @@
           <div class="home-new-track">
             {% for product in new_products %}
               <article class="catalog-card home-new-card">
-                <a href="#" class="catalog-card-media">
-                  {% if product.media_type == "image" %}
-                    <img src="{{ product.file.url }}" alt="{{ product.name }}">
-                  {% else %}
-                    <video muted playsinline loop>
-                      <source src="{{ product.file.url }}" type="video/mp4">
-                    </video>
-                  {% endif %}
+                <div class="catalog-card-media" style="position: relative; display: block;">
+                  
+                  <a href="#" style="display: block; width: 100%; height: 100%;">
+                    {% if product.media_type == "image" %}
+                      <img src="{{ product.file.url }}" alt="{{ product.name }}">
+                    {% else %}
+                      <video muted playsinline loop>
+                        <source src="{{ product.file.url }}" type="video/mp4">
+                      </video>
+                    {% endif %}
+                  </a>
 
                   <div class="card-actions">
-                    <button class="btn-action btn-wishlist" title="В избранное" onclick="event.preventDefault(); /* логика */">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                      </svg>
-                    </button>
-                    <button class="btn-action btn-add-cart" title="В корзину" onclick="event.preventDefault(); /* логика */">
-                      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-                    </button>
+                    
+                    {% if user.is_authenticated %}
+                        <button class="btn-action btn-wishlist" title="В избранное" data-product-id="{{ product.id }}">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                          </svg>
+                        </button>
+                    {% else %}
+                        <a href="{% url 'personal_account:register' %}" class="btn-action btn-wishlist" title="Войдите, чтобы добавить в избранное">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                          </svg>
+                        </a>
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+                        <button class="btn-action btn-add-cart" title="В корзину" data-product-id="{{ product.id }}">
+                          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                        </button>
+                    {% else %}
+                        <a href="{% url 'personal_account:register' %}" class="btn-action btn-add-cart" title="Войдите, чтобы добавить в корзину">
+                          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                        </a>
+                    {% endif %}
+
                   </div>
 
                   {% if not product.is_active %}
@@ -67,7 +87,8 @@
                   {% elif product.is_new %}
                     <span class="catalog-card-badge catalog-card-badge--new">NEW</span>
                   {% endif %}
-                </a>
+                </div>
+
                 <div class="catalog-card-body">
                   <div class="catalog-card-category">{{ product.description }}</div>
                   <h3 class="catalog-card-title">{{ product.name }}</h3>
@@ -119,40 +140,58 @@
           <div class="home-new-track">
 
             {% for product in hits %}
-            <article class="catalog-card home-new-card">
+              <article class="catalog-card home-new-card">
+                <div class="catalog-card-media" style="position: relative; display: block;">
+                  
+                  <a href="#" style="display: block; width: 100%; height: 100%;">
+                    {% if product.media_type == "image" %}
+                      <img src="{{ product.file.url }}" alt="{{ product.name }}">
+                    {% else %}
+                      <video muted playsinline loop>
+                        <source src="{{ product.file.url }}" type="video/mp4">
+                      </video>
+                    {% endif %}
+                  </a>
 
-              <a href="#" class="catalog-card-media">
-                {% if product.media_type == "image" %}
-                  <img src="{{ product.file.url }}" alt="{{ product.name }}">
-                {% else %}
-                  <video muted playsinline loop>
-                    <source src="{{ product.file.url }}" type="video/mp4">
-                  </video>
-                {% endif %}
+                  <div class="card-actions">
+                    {% if user.is_authenticated %}
+                    <button type="button" class="btn-action wishlist-btn" data-product-id="{{ product.id }}" aria-label="В избранное">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    </button>
+                    {% else %}
+                        <a href="{% url 'personal_account:register' %}" class="btn-action" aria-label="Войдите">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                        </a>
+                    {% endif %}
 
-                <div class="card-actions">
-                  <button class="btn-action btn-wishlist" title="В избранное" onclick="event.preventDefault();">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                  </button>
-                  <button class="btn-action btn-add-cart" title="В корзину" onclick="event.preventDefault();">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-                  </button>
+                    {% if user.is_authenticated %}
+                        <button type="button" class="btn-action cart-btn" data-product-id="{{ product.id }}" aria-label="В корзину">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                        </button>
+                    {% else %}
+                        <a href="{% url 'personal_account:register' %}" class="btn-action" aria-label="Войдите">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                        </a>
+                    {% endif %}
+                  </div>
+
+                  {% if not product.is_active %}
+                    <span class="catalog-card-badge catalog-card-badge--out">НЕТ В НАЛИЧИИ</span>
+                  {% elif product.is_new %}
+                    <span class="catalog-card-badge catalog-card-badge--new">NEW</span>
+                  {% endif %}
                 </div>
-              </a>
 
-              <div class="catalog-card-body">
-                <div class="catalog-card-category">{{ product.description }}</div>
-                <h3 class="catalog-card-title">{{ product.name }}</h3>
-
-                <div class="catalog-card-footer">
-                  <div class="catalog-card-price">{{ product.price }} ₸</div>
-                  <div class="small text-muted">Продано: {{ product.total_sales }}</div>
+                <div class="catalog-card-body">
+                  <div class="catalog-card-category">{{ product.description }}</div>
+                  <h3 class="catalog-card-title">{{ product.name }}</h3>
+                  <div class="catalog-card-footer">
+                    <div class="catalog-card-price">{{ product.price }} ₸</div>
+                    <div class="small text-muted">Продано: {{ product.total_sales }}</div>
+                  </div>
                 </div>
-              </div>
-
-            </article>
+              </article>
             {% endfor %}
 
           </div>
