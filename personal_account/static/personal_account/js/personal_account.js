@@ -136,3 +136,51 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+
+// --- 1. ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК (Профиль / Заказы / Избранное) ---
+    const navItems = document.querySelectorAll('.nav-item[data-tab]');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    // Функция: Активирует вкладку по её ID (cart, favorites, profile)
+    function activateTab(tabId) {
+        const targetBtn = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
+        if (!targetBtn) return;
+
+        // Убираем активность у всех
+        navItems.forEach(nav => nav.classList.remove('active'));
+        tabPanes.forEach(pane => pane.classList.remove('active'));
+
+        // Добавляем активность нужным
+        targetBtn.classList.add('active');
+        const targetPane = document.getElementById(tabId);
+        if (targetPane) {
+            targetPane.classList.add('active');
+        }
+    }
+
+    // 1. Обработка кликов по боковому меню
+    if (navItems.length > 0) {
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-tab');
+                // Меняем URL без перезагрузки (добавляем #cart), чтобы работала история браузера
+                history.pushState(null, null, `#${targetId}`);
+                activateTab(targetId);
+            });
+        });
+    }
+
+    // 2. Слушаем изменения в адресной строке (для иконок в шапке)
+    function checkHash() {
+        const hash = window.location.hash.substring(1); // берем слово после #
+        if (hash) {
+            activateTab(hash);
+        }
+    }
+
+    // Проверяем при загрузке страницы
+    checkHash();
+    
+    // ВАЖНОЕ ИЗМЕНЕНИЕ: Проверяем при клике на иконки в шапке
+    window.addEventListener('hashchange', checkHash);
