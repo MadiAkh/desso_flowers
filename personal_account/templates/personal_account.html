@@ -64,18 +64,88 @@
       <main class="profile-content">
         
         <div class="tab-pane active" id="profile">
-          <h2 class="pane-title">Личные данные</h2>
-          <form class="profile-form" method="POST"> {% csrf_token %} <label>Имя</label>
-          <input type="text" name="first_name" value="{{ user.first_name }}" placeholder="Ваше имя">
-          
-          <label>Фамилия</label>
-          <input type="text" name="last_name" value="{{ user.last_name }}" placeholder="Ваша фамилия">
-          
-          <label>Телефон</label>
-          <input type="tel" name="phone" value="{{ user.phone }}" placeholder="+7...">
-          
-          </form>
-        </div>
+          <div class="profile-content-container">
+              <h2 class="pane-title">Личные данные</h2>
+
+              <div id="profile-view-mode" class="profile-mode">
+                  <div class="user-details-grid">
+                      <div class="detail-item full-name">
+                          <label>ФИО</label>
+                          <p>{{ user.first_name }} {{ user.last_name }}</p>
+                      </div>
+                      <div class="detail-item">
+                          <label>Email</label>
+                          <p>{{ user.email }}</p>
+                      </div>
+                      <div class="detail-item">
+                          <label>Телефон</label>
+                          <p>{{ user.phone|default:"Не указан" }}</p>
+                      </div>
+                      <div class="detail-item">
+                          <label>Город</label>
+                          <p>{{ user.city|default:"Алматы" }}</p>
+                      </div>
+                      <div class="detail-item">
+                          <label>Пол</label>
+                          <p>{{ user.get_gender_display|default:"Не указан" }}</p>
+                      </div>
+                      <div class="detail-item">
+                          <label>Дата рождения</label>
+                          <p>{{ user.birth_date|date:"d.m.Y"|default:"Не указана" }}</p>
+                      </div>
+                  </div>
+                  <button type="button" class="btn-edit-trigger" id="edit-profile-btn">
+                      <span>Отредактировать данные</span>
+                  </button>
+              </div>
+
+              <form id="profile-edit-form" class="profile-mode" style="display: none;" method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="user-details-grid edit-grid">
+                      <div class="input-group">
+                          <label>Имя</label>
+                          <input type="text" name="first_name" value="{{ user.first_name }}">
+                      </div>
+                      <div class="input-group">
+                          <label>Фамилия</label>
+                          <input type="text" name="last_name" value="{{ user.last_name }}">
+                      </div>
+                      <div class="input-group">
+                          <label>Email</label>
+                          <input type="email" name="email" value="{{ user.email }}">
+                      </div>
+                      <div class="input-group">
+                          <label>Телефон</label>
+                          <input type="text" name="phone" value="{{ user.phone }}">
+                      </div>
+                      <div class="input-group">
+                          <label>Город</label>
+                          <input type="text" name="city" value="{{ user.city }}">
+                      </div>
+                      <div class="input-group">
+                          <label>Пол</label>
+                          <select name="gender">
+                              <option value="N" {% if user.gender == 'N' %}selected{% endif %}>Не указано</option>
+                              <option value="M" {% if user.gender == 'M' %}selected{% endif %}>Мужской</option>
+                              <option value="F" {% if user.gender == 'F' %}selected{% endif %}>Женский</option>
+                          </select>
+                      </div>
+                      <div class="input-group">
+                          <label>Дата рождения</label>
+                          <input type="date" name="birth_date" value="{{ user.birth_date|date:'Y-m-d' }}">
+                      </div>
+                      <div class="input-group">
+                          <label>Аватар</label>
+                          <input type="file" name="avatar" class="file-custom">
+                      </div>
+                  </div>
+                  <div class="form-buttons">
+                      <button type="button" class="btn-cancel" id="cancel-edit-btn">Отменить</button>
+                      <button type="submit" class="btn-save-submit">Сохранить изменения</button>
+                  </div>
+              </form>
+          </div>
+      </div>
 
         <div class="tab-pane" id="cart">
            <h2 class="pane-title">Корзина</h2>
