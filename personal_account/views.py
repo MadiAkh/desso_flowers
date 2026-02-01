@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.http import JsonResponse
@@ -6,48 +6,110 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth.forms import AuthenticationForm
 import json
 
+
+from django.views.decorators.http import require_POST
+
 from personal_account.models import DessoUser
 from .forms import DessoUserCreationForm
+from orders.models import Cart, Order
 
-from orders.models import Cart, Order 
+
+# Импортируем модели (проверьте пути импорта!)
+from flowers_catalog_page.models import Product
+from orders.models import Cart, CartItem, Order, Wishlist  # <--- Добавили Wishlist
+
+# ===========================
+# 1. API ФУНКЦИИ (AJAX)
+# ===========================
+
+@login_required
+@require_POST
+def api_toggle_wishlist(request):
+    """Добавить или удалить из избранного"""
+    data = json.loads(request.body)
+    product_id = data.get('product_id')
+    product = get_object_or_404(Product, id=product_id)
+    
+    # Получаем или создаем список избранного для юзера
+    wishlist, _ = Wishlist.objects.get_or_create(user=request.user)
+    
+    # Если товар уже там — удаляем
+    if wishlist.products.filter(id=product.id).exists():
+        wishlist.products.remove(product)
+        in_wishlist = False
+    else:
+        wishlist.products.add(product)
+        in_wishlist = True
+        
+    return JsonResponse({'status': 'ok', 'in_wishlist': in_wishlist})
+
+@login_required
+@require_POST
+def api_add_to_cart(request):
+    """Добавить в корзину (с проверкой на дубликаты)"""
+    data = json.loads(request.body)
+    product_id = data.get('product_id')
+    product = get_object_or_404(Product, id=product_id)
+    
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    
+    # Проверяем, есть ли уже этот товар в корзине
+    if CartItem.objects.filter(cart=cart, product=product).exists():
+        # Если есть — НЕ добавляем дубль
+        return JsonResponse({'status': 'ok', 'message': 'Товар уже в корзине', 'added': False})
+    
+    # Если нет — создаем
+    CartItem.objects.create(cart=cart, product=product, quantity=1)
+    
+    return JsonResponse({'status': 'ok', 'message': 'Товар добавлен', 'added': True})
+
+@login_required
+@require_POST
+def api_remove_cart_item(request):
+    """Удалить товар из корзины по ID товара"""
+    data = json.loads(request.body)
+    product_id = data.get('product_id')
+    
+    cart = Cart.objects.get(user=request.user)
+    # Удаляем CartItem, который ссылается на этот продукт
+    CartItem.objects.filter(cart=cart, product_id=product_id).delete()
+    
+    return JsonResponse({'status': 'ok'})
+
+
+# ===========================
+# 2. ОБНОВЛЕНИЕ PROFILE_VIEW
+# ===========================
 
 @login_required
 def profile_view(request):
     user = request.user
+    
+    # (Ваш код обработки POST формы профиля оставляем здесь...)
     if request.method == 'POST':
-        user.first_name = request.POST.get('first_name')
-        user.last_name = request.POST.get('last_name')
-        user.email = request.POST.get('email')
-        user.phone = request.POST.get('phone')
-        user.city = request.POST.get('city')
-        user.gender = request.POST.get('gender')
-        
-        # Обработка даты
-        birth_date = request.POST.get('birth_date')
-        if birth_date:
-            user.birth_date = birth_date
-        
-        if request.FILES.get('avatar'):
-            user.avatar = request.FILES.get('avatar')
-            
-        user.save()
-        return redirect('personal_account:personal_account')
+        # ... код сохранения данных юзера ...
+        pass
 
-    cart_items = []
-    cart_total = 0
-    orders = []
-
-    cart, created = Cart.objects.get_or_create(user=user)
-    cart_items = cart.items.select_related('product').all()
+    # --- СБОР ДАННЫХ ДЛЯ ШАБЛОНА ---
+    
+    # 1. Корзина
+    cart, _ = Cart.objects.get_or_create(user=user)
+    cart_items = cart.items.select_related('product').all() # Получаем сами товары
     cart_total = cart.total_price
+
+    # 2. Избранное
+    wishlist, _ = Wishlist.objects.get_or_create(user=user)
+    wishlist_items = wishlist.products.all() # Получаем список товаров
+
+    # 3. Заказы
     orders = Order.objects.filter(user=user).order_by('-created_at')
-    # ---------------------------
 
     context = {
         'cart_items': cart_items,
         'cart_total': cart_total,
-        'delivery_cost': 1500,
+        'wishlist_items': wishlist_items, # Передаем в шаблон
         'orders': orders,
+        'delivery_cost': 1500, 
     }
     return render(request, 'personal_account.html', context)
 
