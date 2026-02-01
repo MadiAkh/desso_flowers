@@ -21,8 +21,3 @@ class DessoUser(AbstractUser):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.email})"
-
-# Избранное
-class Wishlist(models.Model):
-    user = models.OneToOneField(DessoUser, on_delete=models.CASCADE, related_name='wishlist')
-    products = models.ManyToManyField('flowers_catalog_page.Product', blank=True)

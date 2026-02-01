@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="padding: 60px 20px; text-align: center;">
+    <div class="registration-success-container" style="max-width: 600px; margin: 0 auto;">
+        
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 32px; margin-bottom: 20px;">
+            Поздравляем!
+        </h2>
+        <p style="font-size: 18px; color: #555; margin-bottom: 40px;">
+            Вы успешно зарегистрированы и авторизованы.
+        </p>
+
+        <div class="actions" style="display: flex; gap: 20px; justify-content: center;">
+            <a href="{% url 'personal_account:personal_account' %}" 
+               class="btn" 
+               style="background: var(--accent); color: white; padding: 12px 30px; border-radius: 99px; text-decoration: none;">
+               Личный кабинет
+            </a>
+            
+            <a href="{% url 'home' %}" 
+               class="btn btn-outline" 
+               style="border: 1px solid #ddd; padding: 12px 30px; border-radius: 99px; text-decoration: none; color: #333;">
+               Вернуться на главную
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
