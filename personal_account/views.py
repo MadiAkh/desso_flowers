@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.contrib.auth.forms import AuthenticationForm
 import json
 
 from personal_account.models import DessoUser
@@ -70,18 +71,25 @@ def checkout_view(request):
 # --- НОВЫЕ ФУНКЦИИ ДЛЯ ТЗ ---
 
 def register_view(request):
+    if request.user.is_authenticated:
+        return redirect('personal_account:personal_account')
+
     if request.method == 'POST':
         form = DessoUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # --- ВАЖНО: АВТОМАТИЧЕСКИЙ ВХОД ---
-            login(request, user) 
-            # ----------------------------------
+            login(request, user)
             return redirect('personal_account:registration_success')
     else:
         form = DessoUserCreationForm()
     
-    return render(request, 'register.html', {'form': form})
+    # Добавляем пустую форму логина для отображения во вкладке "Вход"
+    login_form = AuthenticationForm()
+    
+    return render(request, 'register.html', {
+        'form': form, 
+        'login_form': login_form
+    })
 
 
 
