@@ -35,3 +35,11 @@ class Order(models.Model):
     def status_color(self):
         colors = {'process': 'orange', 'shipped': 'green', 'cancel': 'red'}
         return colors.get(self.status, 'gray')
+
+
+class Wishlist(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='wishlist')
+    products = models.ManyToManyField(Product, blank=True, related_name='wishlisted_by')
+
+    def __str__(self):
+        return f"Wishlist of {self.user}"
