@@ -24,8 +24,8 @@
           <div class="user-avatar">
             <span>{{ user_info.first_name|first }}{{ user_info.last_name|first }}</span>
           </div>
-          <div class="user-name">{{ user_info.first_name }} {{ user_info.last_name }}</div>
-          <div class="user-email">{{ user_info.email }}</div>
+          <div class="user-name">{{ user.first_name }} {{ user.last_name }}</div>
+          <div class="user-email">{{ user.email }}</div>
         </div>
 
         <nav class="profile-nav">
@@ -64,68 +64,108 @@
       <main class="profile-content">
         
         <div class="tab-pane active" id="profile">
-          <h2 class="pane-title">Личные данные</h2>
-          <form class="profile-form">
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Имя</label>
-                <input type="text" value="{{ user_info.first_name }}" placeholder="Ваше имя">
+          <div class="profile-content-container">
+              <h2 class="pane-title">Личные данные</h2>
+
+              <div id="profile-view-mode" class="profile-mode">
+                  <div class="user-details-grid">
+                      <div class="detail-item full-name">
+                          <label>ФИО</label>
+                          <p>{{ user.first_name }} {{ user.last_name }}</p>
+                      </div>
+                      <div class="detail-item">
+                          <label>Email</label>
+                          <p>{{ user.email }}</p>
+                      </div>
+                      <div class="detail-item">
+                          <label>Телефон</label>
+                          <p>{{ user.phone|default:"Не указан" }}</p>
+                      </div>
+                      <div class="detail-item">
+                          <label>Город</label>
+                          <p>{{ user.city|default:"Алматы" }}</p>
+                      </div>
+                      <div class="detail-item">
+                          <label>Пол</label>
+                          <p>{{ user.get_gender_display|default:"Не указан" }}</p>
+                      </div>
+                      <div class="detail-item">
+                          <label>Дата рождения</label>
+                          <p>{{ user.birth_date|date:"d.m.Y"|default:"Не указана" }}</p>
+                      </div>
+                  </div>
+                  <button type="button" class="btn-edit-trigger" id="edit-profile-btn">
+                      <span>Отредактировать данные</span>
+                  </button>
               </div>
-              <div class="form-group">
-                <label>Фамилия</label>
-                <input type="text" value="{{ user_info.last_name }}" placeholder="Ваша фамилия">
-              </div>
-              <div class="form-group">
-                <label>Телефон</label>
-                <input type="tel" value="{{ user_info.phone }}" placeholder="+7 (___) ___-__-__">
-              </div>
-              <div class="form-group">
-                <label>E-mail</label>
-                <input type="email" value="{{ user_info.email }}" placeholder="example@mail.com">
-              </div>
-              <div class="form-group full-width">
-                <label>Город доставки</label>
-                <select>
-                  <option {% if user_info.city == 'Алматы' %}selected{% endif %}>Алматы</option>
-                  <option {% if user_info.city == 'Астана' %}selected{% endif %}>Астана</option>
-                </select>
-              </div>
-            </div>
-            <button type="submit" class="btn-save">Сохранить изменения</button>
-          </form>
-        </div>
+
+              <form id="profile-edit-form" class="profile-mode" style="display: none;" method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="user-details-grid edit-grid">
+                      <div class="input-group">
+                          <label>Имя</label>
+                          <input type="text" name="first_name" value="{{ user.first_name }}">
+                      </div>
+                      <div class="input-group">
+                          <label>Фамилия</label>
+                          <input type="text" name="last_name" value="{{ user.last_name }}">
+                      </div>
+                      <div class="input-group">
+                          <label>Email</label>
+                          <input type="email" name="email" value="{{ user.email }}">
+                      </div>
+                      <div class="input-group">
+                          <label>Телефон</label>
+                          <input type="text" name="phone" value="{{ user.phone }}">
+                      </div>
+                      <div class="input-group">
+                          <label>Город</label>
+                          <input type="text" name="city" value="{{ user.city }}">
+                      </div>
+                      <div class="input-group">
+                          <label>Пол</label>
+                          <select name="gender">
+                              <option value="N" {% if user.gender == 'N' %}selected{% endif %}>Не указано</option>
+                              <option value="M" {% if user.gender == 'M' %}selected{% endif %}>Мужской</option>
+                              <option value="F" {% if user.gender == 'F' %}selected{% endif %}>Женский</option>
+                          </select>
+                      </div>
+                      <div class="input-group">
+                          <label>Дата рождения</label>
+                          <input type="date" name="birth_date" value="{{ user.birth_date|date:'Y-m-d' }}">
+                      </div>
+                      <div class="input-group">
+                          <label>Аватар</label>
+                          <input type="file" name="avatar" class="file-custom">
+                      </div>
+                  </div>
+                  <div class="form-buttons">
+                      <button type="button" class="btn-cancel" id="cancel-edit-btn">Отменить</button>
+                      <button type="submit" class="btn-save-submit">Сохранить изменения</button>
+                  </div>
+              </form>
+          </div>
+      </div>
 
         <div class="tab-pane" id="cart">
            <h2 class="pane-title">Корзина</h2>
            {% if cart_items %}
            <div class="cart-layout">
                <div class="cart-items">
-                   {% for item in cart_items %}
-                   <div class="cart-item" data-price="{{ item.price }}">
-                       <div class="cart-img">
-                           {% if item.image_url %}
-                               <img src="{{ item.image_url }}" alt="{{ item.name }}">
-                           {% else %}
-                               <div class="no-img">🌸</div>
-                           {% endif %}
-                       </div>
-                       <div class="cart-info">
-                           <h3 class="cart-name">{{ item.name }}</h3>
-                           <p class="cart-price-single">{{ item.price }} ₸ / шт.</p>
-                       </div>
-                       <div class="cart-controls">
-                           <button class="qty-btn minus" type="button">−</button>
-                           <input type="text" class="qty-input" value="{{ item.quantity }}" readonly>
-                           <button class="qty-btn plus" type="button">+</button>
-                       </div>
-                       <div class="cart-total-price">
-                           <span>{{ item.total_price }}</span> ₸
-                       </div>
-                       <button class="cart-remove" type="button" aria-label="Удалить">
-                           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                       </button>
-                   </div>
-                   {% endfor %}
+                  {% for item in cart_items %}
+                    <div class="cart-item">
+                      <div class="cart-img">
+                        {% if item.product.image %} 
+                          <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                        {% else %}
+                          <div class="no-img">🌸</div>
+                        {% endif %}
+                      </div>
+                      <div class="cart-info">
+                            <h3 class="cart-name">{{ item.product.name }}</h3> <p class="cart-price-single">{{ item.product.price }} ₸ / шт.</p>
+                      </div>
+                    </div>
+                  {% endfor %}
                </div>
 
                <div class="cart-summary">
@@ -155,20 +195,16 @@
           {% if orders %}
             <div class="orders-list">
               {% for order in orders %}
-                <div class="order-card">
-                  <div class="order-header">
-                    <span class="order-id">Заказ №{{ order.id }}</span>
-                    <span class="order-date">{{ order.date }}</span>
-                  </div>
-                  <div class="order-body">
-                    <div class="order-status status-{{ order.color }}">{{ order.status }}</div>
-                    <div class="order-total">{{ order.total }}</div>
-                  </div>
-                  <div class="order-footer">
-                    <a href="#" class="btn-outline">Подробнее</a>
-                    <a href="#" class="btn-repeat">Повторить</a>
-                  </div>
+              <div class="order-card">
+                <div class="order-header">
+                  <span class="order-id">Заказ №{{ order.id }}</span>
+                  <span class="order-date">{{ order.created_at|date:"d.m.Y" }}</span> </div>
+                <div class="order-body">
+                  <div class="order-status status-{{ order.status_color }}">
+                      {{ order.get_status_display }} </div>
+                  <div class="order-total">{{ order.total_amount }} ₸</div>
                 </div>
+              </div>
               {% endfor %}
             </div>
           {% else %}
