@@ -45,23 +45,21 @@ def api_toggle_wishlist(request):
 
 @login_required
 @require_POST
-def api_add_to_cart(request):
-    """Добавить в корзину (с проверкой на дубликаты)"""
+def api_toggle_cart(request):
     data = json.loads(request.body)
     product_id = data.get('product_id')
     product = get_object_or_404(Product, id=product_id)
-    
+
     cart, _ = Cart.objects.get_or_create(user=request.user)
-    
-    # Проверяем, есть ли уже этот товар в корзине
-    if CartItem.objects.filter(cart=cart, product=product).exists():
-        # Если есть — НЕ добавляем дубль
-        return JsonResponse({'status': 'ok', 'message': 'Товар уже в корзине', 'added': False})
-    
-    # Если нет — создаем
-    CartItem.objects.create(cart=cart, product=product, quantity=1)
-    
-    return JsonResponse({'status': 'ok', 'message': 'Товар добавлен', 'added': True})
+
+    item = CartItem.objects.filter(cart=cart, product=product).first()
+
+    if item:
+        item.delete()
+        return JsonResponse({'in_cart': False})
+    else:
+        CartItem.objects.create(cart=cart, product=product, quantity=1)
+        return JsonResponse({'in_cart': True})
 
 @login_required
 @require_POST
