@@ -37,13 +37,9 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.status === 'ok') {
                 if (data.in_wishlist) {
-                    alert('Добавлено в избранное');
-                    btn.classList.add('active');
+                    btn.classList.add('in-wishlist');
                 } else {
-                    alert('Удалено из избранного');
-                    btn.classList.remove('active');
-                    const card = btn.closest('.wishlist-card');
-                    if(card) card.remove(); 
+                    btn.classList.remove('in-wishlist');
                 }
             }
         });
@@ -53,21 +49,26 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.addEventListener('click', function(e) {
         const btn = e.target.closest('.cart-btn');
         if (!btn) return;
-        
+
         if (btn.tagName === 'A') return;
 
         e.preventDefault();
         const productId = btn.getAttribute('data-product-id');
 
-        fetch('/personal_account/api/cart/add/', {
+        fetch('/personal_account/api/cart/toggle/', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+            headers: { 
+                'Content-Type': 'application/json', 
+                'X-CSRFToken': csrftoken 
+            },
             body: JSON.stringify({ product_id: productId })
         })
         .then(res => res.json())
         .then(data => {
-            if (data.status === 'ok') {
-                alert(data.message);
+            if (data.in_cart) {
+                btn.classList.add('in-cart');
+            } else {
+                btn.classList.remove('in-cart');
             }
         });
     });

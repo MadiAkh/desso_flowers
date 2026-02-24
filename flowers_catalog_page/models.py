@@ -69,6 +69,39 @@ class Product(models.Model):
 
 
 
+# Моделька клубники в шоколоде
+class ProductStrawberryChoco(models.Model):
+    name = models.CharField("Название товара", max_length=255)
+    description = models.CharField("Описание (линия под названием)", max_length=255, blank=True)
+    price = models.DecimalField("Цена", max_digits=10, decimal_places=2)
+    is_new = models.BooleanField("Новинка", default=False)
+    is_active = models.BooleanField("Активен", default=True)
+
+    MEDIA_TYPES = (
+        ("image", "Изображение"),
+    )
+    media_type = models.CharField(
+        "Тип медиа",
+        max_length=10,
+        choices=MEDIA_TYPES,
+        default="image",
+    )
+
+    file = models.FileField("Файл", upload_to="products/strawberries/")
+    order = models.PositiveIntegerField("Порядок", default=0)
+
+    total_sales = models.PositiveIntegerField("Всего продаж", default=0)
+    created_at = models.DateTimeField("Создан", auto_now_add=True)
+
+    class Meta:
+        ordering = ["order"]
+        verbose_name = "Клубника в шоколаде"
+        verbose_name_plural = "Клубника в шоколаде"
+
+    def __str__(self):
+        return self.name
+
+
 
 # ----------------- Добавление видео в hero страницы товара
 

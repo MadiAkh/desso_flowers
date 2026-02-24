@@ -11,7 +11,7 @@ urlpatterns = [
 
     # --- API для кнопок (AJAX) ---
     path('api/wishlist/toggle/', views.api_toggle_wishlist, name='api_toggle_wishlist'),
-    path('api/cart/add/', views.api_add_to_cart, name='api_add_to_cart'),
+    path('api/cart/toggle/', views.api_toggle_cart),
     path('api/cart/remove/', views.api_remove_cart_item, name='api_remove_cart_item'),
     
     # Новые страницы

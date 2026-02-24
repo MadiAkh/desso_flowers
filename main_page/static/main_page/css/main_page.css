@@ -20,6 +20,13 @@
   margin: 0;
 }
 
+.in-wishlist svg,
+.in-cart svg {
+    color: #56348b;
+    stroke: #56348b;
+    fill: #56348b;
+}
+
 /* ----- горизонтальный слайдер ----- */
 
 .home-new-slider {
@@ -336,9 +343,10 @@
 
 
 .home-new > .container {
-  max-width: 2000px;
-  padding-left: 24px;
-  padding-right: 24px;
+  max-width: 2100px;
+  padding-left: 100px;
+  padding-right: 100px;
+  margin: 0 auto;
 }
 
 
@@ -687,4 +695,28 @@
         width: 34px;
         height: 34px;
     }
+}
+
+
+/* БАЗОВОЕ СОСТОЯНИЕ */
+.btn-action {
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.btn-action svg {
+    stroke: black;
+    fill: none;
+}
+
+/* АКТИВНОЕ СОСТОЯНИЕ */
+.btn-action.in-wishlist,
+.btn-action.in-cart {
+    background: #56348b;
+}
+
+.btn-action.in-wishlist svg,
+.btn-action.in-cart svg {
+    stroke: white !important;
+    fill: white !important;
 }

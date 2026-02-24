@@ -44,12 +44,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
             TABS.forEach(t => t.classList.toggle("is-active", t === tab));
             GRIDS.forEach(grid => {
-                if (grid.id === targetId) {
-                    grid.classList.add("is-active");
-                    updateGridVisibility(grid);
-                } else {
-                    grid.classList.remove("is-active");
-                }
+            // ❗ КЛУБНИКУ НЕ ТРОГАЕМ
+            if (grid.id === 'strawberries-grid') return;
+
+            if (grid.id === targetId) {
+                grid.classList.add("is-active");
+                updateGridVisibility(grid);
+            } else {
+                grid.classList.remove("is-active");
+            }
             });
         });
     });
@@ -114,6 +117,32 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('filterCancel')?.addEventListener('click', toggleFilter);
         filterAside.querySelector('.filter-aside__overlay')?.addEventListener('click', toggleFilter);
     }
+
+    /* ===== 4.1 ФИЛЬТР ДЛЯ КЛУБНИКИ ===== */
+
+    const strawberryFilterBtn = document.querySelector(
+        '.catalog-filter-toggle[data-filter="strawberry"]'
+    );
+
+    const strawberryAside = document.getElementById('filterAsideStrawberry');
+
+    const toggleStrawberryFilter = () => {
+        if (strawberryAside) strawberryAside.classList.toggle('is-open');
+    };
+
+    if (strawberryFilterBtn && strawberryAside) {
+        strawberryFilterBtn.addEventListener('click', toggleStrawberryFilter);
+
+        strawberryAside.querySelector('.filter-aside__overlay')
+            ?.addEventListener('click', toggleStrawberryFilter);
+
+        strawberryAside.querySelector('#filterClose')
+            ?.addEventListener('click', toggleStrawberryFilter);
+
+        strawberryAside.querySelector('#filterCancel')
+            ?.addEventListener('click', toggleStrawberryFilter);
+    }
+
 
     /* --- ЛОГИКА ДВОЙНОГО СЛАЙДЕРА (НОВОЕ) --- */
     const MIN_GAP = 1000; // Минимальная разница
