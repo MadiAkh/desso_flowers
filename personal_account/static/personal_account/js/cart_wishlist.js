@@ -62,6 +62,11 @@ document.addEventListener("DOMContentLoaded", function () {
           this.textContent = 'В корзине ✓';
           this.classList.add('in-cart');
           this.disabled = true;
+
+        // 🔥 если пользователь сейчас во вкладке корзины — обновляем её
+        if (window.location.hash === '#cart') {
+            location.reload();
+        }
         } else {
           this.textContent = 'Добавить в корзину';
           this.classList.remove('in-cart');

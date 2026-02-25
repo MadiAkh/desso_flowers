@@ -46,36 +46,28 @@ def api_toggle_wishlist(request):
 @require_POST
 @login_required
 def api_toggle_cart(request):
-    try:
-        data = json.loads(request.body.decode('utf-8'))
-        product_id = data.get('product_id')
+    data = json.loads(request.body)
+    product_id = data.get('product_id')
 
-        if not product_id:
-            return JsonResponse({'error': 'No product id'}, status=400)
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    item = CartItem.objects.filter(cart=cart, product_id=product_id).first()
 
-        product = get_object_or_404(Product, id=product_id)
+    if item:
+        item.delete()
+        in_cart = False
+    else:
+        CartItem.objects.create(cart=cart, product_id=product_id, quantity=1)
+        in_cart = True
 
-        cart, _ = Cart.objects.get_or_create(user=request.user)
+    cart_items = cart.items.all()
+    cart_total = sum(i.product.price * i.quantity for i in cart_items)
+    cart_count = sum(i.quantity for i in cart_items)
 
-        item = CartItem.objects.filter(cart=cart, product=product).first()
-
-        if item:
-            item.delete()
-            in_cart = False
-        else:
-            CartItem.objects.create(cart=cart, product=product, quantity=1)
-            in_cart = True
-
-        cart_count = cart.items.aggregate(total=Sum('quantity'))['total'] or 0
-
-        return JsonResponse({
-            'in_cart': in_cart,
-            'cart_count': cart_count
-        })
-
-    except Exception as e:
-        print("CART ERROR:", e)
-        return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({
+        "in_cart": in_cart,
+        "cart_total": cart_total,
+        "cart_count": cart_count
+    })
 
 @login_required
 @require_POST
@@ -194,3 +186,26 @@ def login_ajax_view(request):
             return JsonResponse({'status': 'error', 'message': 'Ошибка данных'}, status=400)
             
     return JsonResponse({'status': 'error', 'message': 'Только POST запросы'}, status=405)
+
+
+@require_POST
+@login_required
+def api_update_quantity(request):
+    data = json.loads(request.body)
+    product_id = data.get('product_id')
+    quantity = int(data.get('quantity'))
+
+    if quantity < 1:
+        quantity = 1
+
+    cart = Cart.objects.get(user=request.user)
+    item = CartItem.objects.get(cart=cart, product_id=product_id)
+    item.quantity = quantity
+    item.save()
+
+    total = sum(i.product.price * i.quantity for i in cart.items.all())
+
+    return JsonResponse({
+        'quantity': item.quantity,
+        'total': total
+    })

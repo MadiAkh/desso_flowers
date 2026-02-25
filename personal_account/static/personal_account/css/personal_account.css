@@ -611,3 +611,33 @@
     transform: translate(-50%, 0);
   }
 }
+
+.qty-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qty-control button {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.qty-value {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.qty-value {
+    transition: transform 0.15s ease;
+}
+
+.qty-value.bump {
+    transform: scale(1.2);
+}

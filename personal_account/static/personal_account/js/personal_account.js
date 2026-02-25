@@ -1,3 +1,21 @@
+// ===== GLOBAL UTILS =====
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
 document.addEventListener('DOMContentLoaded', function() {
 
     // --- 1. ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК (Профиль / Заказы / Избранное) ---
@@ -184,3 +202,114 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // ВАЖНОЕ ИЗМЕНЕНИЕ: Проверяем при клике на иконки в шапке
     window.addEventListener('hashchange', checkHash);
+
+
+    document.querySelectorAll('.btn-remove').forEach(btn => {
+        btn.addEventListener('click', async function () {
+
+            const productId = this.dataset.productId;
+            const row = this.closest('.cart-item');
+            const badge = document.querySelector('.cart-badge');
+                if (badge) {
+                    badge.textContent = data.cart_count;
+
+                    if (data.cart_count === 0) {
+                        badge.style.display = 'none';
+                    }
+                }
+
+            await fetch('/personal_account/api/cart/toggle/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({ product_id: productId })
+            });
+
+            row.style.transition = "opacity 0.3s ease";
+            row.style.opacity = "0";
+
+            setTimeout(() => {
+                row.remove();
+
+                // если больше нет товаров
+                if (document.querySelectorAll('.cart-item').length === 0) {
+
+                    const container = document.querySelector('.cart-items-list');
+
+                    container.innerHTML = `
+                        <div style="text-align:center;padding:40px 0;">
+                            <h3>🛒 Ваша корзина пуста</h3>
+                            <a href="/catalog/" 
+                            style="display:inline-block;margin-top:15px;padding:10px 20px;background:#000;color:#fff;border-radius:6px;text-decoration:none;">
+                                Перейти в каталог
+                            </a>
+                        </div>
+                    `;
+
+                    document.querySelector('.cart-total').textContent = "0 ₸";
+                }
+
+            }, 300);
+        });
+    });
+
+    document.querySelectorAll('.qty-control').forEach(control => {
+
+        const productId = control.dataset.productId;
+        const valueEl = control.querySelector('.qty-value');
+
+        control.querySelector('.qty-plus').addEventListener('click', () => {
+            updateQty(productId, parseInt(valueEl.textContent) + 1, valueEl);
+        });
+
+        control.querySelector('.qty-minus').addEventListener('click', () => {
+            let current = parseInt(valueEl.textContent);
+            if (current > 1) {
+            updateQty(productId, current - 1, valueEl);
+            }
+        });
+        });
+
+        async function updateQty(productId, quantity, valueEl) {
+
+            const control = valueEl.closest('.qty-control');
+            const plusBtn = control.querySelector('.qty-plus');
+            const minusBtn = control.querySelector('.qty-minus');
+
+            // 🔒 Блокируем кнопки
+            plusBtn.disabled = true;
+            minusBtn.disabled = true;
+
+            try {
+                const res = await fetch('/personal_account/api/cart/update-quantity/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        quantity: quantity
+                    })
+                });
+
+                const data = await res.json();
+
+                valueEl.textContent = data.quantity;
+
+                // ✨ Анимация
+                valueEl.classList.add('bump');
+                setTimeout(() => valueEl.classList.remove('bump'), 150);
+
+                document.querySelector('.cart-total').textContent = data.total + " ₸";
+
+            } catch (err) {
+                console.error(err);
+            }
+
+            // 🔓 Разблокируем кнопки
+            plusBtn.disabled = false;
+            minusBtn.disabled = false;
+        }
