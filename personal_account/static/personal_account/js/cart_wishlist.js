@@ -24,10 +24,31 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Обновить счётчик корзины в шапке (если есть элемент)
+  // --- универсальная функция обновления счётчика корзины ---
   function updateCartCounter(n){
     if (typeof n === 'undefined') return;
-    const el = document.querySelector('#site-cart-count') || document.querySelector('.site-cart-count');
-    if (el) el.textContent = n;
+
+    // списком обновляем все возможные места в DOM, где может быть бейдж/счётчик
+    const selectors = [
+      '#site-cart-count',
+      '.site-cart-count',
+      '.cart-badge',
+      '.badge-count',
+      '.cart-count'
+    ];
+
+    selectors.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => {
+        el.textContent = n;
+        // если ноль — скрываем бейдж (как в существующем CSS/логике)
+        if (parseInt(n) === 0) {
+          // некоторые бейджи используют display:none
+          el.style.display = 'none';
+        } else {
+          el.style.display = '';
+        }
+      });
+    });
   }
 
   // Обработчик добавления/убирания в корзину (toggle)
@@ -63,17 +84,21 @@ document.addEventListener("DOMContentLoaded", function () {
           this.classList.add('in-cart');
           this.disabled = true;
 
-        // 🔥 если пользователь сейчас во вкладке корзины — обновляем её
-        if (window.location.hash === '#cart') {
+          // если пользователь на странице корзины — перезагрузим
+          const cartPane = document.querySelector('#cart');
+          if (cartPane) {
             location.reload();
-        }
+          }
+
         } else {
           this.textContent = 'Добавить в корзину';
           this.classList.remove('in-cart');
           this.disabled = false;
         }
 
-        if (data.cart_count !== undefined) updateCartCounter(data.cart_count);
+        if (data.cart_count !== undefined) {
+          updateCartCounter(data.cart_count);
+        }
 
       } catch (err) {
         console.error('Add to cart error', err);
