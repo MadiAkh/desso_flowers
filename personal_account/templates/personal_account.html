@@ -233,13 +233,22 @@
                         <div class="catalog-card-price" style="font-weight: bold; margin-bottom: 15px;">{{ product.price }} ₸</div>
 
                         <div class="wishlist-actions" style="display: flex; flex-direction: column; gap: 10px;">
-                            <button class="btn-add-cart" data-product-id="{{ product.id }}" style="background: #000; color: #fff; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">
+                            <button
+                                type="button"
+                                class="btn-add-cart"
+                                data-product-id="{{ product.id }}"
+                                style="background: #000; color: #fff; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">
                                 Добавить в корзину
                             </button>
-                            <button class="btn-wishlist" data-product-id="{{ product.id }}" style="background: #fff; border: 1px solid #ddd; color: #333; padding: 10px; border-radius: 5px; cursor: pointer;">
+
+                            <button
+                                type="button"
+                                class="btn-wishlist"
+                                data-product-id="{{ product.id }}"
+                                style="background: #fff; border: 1px solid #ddd; color: #333; padding: 10px; border-radius: 5px; cursor: pointer;">
                                 Удалить из избранного
                             </button>
-                        </div>
+                            </div>
                     </div>
                     {% endfor %}
                 </div>
@@ -256,4 +265,5 @@
 
 {% block scripts %}
   <script src="{% static 'personal_account/js/personal_account.js' %}"></script>
+  <script src="{% static 'personal_account/js/cart_wishlist.js' %}"></script>
 {% endblock %}

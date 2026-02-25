@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth.forms import AuthenticationForm
 import json
-
+from django.db.models import Sum
 
 from django.views.decorators.http import require_POST
 
@@ -43,23 +43,39 @@ def api_toggle_wishlist(request):
         
     return JsonResponse({'status': 'ok', 'in_wishlist': in_wishlist})
 
-@login_required
 @require_POST
+@login_required
 def api_toggle_cart(request):
-    data = json.loads(request.body)
-    product_id = data.get('product_id')
-    product = get_object_or_404(Product, id=product_id)
+    try:
+        data = json.loads(request.body.decode('utf-8'))
+        product_id = data.get('product_id')
 
-    cart, _ = Cart.objects.get_or_create(user=request.user)
+        if not product_id:
+            return JsonResponse({'error': 'No product id'}, status=400)
 
-    item = CartItem.objects.filter(cart=cart, product=product).first()
+        product = get_object_or_404(Product, id=product_id)
 
-    if item:
-        item.delete()
-        return JsonResponse({'in_cart': False})
-    else:
-        CartItem.objects.create(cart=cart, product=product, quantity=1)
-        return JsonResponse({'in_cart': True})
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+
+        item = CartItem.objects.filter(cart=cart, product=product).first()
+
+        if item:
+            item.delete()
+            in_cart = False
+        else:
+            CartItem.objects.create(cart=cart, product=product, quantity=1)
+            in_cart = True
+
+        cart_count = cart.items.aggregate(total=Sum('quantity'))['total'] or 0
+
+        return JsonResponse({
+            'in_cart': in_cart,
+            'cart_count': cart_count
+        })
+
+    except Exception as e:
+        print("CART ERROR:", e)
+        return JsonResponse({'error': str(e)}, status=500)
 
 @login_required
 @require_POST
