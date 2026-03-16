@@ -72,7 +72,6 @@
             <a href="#" class="dropbtn">Каталог</a> 
             <div class="dropdown-content">
               <a href="{% url 'catalog_page' %}">Коллекции DÉSSO</a>
-              <a href="#">Клубника в шоколаде</a>
             </div>
           </div>
 
@@ -177,7 +176,8 @@
   {% endblock stories %}
 
     <main>
-        {% block content %}{% endblock %}
+        {% block content %}
+        {% endblock %}
     </main>
   
   <!-- Floating CTA (Contact button) -->
@@ -246,6 +246,7 @@
     };
   </script>
   <script async src="{% static 'base_page/js/stories.js' %}"></script>
+  <script src="{% static 'personal_account/js/cart_wishlist.js' %}"></script>
   {% endblock %}
 
 </body>

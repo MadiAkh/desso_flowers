@@ -630,3 +630,27 @@
 .btn-filter--cancel { background: transparent; color: #888; text-decoration: underline; }
 
 .btn-filter:hover { opacity: 0.8; }
+
+
+/* БАЗОВОЕ СОСТОЯНИЕ */
+.btn-action {
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.btn-action svg {
+    stroke: black;
+    fill: none;
+}
+
+/* АКТИВНОЕ СОСТОЯНИЕ */
+.btn-action.in-wishlist,
+.btn-action.in-cart {
+    background: #56348b;
+}
+
+.btn-action.in-wishlist svg,
+.btn-action.in-cart svg {
+    stroke: white !important;
+    fill: white !important;
+}

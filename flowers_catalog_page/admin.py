@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Collection, Product, HeroSlideProducts
+from .models import Collection, Product, HeroSlideProducts, ProductStrawberryChoco
 
 
 # -------------Добавление товара-------------------------
@@ -20,6 +20,16 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ("is_new", "is_active", "media_type", "collections")
     filter_horizontal = ("collections",)
     ordering = ("order",)
+
+
+@admin.register(ProductStrawberryChoco)
+class ProductStrawberryChocoAdmin(admin.ModelAdmin):
+    list_display = ("name", "price", "is_new", "is_active", "order")
+    list_editable = ("is_new", "is_active", "order")
+    search_fields = ("name",)
+    list_filter = ("is_new", "is_active")
+    ordering = ("order",)
+    
 
 
 
