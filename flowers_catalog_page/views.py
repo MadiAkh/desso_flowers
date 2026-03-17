@@ -41,6 +41,11 @@ def catalog_page(request):
     min_price_straw = int(min(prices_straw)) if prices_straw else 0
     max_price_straw = int(max(prices_straw)) if prices_straw else 50000
 
+    # ВАЖНО: Считаем цены именно здесь
+    price_bounds = products_all.aggregate(min_p=Min('price'), max_p=Max('price'))
+    min_price = int(price_bounds['min_p'] or 0)
+    max_price = int(price_bounds['max_p'] or 100000)
+
     return render(
         request,
         "flowers_catalog_page.html",
@@ -50,6 +55,7 @@ def catalog_page(request):
             "collections": collections,
             "catalog_slides": catalog_slides,
             "stories": stories,
+<<<<<<< HEAD
             "hits": hits,
             "new_products": new_products,
             # Диапазоны для букетов
@@ -58,5 +64,9 @@ def catalog_page(request):
             # Диапазоны для клубники
             "min_price_straw": min_price_straw,
             "max_price_straw": max_price_straw,
+=======
+            "min_price": min_price,  # Теперь они попадут в HTML
+            "max_price": max_price,
+>>>>>>> origin/main
         },
     )   

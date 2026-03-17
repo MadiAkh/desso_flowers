@@ -61,6 +61,7 @@ def api_toggle_cart(request):
         CartItem.objects.create(cart=cart, product=product, quantity=1)
         return JsonResponse({'in_cart': True})
 
+
 @login_required
 @require_POST
 def api_remove_cart_item(request):

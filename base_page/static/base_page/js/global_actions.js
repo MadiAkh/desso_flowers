@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     btn.classList.add('in-wishlist');
                 } else {
                     btn.classList.remove('in-wishlist');
+
                 }
             }
         });
@@ -49,12 +50,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.addEventListener('click', function(e) {
         const btn = e.target.closest('.cart-btn');
         if (!btn) return;
-
-        if (btn.tagName === 'A') return;
-
-        e.preventDefault();
-        const productId = btn.getAttribute('data-product-id');
-
         fetch('/personal_account/api/cart/toggle/', {
             method: 'POST',
             headers: { 
@@ -69,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.classList.add('in-cart');
             } else {
                 btn.classList.remove('in-cart');
+
             }
         });
     });

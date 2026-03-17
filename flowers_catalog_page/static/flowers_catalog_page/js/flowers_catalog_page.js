@@ -53,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 grid.classList.remove("is-active");
             }
+
             });
         });
     });
@@ -142,7 +143,6 @@ document.addEventListener("DOMContentLoaded", () => {
         strawberryAside.querySelector('#filterCancel')
             ?.addEventListener('click', toggleStrawberryFilter);
     }
-
 
     /* --- ЛОГИКА ДВОЙНОГО СЛАЙДЕРА (НОВОЕ) --- */
     const MIN_GAP = 1000; // Минимальная разница

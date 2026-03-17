@@ -424,6 +424,7 @@
 .cart-remove:hover { color: #e74c3c; }
 
 /* Сводная карточка (Итого) */
+<<<<<<< HEAD
 /* === ОБНОВЛЕННАЯ СВОДНАЯ КАРТОЧКА === */
 .cart-summary {
     background: #ffffff;
@@ -529,6 +530,44 @@
 
 .btn-checkout:hover::after {
     left: 100%;
+=======
+.cart-summary {
+    background: #fcfcfc;
+    padding: 25px;
+    border-radius: 16px;
+    border: 1px solid #eee;
+    height: fit-content;
+}
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 15px;
+    color: #555;
+}
+.summary-row.total {
+    font-weight: 700;
+    font-size: 18px;
+    color: #000;
+    margin-top: 15px;
+    margin-bottom: 25px;
+}
+.btn-checkout {
+    width: 100%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 16px;
+    border-radius: 99px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.btn-checkout:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(123, 44, 191, 0.3);
+>>>>>>> origin/main
 }
 
 /* === ФИКСАЦИЯ ШАПКИ (из прошлого ответа) === */
@@ -552,8 +591,13 @@
 .profile-content-container {
     background: #ffffff;
     padding: 40px;
+<<<<<<< HEAD
     border-radius: 24px; /* Более мягкий радиус */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+=======
+    border-radius: 20px;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.03);
+>>>>>>> origin/main
 }
 
 .pane-title {
@@ -594,7 +638,6 @@
     letter-spacing: 1.2px;
     color: #a0a0a0;
     font-weight: 700;
-}
 
 .detail-item p {
     font-size: 16px;
@@ -620,6 +663,7 @@
 
 /* Кнопки */
 .btn-edit-trigger {
+<<<<<<< HEAD
     background: #f8f9fa;
     color: #222;
     border: 1px solid #e9ecef;
@@ -636,6 +680,21 @@
     color: #fff;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+=======
+    background: #222;
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s;
+}
+
+.btn-edit-trigger:hover {
+    transform: translateY(-2px);
+    background: #000;
+>>>>>>> origin/main
 }
 
 .form-buttons {
