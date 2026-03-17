@@ -1,3 +1,24 @@
+<<<<<<< HEAD
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const csrftoken = getCookie("csrftoken");
+
+
+=======
+>>>>>>> origin/main
 document.addEventListener('DOMContentLoaded', function() {
 
     // --- 1. ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК (Профиль / Заказы / Избранное) ---
@@ -71,33 +92,43 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function updateCartTotal() {
+    window.updateCartTotal = function() {
+        const items = document.querySelectorAll('.cart-item-row');
+        const summaryBlock = document.querySelector('.cart-summary');
+        let emptyMsg = document.querySelector('.empty-cart-message');
+        const totalElem = document.querySelector('.total-row span:last-child');
+
+        // если нет сообщения — создаем
+        if (!emptyMsg) {
+            emptyMsg = document.createElement("p");
+            emptyMsg.classList.add("empty-cart-message");
+            emptyMsg.textContent = "Корзина пуста";
+            document.querySelector('.cart-items-list').appendChild(emptyMsg);
+        }
+
+        // ❗ ВАЖНО: проверка на null
+        if (items.length === 0) {
+            if (summaryBlock) summaryBlock.style.display = 'none';
+            if (emptyMsg) emptyMsg.style.display = 'block';
+            return;
+        } else {
+            if (summaryBlock) summaryBlock.style.display = 'block';
+            if (emptyMsg) emptyMsg.style.display = 'none';
+        }
+
         let total = 0;
-        
-        // Пробегаем по всем товарам и считаем сумму
-        document.querySelectorAll('.cart-item').forEach(item => {
-            const price = parseInt(item.getAttribute('data-price'));
-            const qtyInput = item.querySelector('.qty-input');
-            const qty = qtyInput ? parseInt(qtyInput.value) : 1;
-            total += price * qty;
+
+        items.forEach(item => {
+            const priceText = item.querySelector('.catalog-card-price')?.textContent || "0";
+            const price = parseInt(priceText.replace(/\D/g, '')) || 0;
+            total += price;
         });
 
-        // Обновляем текст "Товары"
-        const goodsElem = document.getElementById('summary-goods');
-        if (goodsElem) goodsElem.textContent = total.toLocaleString() + ' ₸';
-
-        // Берем стоимость доставки (удаляем все кроме цифр)
-        const deliveryElem = document.getElementById('summary-delivery');
-        if(!deliveryElem) return; 
-        
-        const deliveryCost = parseInt(deliveryElem.textContent.replace(/\D/g, '')) || 0;
-        
-        // Обновляем "Итого к оплате"
-        const totalElem = document.getElementById('summary-total');
         if (totalElem) {
-            totalElem.textContent = (total + deliveryCost).toLocaleString() + ' ₸';
+            totalElem.textContent = total.toLocaleString() + ' ₸';
         }
-    }
+    };
+
 
     // --- 3. ПОДТВЕРЖДЕНИЕ ВЫХОДА ---
     const logoutBtn = document.getElementById('logoutBtn');
@@ -183,4 +214,43 @@ document.addEventListener('DOMContentLoaded', function() {
     checkHash();
     
     // ВАЖНОЕ ИЗМЕНЕНИЕ: Проверяем при клике на иконки в шапке
+<<<<<<< HEAD
     window.addEventListener('hashchange', checkHash);
+
+
+document.body.addEventListener("click", function(e){
+
+    const removeBtn = e.target.closest(".btn-remove-from-cart");
+
+    if(!removeBtn) return;
+
+    fetch("/personal_account/api/cart/remove/", {
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            "X-CSRFToken": csrftoken
+        },
+        body: JSON.stringify({
+            product_id: removeBtn.dataset.productId
+        })
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        const row = removeBtn.closest(".cart-item-row");
+        if (row) row.remove();
+
+        if (typeof window.updateCartTotal === 'function') {
+            window.updateCartTotal();
+        }
+    });
+
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    if (typeof window.updateCartTotal === 'function') {
+        window.updateCartTotal();
+    }
+});
+=======
+    window.addEventListener('hashchange', checkHash);
+>>>>>>> origin/main
