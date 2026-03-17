@@ -55,7 +55,6 @@ def catalog_page(request):
             "collections": collections,
             "catalog_slides": catalog_slides,
             "stories": stories,
-<<<<<<< HEAD
             "hits": hits,
             "new_products": new_products,
             # Диапазоны для букетов
@@ -64,9 +63,6 @@ def catalog_page(request):
             # Диапазоны для клубники
             "min_price_straw": min_price_straw,
             "max_price_straw": max_price_straw,
-=======
-            "min_price": min_price,  # Теперь они попадут в HTML
-            "max_price": max_price,
->>>>>>> origin/main
+
         },
     )   

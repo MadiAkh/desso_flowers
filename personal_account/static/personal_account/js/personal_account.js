@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== "") {
@@ -16,9 +16,6 @@ function getCookie(name) {
 
 const csrftoken = getCookie("csrftoken");
 
-
-=======
->>>>>>> origin/main
 document.addEventListener('DOMContentLoaded', function() {
 
     // --- 1. ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК (Профиль / Заказы / Избранное) ---
@@ -214,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
     checkHash();
     
     // ВАЖНОЕ ИЗМЕНЕНИЕ: Проверяем при клике на иконки в шапке
-<<<<<<< HEAD
+
     window.addEventListener('hashchange', checkHash);
 
 
@@ -251,6 +248,4 @@ document.addEventListener("DOMContentLoaded", function () {
         window.updateCartTotal();
     }
 });
-=======
-    window.addEventListener('hashchange', checkHash);
->>>>>>> origin/main
+
