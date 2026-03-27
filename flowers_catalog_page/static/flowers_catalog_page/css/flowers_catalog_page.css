@@ -461,22 +461,27 @@
 .filter-aside {
     position: fixed;
     top: 0;
-    right: -100%; /* Скрыто за краем */
+    right: 0;
     width: 100%;
     height: 100%;
     z-index: 1000;
-    transition: right 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     display: flex;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s ease;
 }
 
 .filter-aside.is-open {
-    right: 0;
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .filter-aside__overlay {
     flex: 1;
     background: rgba(0,0,0,0.4);
     backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity 0.28s ease;
 }
 
 .filter-aside__content {
@@ -486,6 +491,16 @@
     flex-direction: column;
     padding: 40px 30px;
     box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+    transform: translateX(24px);
+    transition: transform 0.34s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.filter-aside.is-open .filter-aside__overlay {
+    opacity: 1;
+}
+
+.filter-aside.is-open .filter-aside__content {
+    transform: translateX(0);
 }
 
 .filter-aside__header {
@@ -630,6 +645,8 @@
 .btn-filter--cancel { background: transparent; color: #888; text-decoration: underline; }
 .btn-filter:hover { opacity: 0.8; }
 
+.btn-filter:hover { opacity: 0.8; }
+
 
 /* БАЗОВОЕ СОСТОЯНИЕ */
 .btn-action {
@@ -652,4 +669,8 @@
 .btn-action.in-cart svg {
     stroke: white !important;
     fill: white !important;
+}
+
+body.filter-open {
+  overflow: hidden;
 }

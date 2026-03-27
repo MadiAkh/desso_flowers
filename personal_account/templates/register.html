@@ -116,6 +116,7 @@
         <div id="tab-register" class="auth-form-container active">
             <form method="post" action="{% url 'personal_account:register' %}">
                 {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next_url }}">
                 {% for field in form %}
                     <div class="form-group">
                         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
@@ -130,6 +131,7 @@
         <div id="tab-login" class="auth-form-container">
             <form id="login-page-form">
                 {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next_url }}">
                 <div class="form-group">
                     <label>Email</label>
                     <input type="email" name="username" class="form-input" required>
@@ -147,6 +149,21 @@
 </section>
 
 <script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
     // Логика переключения табов
     function switchAuthTab(tabName) {
         // Убираем активность у всех
@@ -168,27 +185,26 @@
         e.preventDefault();
         const formData = new FormData(this);
         const data = Object.fromEntries(formData.entries());
-        // В форме Django имя поля username, но ваш API ждет email
         data.email = data.username; 
 
         fetch("{% url 'personal_account:api_login' %}", {
             method: 'POST',
             headers: {
-                'X-CSRFToken': '{{ csrf_token }}',
+                'X-CSRFToken': getCookie('csrftoken'),
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         })
-        .then(response => {
+        .then(async response => {
+            const payload = await response.json().catch(() => ({}));
             if (response.ok) {
-                window.location.href = "{% url 'personal_account:personal_account' %}";
-            } else {
-                return response.json().then(data => {
-                    const err = document.getElementById('login-error-msg');
-                    err.textContent = data.message || 'Ошибка входа';
-                    err.style.display = 'block';
-                });
+                window.location.href = payload.redirect_url || "{% url 'personal_account:personal_account' %}";
+                return;
             }
+
+            const err = document.getElementById('login-error-msg');
+            err.textContent = payload.message || 'Ошибка входа';
+            err.style.display = 'block';
         });
     });
 </script>

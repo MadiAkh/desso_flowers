@@ -55,7 +55,6 @@
                   </a>
 
                   <div class="card-actions">
-
                     {% if user.is_authenticated %}
                         {# ===== WISHLIST ===== #}
                         {% if product.id in wishlist_product_ids %}
@@ -147,6 +146,8 @@
                         </a>
 
                     {% endif %}
+
+                    {% endif %}
                   </div>
 
                   {% if not product.is_active %}
@@ -221,6 +222,7 @@
                   </a>
 
                   <div class="card-actions">
+
                     {% if user.is_authenticated %}
 
                         {# ===== WISHLIST ===== #}
