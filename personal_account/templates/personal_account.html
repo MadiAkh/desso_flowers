@@ -37,9 +37,7 @@
         <button class="nav-item" data-tab="cart">
             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
             Корзина
-            {% if cart_items_count %}
-                <span class="badge-count">{{ cart_items_count }}</span>
-            {% endif %}
+            <span class="badge-count" {% if not cart_items_count %}style="display:none"{% endif %}>{{ cart_items_count|default:0 }}</span>
         </button>
 
         <button class="nav-item" data-tab="orders">
@@ -53,9 +51,7 @@
         <button class="nav-item" data-tab="favorites">
             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
             Избранное
-            {% if wishlist_items_count %}
-                <span class="badge-count favorites-count">{{ wishlist_items_count }}</span>
-            {% endif %}
+            <span class="badge-count favorites-count" {% if not wishlist_items_count %}style="display:none"{% endif %}>{{ wishlist_items_count|default:0 }}</span>
         </button>
 
         <form action="{% url 'personal_account:logout' %}" method="post" id="logout-form" style="display: none;">
@@ -225,13 +221,16 @@
                     </button>
                 </div>
                 {% endfor %}
+            </div>
 
             <div class="cart-footer" style="margin-top: 30px; border-top: 2px solid #000; padding-top: 20px;">
                 <div class="total-row" style="display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; margin-bottom: 20px;">
                     <span>Итого:</span>
                     <span class="cart-total">{{ cart_total }} ₸</span>
                 </div>
-
+                <a href="{% url 'personal_account:checkout' %}" class="btn-checkout" style="display: block; width: 100%; background: #000; color: #fff; text-align: center; padding: 15px; text-decoration: none; border-radius: 5px;">
+                    Оформить заказ
+                </a>
             </div>
         </div>
         {% else %}
