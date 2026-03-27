@@ -11,12 +11,15 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='dessouser',
+            model_name='DessoUser',
+
             name='birth_date',
             field=models.DateField(blank=True, null=True, verbose_name='Дата рождения'),
         ),
         migrations.AddField(
-            model_name='dessouser',
+
+            model_name='DessoUser',
+
             name='gender',
             field=models.CharField(choices=[('M', 'Мужской'), ('F', 'Женский'), ('N', 'Не указано')], default='N', max_length=1, verbose_name='Пол'),
         ),

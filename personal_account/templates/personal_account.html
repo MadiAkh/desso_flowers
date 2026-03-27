@@ -224,17 +224,13 @@
                         ×
                     </button>
                 </div>
-                {% endfor %}
-            </div>
 
             <div class="cart-footer" style="margin-top: 30px; border-top: 2px solid #000; padding-top: 20px;">
                 <div class="total-row" style="display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; margin-bottom: 20px;">
                     <span>Итого:</span>
                     <span class="cart-total">{{ cart_total }} ₸</span>
                 </div>
-                <a href="{% url 'personal_account:checkout' %}" class="btn-checkout" style="display: block; width: 100%; background: #000; color: #fff; text-align: center; padding: 15px; text-decoration: none; border-radius: 5px;">
-                    Оформить заказ
-                </a>
+
             </div>
         </div>
         {% else %}

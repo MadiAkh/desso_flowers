@@ -643,6 +643,7 @@
 .btn-filter--apply { background: #111; color: #fff; }
 .btn-filter--reset { background: #f5f5f5; color: #111; }
 .btn-filter--cancel { background: transparent; color: #888; text-decoration: underline; }
+.btn-filter:hover { opacity: 0.8; }
 
 .btn-filter:hover { opacity: 0.8; }
 
