@@ -1,14 +1,11 @@
 from django.db import models
+from django.db.models import F
 from django.utils.text import slugify
-
-
-# -------------Добавление товара-------------------------
-
 
 
 class Collection(models.Model):
     name = models.CharField("Название коллекции", max_length=100)
-    slug = models.SlugField("URL-адрес", unique=True, blank=True)  # ← добавили blank=True
+    slug = models.SlugField("URL-адрес", unique=True, blank=True)
     is_active = models.BooleanField("Активна", default=True)
     order = models.PositiveIntegerField("Порядок", default=0)
 
@@ -28,14 +25,7 @@ class Product(models.Model):
     name = models.CharField("Название товара", max_length=255)
     description = models.CharField("Описание (линия под названием)", max_length=255, blank=True)
     price = models.DecimalField("Цена", max_digits=10, decimal_places=2)
-
-    collections = models.ManyToManyField(
-        Collection,
-        related_name="products",
-        blank=True,
-        verbose_name="Коллекции",
-    )
-
+    collections = models.ManyToManyField(Collection, related_name="products", blank=True, verbose_name="Коллекции")
     is_new = models.BooleanField("Новинка", default=False)
     is_active = models.BooleanField("Активен", default=True)
 
@@ -43,23 +33,25 @@ class Product(models.Model):
         ("image", "Изображение"),
         ("video", "Видео"),
     )
-    media_type = models.CharField(
-        "Тип медиа",
-        max_length=10,
-        choices=MEDIA_TYPES,
-        default="image",
-    )
-    # ВАЖНО: без начального слэша
+    media_type = models.CharField("Тип медиа", max_length=10, choices=MEDIA_TYPES, default="image")
     file = models.FileField("Файл", upload_to="products/")
-
     order = models.PositiveIntegerField("Порядок", default=0)
-
     total_sales = models.PositiveIntegerField("Всего продаж", default=0)
     created_at = models.DateTimeField("Создан", auto_now_add=True)
 
+    @property
+    def item_kind(self):
+        return "product"
+
+    @property
+    def item_key(self):
+        return f"{self.item_kind}:{self.id}"
+
+    @staticmethod
     def finalize_order(order):
         for item in order.items.all():
-            Product.objects.filter(pk=item.product_id).update(total_sales=F('total_sales') + item.quantity)
+            if item.product_id:
+                Product.objects.filter(pk=item.product_id).update(total_sales=F("total_sales") + item.quantity)
 
     class Meta:
         ordering = ["order"]
@@ -68,8 +60,6 @@ class Product(models.Model):
         return self.name
 
 
-
-# Моделька клубники в шоколоде
 class ProductStrawberryChoco(models.Model):
     name = models.CharField("Название товара", max_length=255)
     description = models.CharField("Описание (линия под названием)", max_length=255, blank=True)
@@ -80,18 +70,19 @@ class ProductStrawberryChoco(models.Model):
     MEDIA_TYPES = (
         ("image", "Изображение"),
     )
-    media_type = models.CharField(
-        "Тип медиа",
-        max_length=10,
-        choices=MEDIA_TYPES,
-        default="image",
-    )
-
+    media_type = models.CharField("Тип медиа", max_length=10, choices=MEDIA_TYPES, default="image")
     file = models.FileField("Файл", upload_to="products/strawberries/")
     order = models.PositiveIntegerField("Порядок", default=0)
-
     total_sales = models.PositiveIntegerField("Всего продаж", default=0)
     created_at = models.DateTimeField("Создан", auto_now_add=True)
+
+    @property
+    def item_kind(self):
+        return "strawberry"
+
+    @property
+    def item_key(self):
+        return f"{self.item_kind}:{self.id}"
 
     class Meta:
         ordering = ["order"]
@@ -101,9 +92,6 @@ class ProductStrawberryChoco(models.Model):
     def __str__(self):
         return self.name
 
-
-
-# ----------------- Добавление видео в hero страницы товара
 
 class HeroSlideProducts(models.Model):
     title = models.CharField("Заголовок", max_length=255)

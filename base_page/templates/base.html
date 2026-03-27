@@ -50,6 +50,9 @@
               <a href="{% if user.is_authenticated %}{% url 'personal_account:personal_account' %}#favorites{% else %}{% url 'personal_account:register' %}{% endif %}" 
                 class="action-btn" 
                 aria-label="Избранное">
+                  {% if wishlist_items_count %}
+                    <span class="cart-badge favorites-badge">{{ wishlist_items_count }}</span>
+                  {% endif %}
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
               </a>
               <a href="{% if user.is_authenticated %}{% url 'personal_account:personal_account' %}{% else %}{% url 'personal_account:register' %}{% endif %}" 
@@ -60,7 +63,10 @@
               <a href="{% if user.is_authenticated %}{% url 'personal_account:personal_account' %}#cart{% else %}{% url 'personal_account:register' %}{% endif %}" 
                 class="action-btn" 
                 aria-label="Корзина">
-                  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                  {% if cart_items_count %}
+                    <span class="cart-badge">{{ cart_items_count }}</span>
+                  {% endif %}
+                  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
               </a>
           </div>
       </div>

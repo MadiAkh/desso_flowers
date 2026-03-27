@@ -1,294 +1,263 @@
 document.addEventListener("DOMContentLoaded", () => {
     const PAGE_SIZE = 12;
+    const tabsContainer = document.querySelector(".catalog-tabs");
+    const tabs = Array.from(document.querySelectorAll(".catalog-tab"));
+    const grids = Array.from(document.querySelectorAll(".catalog-tabs-content .catalog-grid"));
 
-    // Кэшируем элементы
-    const TABS_CONTAINER = document.querySelector(".catalog-tabs");
-    const TABS = document.querySelectorAll(".catalog-tab");
-    const GRIDS = document.querySelectorAll(".catalog-grid");
-    
-    // Элементы фильтра
-    const toggleBtn = document.querySelector('.catalog-filter-toggle');
-    const filterAside = document.getElementById('filterAside');
-    const priceMinInput = document.getElementById('priceMin');
-    const priceMaxInput = document.getElementById('priceMax');
-    const priceRange = document.getElementById('priceRange');
-    const applyBtn = document.getElementById('filterApply');
-    const resetBtn = document.getElementById('filterReset');
-    const rangeMin = document.getElementById('rangeMin');
-    const rangeMax = document.getElementById('rangeMax');
-    const trackFill = document.getElementById('sliderTrackFill');
+    function updateGridVisibility(grid) {
+        if (!grid) return;
 
-    // Сохраняем начальные значения для сброса
-    const ABSOLUTE_MIN = priceMinInput ? parseInt(priceMinInput.value) : 0;
-    const ABSOLUTE_MAX = priceMaxInput ? parseInt(priceMaxInput.value) : 1000000;
+        const cards = Array.from(grid.querySelectorAll(".catalog-card")).filter(
+            (card) => card.style.display !== "none"
+        );
+        const moreBtn = grid.querySelector(".catalog-more");
+        const currentPage = parseInt(grid.dataset.page || "1", 10);
+        const limit = currentPage * PAGE_SIZE;
 
-    /* --- ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ (Throttle) --- */
-    const rafUpdate = (fn) => {
-        let ticking = false;
-        return (...args) => {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    fn(...args);
-                    ticking = false;
+        cards.forEach((card, index) => {
+            card.classList.toggle("is-hidden", index >= limit);
+
+            const video = card.querySelector("video");
+            if (video && !video.dataset.initialized) {
+                card.addEventListener("mouseenter", () => video.play());
+                card.addEventListener("mouseleave", () => {
+                    video.pause();
+                    video.currentTime = 0;
                 });
-                ticking = true;
+                video.dataset.initialized = "true";
             }
-        };
-    };
+        });
 
-    /* ===== 1. ТАБЫ И СЕТКИ ===== */
-    TABS.forEach(tab => {
-        tab.addEventListener("click", () => {
-            if (tab.classList.contains('is-active')) return;
-            const targetId = tab.dataset.target;
+        if (moreBtn) {
+            moreBtn.style.display = cards.length > limit ? "block" : "none";
+        }
+    }
 
-            TABS.forEach(t => t.classList.toggle("is-active", t === tab));
-            GRIDS.forEach(grid => {
-            // ❗ КЛУБНИКУ НЕ ТРОГАЕМ
-            if (grid.id === 'strawberries-grid') return;
-
-            if (grid.id === targetId) {
-                grid.classList.add("is-active");
+    function activateTab(targetId) {
+        tabs.forEach((tab) => tab.classList.toggle("is-active", tab.dataset.target === targetId));
+        grids.forEach((grid) => {
+            const isTarget = grid.id === targetId;
+            grid.classList.toggle("is-active", isTarget);
+            if (isTarget) {
                 updateGridVisibility(grid);
-            } else {
-                grid.classList.remove("is-active");
             }
-            });
+        });
+    }
+
+    tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+            if (tab.classList.contains("is-active")) return;
+            activateTab(tab.dataset.target);
         });
     });
 
-    /* ===== 2. DRAG-SCROLL ===== */
-    if (TABS_CONTAINER) {
-        let isDown = false; let startX; let scrollLeft; let isDragging = false;
-        TABS_CONTAINER.addEventListener("mousedown", (e) => {
-            isDown = true; isDragging = false;
-            startX = e.pageX - TABS_CONTAINER.offsetLeft;
-            scrollLeft = TABS_CONTAINER.scrollLeft;
+    if (tabsContainer) {
+        let isDown = false;
+        let startX = 0;
+        let scrollLeft = 0;
+
+        tabsContainer.addEventListener("mousedown", (e) => {
+            isDown = true;
+            startX = e.pageX - tabsContainer.offsetLeft;
+            scrollLeft = tabsContainer.scrollLeft;
         });
-        const handleMove = (e) => {
+
+        ["mouseup", "mouseleave"].forEach((eventName) => {
+            tabsContainer.addEventListener(eventName, () => {
+                isDown = false;
+            });
+        });
+
+        tabsContainer.addEventListener("mousemove", (e) => {
             if (!isDown) return;
             e.preventDefault();
-            const x = (e.pageX || e.touches[0].pageX) - TABS_CONTAINER.offsetLeft;
-            const walk = (x - startX) * 2;
-            if (Math.abs(walk) > 5) isDragging = true;
-            TABS_CONTAINER.scrollLeft = scrollLeft - walk;
-        };
-        TABS_CONTAINER.addEventListener("mousemove", rafUpdate(handleMove));
-        TABS_CONTAINER.addEventListener("mouseup", () => isDown = false);
-        TABS_CONTAINER.addEventListener("mouseleave", () => isDown = false);
-    }
-
-    /* ===== 3. ПАГИНАЦИЯ И ВИДЕО ===== */
-    function updateGridVisibility(grid) {
-        const cards = grid.querySelectorAll(".catalog-card");
-        const moreBtn = grid.querySelector(".catalog-more");
-        const currentPage = parseInt(grid.dataset.page || 1);
-        const limit = currentPage * PAGE_SIZE;
-
-        let visibleCount = 0;
-        cards.forEach((card, index) => {
-            // Если карточка скрыта ФИЛЬТРОМ (через style.display), не считаем её в пагинации
-            if (card.style.display === 'none') return;
-
-            if (visibleCount < limit) {
-                card.classList.remove("is-hidden");
-                const video = card.querySelector('video');
-                if (video && !video.dataset.initialized) {
-                    card.addEventListener('mouseenter', () => video.play());
-                    card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
-                    video.dataset.initialized = "true";
-                }
-                visibleCount++;
-            } else {
-                card.classList.add("is-hidden");
-            }
+            const x = e.pageX - tabsContainer.offsetLeft;
+            tabsContainer.scrollLeft = scrollLeft - (x - startX) * 1.5;
         });
-        if (moreBtn) moreBtn.style.display = visibleCount >= cards.length ? "none" : "block";
     }
 
-    /* ===== 4. ФИЛЬТР (ИСПРАВЛЕННЫЙ) ===== */
-    const toggleFilter = () => {
-        if (filterAside) filterAside.classList.toggle('is-open');
-    };
+    function setupFilter({
+        triggerSelector,
+        asideId,
+        inputMinId,
+        inputMaxId,
+        rangeMinId,
+        rangeMaxId,
+        trackFillId,
+        applyId,
+        resetId,
+        cardSelector,
+    }) {
+        const trigger = document.querySelector(triggerSelector);
+        const aside = document.getElementById(asideId);
+        const inputMin = document.getElementById(inputMinId);
+        const inputMax = document.getElementById(inputMaxId);
+        const rangeMin = document.getElementById(rangeMinId);
+        const rangeMax = document.getElementById(rangeMaxId);
+        const trackFill = document.getElementById(trackFillId);
+        const applyBtn = document.getElementById(applyId);
+        const resetBtn = document.getElementById(resetId);
+        const closeBtn = aside?.querySelector(".filter-aside__close");
+        const cancelBtn = aside?.querySelector(".btn-filter--cancel");
+        const overlay = aside?.querySelector(".filter-aside__overlay");
+        const cards = () => Array.from(document.querySelectorAll(cardSelector));
 
-    if (toggleBtn && filterAside) {
-        toggleBtn.addEventListener('click', toggleFilter);
-        document.getElementById('filterClose')?.addEventListener('click', toggleFilter);
-        document.getElementById('filterCancel')?.addEventListener('click', toggleFilter);
-        filterAside.querySelector('.filter-aside__overlay')?.addEventListener('click', toggleFilter);
-    }
-
-    /* ===== 4.1 ФИЛЬТР ДЛЯ КЛУБНИКИ ===== */
-
-    const strawberryFilterBtn = document.querySelector(
-        '.catalog-filter-toggle[data-filter="strawberry"]'
-    );
-
-    const strawberryAside = document.getElementById('filterAsideStrawberry');
-
-    const toggleStrawberryFilter = () => {
-        if (strawberryAside) strawberryAside.classList.toggle('is-open');
-    };
-
-    if (strawberryFilterBtn && strawberryAside) {
-        strawberryFilterBtn.addEventListener('click', toggleStrawberryFilter);
-
-        strawberryAside.querySelector('.filter-aside__overlay')
-            ?.addEventListener('click', toggleStrawberryFilter);
-
-        strawberryAside.querySelector('#filterClose')
-            ?.addEventListener('click', toggleStrawberryFilter);
-
-        strawberryAside.querySelector('#filterCancel')
-            ?.addEventListener('click', toggleStrawberryFilter);
-    }
-
-
-    /* --- ЛОГИКА ДВОЙНОГО СЛАЙДЕРА (НОВОЕ) --- */
-    const MIN_GAP = 1000; // Минимальная разница
-
-    const updateSliderTrack = () => {
-        if (!rangeMin || !rangeMax || !trackFill) return;
-
-        const minVal = parseInt(rangeMin.value);
-        const maxVal = parseInt(rangeMax.value);
-        const minAttr = parseInt(rangeMin.min);
-        const maxAttr = parseInt(rangeMin.max);
-
-        const percent1 = ((minVal - minAttr) / (maxAttr - minAttr)) * 100;
-        const percent2 = ((maxVal - minAttr) / (maxAttr - minAttr)) * 100;
-
-        trackFill.style.left = percent1 + "%";
-        trackFill.style.width = (percent2 - percent1) + "%";
-    };
-
-    if (rangeMin && rangeMax) {
-        // Двигаем левый ползунок
-        rangeMin.addEventListener('input', () => {
-            if (parseInt(rangeMax.value) - parseInt(rangeMin.value) <= MIN_GAP) {
-                rangeMin.value = parseInt(rangeMax.value) - MIN_GAP;
-            }
-            priceMinInput.value = rangeMin.value;
-            updateSliderTrack();
-        });
-
-        // Двигаем правый ползунок
-        rangeMax.addEventListener('input', () => {
-            if (parseInt(rangeMax.value) - parseInt(rangeMin.value) <= MIN_GAP) {
-                rangeMax.value = parseInt(rangeMin.value) + MIN_GAP;
-            }
-            priceMaxInput.value = rangeMax.value;
-            updateSliderTrack();
-        });
-
-        // Если меняем цифры руками
-        if (priceMinInput) {
-            priceMinInput.addEventListener('change', () => {
-                let val = parseInt(priceMinInput.value);
-                if (val < parseInt(rangeMin.min)) val = parseInt(rangeMin.min);
-                if (val > parseInt(rangeMax.value) - MIN_GAP) val = parseInt(rangeMax.value) - MIN_GAP;
-                rangeMin.value = val;
-                priceMinInput.value = val;
-                updateSliderTrack();
-            });
+        if (!aside || !inputMin || !inputMax || !rangeMin || !rangeMax || !trackFill) {
+            return;
         }
-        if (priceMaxInput) {
-            priceMaxInput.addEventListener('change', () => {
-                let val = parseInt(priceMaxInput.value);
-                if (val > parseInt(rangeMax.max)) val = parseInt(rangeMax.max);
-                if (val < parseInt(rangeMin.value) + MIN_GAP) val = parseInt(rangeMin.value) + MIN_GAP;
-                rangeMax.value = val;
-                priceMaxInput.value = val;
-                updateSliderTrack();
-            });
+
+        const absoluteMin = parseInt(inputMin.value || rangeMin.min || "0", 10);
+        const absoluteMax = parseInt(inputMax.value || rangeMax.max || "0", 10);
+        const minGap = 100;
+
+        function setOpen(isOpen) {
+            aside.classList.toggle("is-open", isOpen);
+            document.body.classList.toggle("filter-open", isOpen);
         }
-        
-        updateSliderTrack(); // Запуск при загрузке
-    }
 
-    if (applyBtn) {
-        applyBtn.addEventListener('click', () => {
-            // 1. Получаем значения из инпутов, или дефолтные границы
-            const min = parseInt(priceMinInput.value) || 0;
-            const max = parseInt(priceMaxInput.value) || 1000000;
-            
-            // 2. Ищем все карточки на странице
-            const cards = document.querySelectorAll('.catalog-card');
-            
-            cards.forEach(card => {
-                // 3. Получаем цену из атрибута data-price, который мы добавили в HTML
-                // (Это число вроде "10500", без пробелов и знаков валют)
-                const priceRaw = card.dataset.price;
-                
-                // Превращаем строку в число
-                const price = parseInt(priceRaw);
+        function updateTrack() {
+            const minVal = parseInt(rangeMin.value, 10);
+            const maxVal = parseInt(rangeMax.value, 10);
+            const minAttr = parseInt(rangeMin.min, 10);
+            const maxAttr = parseInt(rangeMin.max, 10);
 
-                // 4. Проверяем условие
-                if (!isNaN(price)) {
-                    if (price >= min && price <= max) {
-                        card.style.display = ""; // Показываем
-                    } else {
-                        card.style.display = "none"; // Скрываем
-                    }
+            const percent1 = ((minVal - minAttr) / (maxAttr - minAttr || 1)) * 100;
+            const percent2 = ((maxVal - minAttr) / (maxAttr - minAttr || 1)) * 100;
+
+            trackFill.style.left = `${percent1}%`;
+            trackFill.style.width = `${percent2 - percent1}%`;
+        }
+
+        function syncFromRanges() {
+            if (parseInt(rangeMax.value, 10) - parseInt(rangeMin.value, 10) < minGap) {
+                if (document.activeElement === rangeMin) {
+                    rangeMin.value = parseInt(rangeMax.value, 10) - minGap;
+                } else {
+                    rangeMax.value = parseInt(rangeMin.value, 10) + minGap;
                 }
+            }
+
+            inputMin.value = rangeMin.value;
+            inputMax.value = rangeMax.value;
+            updateTrack();
+        }
+
+        function syncFromInputs() {
+            let minValue = parseInt(inputMin.value || absoluteMin, 10);
+            let maxValue = parseInt(inputMax.value || absoluteMax, 10);
+
+            minValue = Math.max(absoluteMin, Math.min(minValue, maxValue - minGap));
+            maxValue = Math.min(absoluteMax, Math.max(maxValue, minValue + minGap));
+
+            inputMin.value = minValue;
+            inputMax.value = maxValue;
+            rangeMin.value = minValue;
+            rangeMax.value = maxValue;
+            updateTrack();
+        }
+
+        function applyFilter() {
+            const min = parseInt(inputMin.value || absoluteMin, 10);
+            const max = parseInt(inputMax.value || absoluteMax, 10);
+
+            cards().forEach((card) => {
+                const price = parseInt(card.dataset.price || "0", 10);
+                card.style.display = price >= min && price <= max ? "" : "none";
             });
-            
-            // 5. Исправляем баг с "пустой страницей" после фильтрации:
-            // Сбрасываем пагинацию (показать еще), чтобы сетка не выглядела сломанной
-            const activeGrid = document.querySelector('.catalog-grid.is-active');
+
+            const activeGrid = tabsContainer?.closest(".catalog") ? document.querySelector(".catalog-tabs-content .catalog-grid.is-active") : null;
             if (activeGrid) {
-                // Если у вас есть логика "показать еще", лучше сбросить счетчик:
-                activeGrid.dataset.page = 1; 
-                
-                // Вызываем функцию обновления видимости (если она у вас есть из прошлого кода)
-                // Если функции updateGridVisibility нет в этом scope, 
-                // можно просто оставить карточки как есть, фильтр уже сработал через display: none
-                if (typeof updateGridVisibility === 'function') {
-                    updateGridVisibility(activeGrid);
-                }
+                activeGrid.dataset.page = "1";
+                updateGridVisibility(activeGrid);
             }
-            
-            // 6. Закрываем шторку фильтра (мобильную)
-            if (typeof toggleFilter === 'function') {
-                toggleFilter();
-            } else if (filterAside) {
-                filterAside.classList.remove('is-open');
+            if (asideId === "filterAsideStrawberry") {
+                updateGridVisibility(document.getElementById("strawberries-grid"));
             }
-        });
-    }
+            setOpen(false);
+        }
 
-    if (resetBtn) {
-        resetBtn.addEventListener('click', () => {
-            if (priceMinInput) priceMinInput.value = ABSOLUTE_MIN;
-            if (priceMaxInput) priceMaxInput.value = ABSOLUTE_MAX;
-            
-            // --- ДОБАВИТЬ ЭТИ 3 СТРОКИ ---
-            if (rangeMin) rangeMin.value = ABSOLUTE_MIN;
-            if (rangeMax) rangeMax.value = ABSOLUTE_MAX;
-            updateSliderTrack();
-            // -----------------------------
+        function resetFilter() {
+            inputMin.value = absoluteMin;
+            inputMax.value = absoluteMax;
+            rangeMin.value = absoluteMin;
+            rangeMax.value = absoluteMax;
+            updateTrack();
 
-            document.querySelectorAll('.catalog-card').forEach(card => {
-                card.style.display = '';
+            cards().forEach((card) => {
+                card.style.display = "";
             });
 
-            const activeGrid = document.querySelector('.catalog-grid.is-active');
-            if (activeGrid) updateGridVisibility(activeGrid);
-            
-            toggleFilter();
-        });
+            const activeGrid = document.querySelector(".catalog-tabs-content .catalog-grid.is-active");
+            if (activeGrid) {
+                activeGrid.dataset.page = "1";
+                updateGridVisibility(activeGrid);
+            }
+            if (asideId === "filterAsideStrawberry") {
+                const strawberryGrid = document.getElementById("strawberries-grid");
+                if (strawberryGrid) {
+                    strawberryGrid.dataset.page = "1";
+                    updateGridVisibility(strawberryGrid);
+                }
+            }
+            setOpen(false);
+        }
+
+        trigger?.addEventListener("click", () => setOpen(true));
+        closeBtn?.addEventListener("click", () => setOpen(false));
+        cancelBtn?.addEventListener("click", () => setOpen(false));
+        overlay?.addEventListener("click", () => setOpen(false));
+
+        rangeMin.addEventListener("input", syncFromRanges);
+        rangeMax.addEventListener("input", syncFromRanges);
+        inputMin.addEventListener("change", syncFromInputs);
+        inputMax.addEventListener("change", syncFromInputs);
+        applyBtn?.addEventListener("click", applyFilter);
+        resetBtn?.addEventListener("click", resetFilter);
+
+        updateTrack();
     }
 
-    // Инициализация "Показать еще"
-    document.querySelectorAll(".catalog-more").forEach(btn => {
+    setupFilter({
+        triggerSelector: '.catalog-filter-toggle:not([data-filter="strawberry"])',
+        asideId: "filterAside",
+        inputMinId: "priceMin",
+        inputMaxId: "priceMax",
+        rangeMinId: "rangeMin",
+        rangeMaxId: "rangeMax",
+        trackFillId: "sliderTrackFill",
+        applyId: "filterApply",
+        resetId: "filterReset",
+        cardSelector: ".catalog-tabs-content .catalog-card",
+    });
+
+    setupFilter({
+        triggerSelector: '.catalog-filter-toggle[data-filter="strawberry"]',
+        asideId: "filterAsideStrawberry",
+        inputMinId: "priceMinStraw",
+        inputMaxId: "priceMaxStraw",
+        rangeMinId: "rangeMinStraw",
+        rangeMaxId: "rangeMaxStraw",
+        trackFillId: "sliderTrackFillStraw",
+        applyId: "filterApplyStraw",
+        resetId: "filterResetStraw",
+        cardSelector: "#strawberries-grid .catalog-card",
+    });
+
+    document.querySelectorAll(".catalog-more").forEach((btn) => {
         btn.addEventListener("click", () => {
-            const grid = btn.closest('.catalog-grid');
-            grid.dataset.page = parseInt(grid.dataset.page || 1) + 1;
+            const grid = btn.closest(".catalog-grid");
+            grid.dataset.page = String(parseInt(grid.dataset.page || "1", 10) + 1);
             updateGridVisibility(grid);
         });
     });
 
-    // Первый запуск
-    const activeGrid = document.querySelector('.catalog-grid.is-active');
-    if (activeGrid) updateGridVisibility(activeGrid);
+    const initialGrid = document.querySelector(".catalog-tabs-content .catalog-grid.is-active");
+    if (initialGrid) {
+        updateGridVisibility(initialGrid);
+    }
+
+    const strawberryGrid = document.getElementById("strawberries-grid");
+    if (strawberryGrid) {
+        updateGridVisibility(strawberryGrid);
+    }
 });
