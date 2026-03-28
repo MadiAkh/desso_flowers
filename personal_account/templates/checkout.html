@@ -14,41 +14,40 @@
 {% block content %}
 <section class="checkout-section">
   <div class="container">
-    
-    <h1 class="page-title">Оформление заказа</h1>
+    <h1 class="page-title" data-i18n="checkout.title">Оформление заказа</h1>
 
     <form class="checkout-grid" id="checkoutForm" method="post">
       {% csrf_token %}
-      
+
       <div class="checkout-steps">
-        
+
         <div class="step-card">
           <div class="step-header">
             <span class="step-number">01</span>
-            <h2 class="step-title">Контактные данные</h2>
+            <h2 class="step-title" data-i18n="checkout.contacts">Контактные данные</h2>
           </div>
           <div class="form-grid">
             <div class="form-group">
-              <label>Ваше имя</label>
-              <input type="text" name="name" value="{{ user_info.name }}" placeholder="Как к вам обращаться?" required>
+              <label data-i18n="checkout.yourName">Ваше имя</label>
+              <input type="text" name="name" value="{{ user_info.name }}" placeholder="Как к вам обращаться?" data-i18n-placeholder="checkout.namePlaceholder" required>
             </div>
             <div class="form-group">
-              <label>Телефон</label>
+              <label data-i18n="checkout.phone">Телефон</label>
               <input type="tel" name="phone" value="{{ user_info.phone }}" placeholder="+7 (___) ___-__-__" required>
             </div>
             <div class="form-group full-width checkbox-group">
               <input type="checkbox" id="another_recipient">
-              <label for="another_recipient">Получатель — другой человек</label>
+              <label for="another_recipient" data-i18n="checkout.otherRecipient">Получатель — другой человек</label>
             </div>
-            
+
             <div class="recipient-fields hidden" id="recipientFields">
                <div class="form-grid inner">
                  <div class="form-group">
-                   <label>Имя получателя</label>
+                   <label data-i18n="checkout.recipientName">Имя получателя</label>
                    <input type="text" name="recipient_name" placeholder="Имя">
                  </div>
                  <div class="form-group">
-                   <label>Телефон получателя</label>
+                   <label data-i18n="checkout.recipientPhone">Телефон получателя</label>
                    <input type="tel" name="recipient_phone" placeholder="+7 (___) ...">
                  </div>
                </div>
@@ -59,53 +58,53 @@
         <div class="step-card">
           <div class="step-header">
             <span class="step-number">02</span>
-            <h2 class="step-title">Доставка</h2>
+            <h2 class="step-title" data-i18n="checkout.delivery">Доставка</h2>
           </div>
-          
+
           <div class="delivery-tabs">
             <label class="tab-radio">
               <input type="radio" name="delivery_type" value="courier" checked>
-              <span class="tab-box">Курьером</span>
+              <span class="tab-box" data-i18n="checkout.courier">Курьером</span>
             </label>
             <label class="tab-radio">
               <input type="radio" name="delivery_type" value="pickup">
-              <span class="tab-box">Самовывоз</span>
+              <span class="tab-box" data-i18n="checkout.pickup">Самовывоз</span>
             </label>
           </div>
 
           <div id="courierFields">
              <div class="form-grid">
                <div class="form-group full-width">
-                 <label>Город</label>
+                 <label data-i18n="checkout.city">Город</label>
                  <select name="city">
-                   <option {% if user_info.city == 'Алматы' %}selected{% endif %}>Алматы</option>
-                   <option {% if user_info.city == 'Астана' %}selected{% endif %}>Астана</option>
+                   <option {% if user_info.city == 'Алматы' %}selected{% endif %} data-i18n="common.almaty">Алматы</option>
+                   <option {% if user_info.city == 'Астана' %}selected{% endif %} data-i18n="common.astana">Астана</option>
                  </select>
                </div>
                <div class="form-group full-width">
-                 <label>Адрес</label>
-                 <input type="text" name="address" placeholder="Улица, дом">
+                 <label data-i18n="checkout.address">Адрес</label>
+                 <input type="text" name="address" placeholder="Улица, дом" data-i18n-placeholder="checkout.addressPlaceholder">
                </div>
                <div class="form-group">
-                 <label>Квартира / Офис</label>
-                 <input type="text" name="apt" placeholder="№">
+                 <label data-i18n="checkout.apartment">Квартира / Офис</label>
+                 <input type="text" name="apt" placeholder="№" data-i18n-placeholder="checkout.apartmentPlaceholder">
                </div>
                <div class="form-group">
-                 <label>Подъезд / Этаж</label>
-                 <input type="text" name="floor" placeholder="Не обязательно">
+                 <label data-i18n="checkout.floor">Подъезд / Этаж</label>
+                 <input type="text" name="floor" placeholder="Не обязательно" data-i18n-placeholder="checkout.floorPlaceholder">
                </div>
              </div>
           </div>
 
           <div class="form-grid" style="margin-top: 20px;">
              <div class="form-group">
-               <label>Дата</label>
+               <label data-i18n="checkout.date">Дата</label>
                <input type="date" name="date" required>
              </div>
              <div class="form-group">
-               <label>Время</label>
+               <label data-i18n="checkout.time">Время</label>
                <select name="time">
-                 <option>Как можно скорее</option>
+                 <option data-i18n="checkout.asap">Как можно скорее</option>
                  <option>10:00 - 12:00</option>
                  <option>12:00 - 15:00</option>
                  <option>15:00 - 18:00</option>
@@ -113,8 +112,8 @@
                </select>
              </div>
              <div class="form-group full-width">
-               <label>Текст открытки (бесплатно)</label>
-               <textarea name="postcard" rows="2" placeholder="Напишем от руки красивым почерком..."></textarea>
+               <label data-i18n="checkout.postcard">Текст открытки (бесплатно)</label>
+               <textarea name="postcard" rows="2" placeholder="Напишем от руки красивым почерком..." data-i18n-placeholder="checkout.postcardPlaceholder"></textarea>
              </div>
           </div>
         </div>
@@ -122,22 +121,22 @@
         <div class="step-card">
           <div class="step-header">
             <span class="step-number">03</span>
-            <h2 class="step-title">Оплата</h2>
+            <h2 class="step-title" data-i18n="checkout.payment">Оплата</h2>
           </div>
-          
+
           <div class="payment-methods">
             <label class="payment-option">
               <input type="radio" name="payment" value="card">
               <div class="payment-box">
                 <span class="icon">💳</span>
-                <span class="name">Картой онлайн</span>
+                <span class="name" data-i18n="checkout.card">Картой онлайн</span>
               </div>
             </label>
             <label class="payment-option">
               <input type="radio" name="payment" value="cash">
               <div class="payment-box">
                 <span class="icon">💵</span>
-                <span class="name">Наличными</span>
+                <span class="name" data-i18n="checkout.cash">Наличными</span>
               </div>
             </label>
           </div>
@@ -147,40 +146,40 @@
 
       <aside class="checkout-sidebar">
         <div class="order-summary sticky">
-          <h3 class="summary-title">Ваш заказ</h3>
-          
+          <h3 class="summary-title" data-i18n="checkout.yourOrder">Ваш заказ</h3>
+
           <div class="summary-items">
             {% for item in cart_items %}
               <div class="summary-item">
                 <div class="item-info">
                   <div class="item-name">{{ item.name }}</div>
-                  <div class="item-qty">{{ item.quantity }} шт.</div>
+                  <div class="item-qty">{{ item.quantity }} <span data-i18n="common.qtyUnit">шт.</span></div>
                 </div>
                 <div class="item-price">{{ item.price }} ₸</div>
               </div>
             {% endfor %}
           </div>
-          
+
           <hr class="summary-divider">
-          
+
           <div class="summary-row">
-            <span>Товары</span>
+            <span data-i18n="checkout.items">Товары</span>
             <span>{{ subtotal }} ₸</span>
           </div>
           <div class="summary-row">
-            <span>Доставка</span>
+            <span data-i18n="checkout.deliveryCost">Доставка</span>
             <span id="deliveryCost">{{ delivery_cost }} ₸</span>
           </div>
-          
+
           <div class="summary-total">
-            <span>Итого к оплате</span>
+            <span data-i18n="checkout.total">Итого к оплате</span>
             <span class="total-price">{{ total }} ₸</span>
           </div>
 
-          <button type="submit" class="btn-place-order">Оплатить заказ</button>
-          
+          <button type="submit" class="btn-place-order" data-i18n="checkout.submit">Оплатить заказ</button>
+
           <p class="policy-text">
-            Нажимая кнопку, вы соглашаетесь с <a href="#">условиями оферты</a>.
+            <span data-i18n="checkout.policy">Нажимая кнопку, вы соглашаетесь с</span> <a href="#" data-i18n="checkout.offer">условиями оферты</a>.
           </p>
         </div>
       </aside>
@@ -192,5 +191,6 @@
 {% endblock %}
 
 {% block scripts %}
+  {{ block.super }}
   <script src="{% static 'personal_account/js/checkout.js' %}"></script>
 {% endblock %}

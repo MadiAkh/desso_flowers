@@ -1,62 +1,79 @@
-// HERO custom slider
 {
-const slider = document.getElementById('heroSlider');
-const slides = [...slider.children];
-const dotsWrap = document.getElementById('heroDots');
-const hero = document.getElementById('hero');
+const slider = document.getElementById("heroSlider");
+const dotsWrap = document.getElementById("heroDots");
+const hero = document.getElementById("hero");
+const nextButton = document.getElementById("heroNext");
+const prevButton = document.getElementById("heroPrev");
 
-let index = 0;
-const total = slides.length;
-let timer = null;
+if (slider && dotsWrap && hero && nextButton && prevButton) {
+  const slides = [...slider.children];
 
-// точки
-for (let i = 0; i < total; i++) {
-  const b = document.createElement('button');
-  b.onclick = () => go(i);
-  dotsWrap.appendChild(b);
-}
+  if (slides.length) {
+    let index = 0;
+    const total = slides.length;
+    let timer = null;
 
-function clearVideoHandlers() {
-  slides.forEach(s => {
-    const v = s.querySelector('video');
-    if (v) { v.onended = null; try { v.pause(); } catch(e){} }
-  });
-}
+    for (let i = 0; i < total; i++) {
+      const button = document.createElement("button");
+      button.onclick = () => go(i);
+      dotsWrap.appendChild(button);
+    }
 
-function bindActiveVideo() {
-  const v = slides[index].querySelector('video');
-  if (v) {
-    try { v.currentTime = 0; v.play(); } catch(e){}
-    v.onended = () => next();            // после конца → следующий
-    clearInterval(timer); timer = null;  // таймер не нужен, крутим по ended
-  } else {
-    restart(6000); // на случай слайда без видео
+    function clearVideoHandlers() {
+      slides.forEach((slide) => {
+        const video = slide.querySelector("video");
+        if (video) {
+          video.onended = null;
+          try {
+            video.pause();
+          } catch (error) {}
+        }
+      });
+    }
+
+    function bindActiveVideo() {
+      const video = slides[index]?.querySelector("video");
+      if (video) {
+        try {
+          video.currentTime = 0;
+          video.play();
+        } catch (error) {}
+        video.onended = () => next();
+        clearInterval(timer);
+        timer = null;
+      } else {
+        restart(6000);
+      }
+    }
+
+    function go(nextIndex) {
+      index = (nextIndex + total) % total;
+      slider.style.transform = `translateX(-${index * 100}%)`;
+      [...dotsWrap.children].forEach((dot, dotIndex) => dot.classList.toggle("active", dotIndex === index));
+      clearVideoHandlers();
+      bindActiveVideo();
+    }
+
+    const next = () => go(index + 1);
+    const prev = () => go(index - 1);
+
+    nextButton.onclick = next;
+    prevButton.onclick = prev;
+
+    function restart(ms = 6000) {
+      clearInterval(timer);
+      timer = setInterval(next, ms);
+    }
+
+    hero.addEventListener("mouseenter", () => clearInterval(timer));
+    hero.addEventListener("mouseleave", () => {
+      const video = slides[index]?.querySelector("video");
+      if (!video) {
+        restart(6000);
+      }
+    });
+
+    go(0);
   }
 }
-
-function go(n){
-  index = (n + total) % total;
-  slider.style.transform = `translateX(-${index*100}%)`;
-  [...dotsWrap.children].forEach((d,i)=>d.classList.toggle('active', i===index));
-  clearVideoHandlers();
-  bindActiveVideo();
-}
-
-const next = () => go(index + 1);
-const prev = () => go(index - 1);
-
-document.getElementById('heroNext').onclick = next;
-document.getElementById('heroPrev').onclick = prev;
-
-function restart(ms = 6000){ clearInterval(timer); timer = setInterval(next, ms); }
-
-// Пауза таймера при наведении (если слайд без видео)
-hero.addEventListener('mouseenter', () => clearInterval(timer));
-hero.addEventListener('mouseleave', () => {
-  const v = slides[index].querySelector('video');
-  if (!v) restart(6000);
-});
-
-go(0);
-
 }

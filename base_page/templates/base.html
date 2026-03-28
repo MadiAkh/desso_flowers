@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-default-lang="ru">
 <head>
   {% load static %}
   <meta charset="utf-8">
@@ -22,13 +22,13 @@
             <div class="dropdown" id="cityDropdown">
                 <div class="action-btn dropbtn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: -2px;"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                    <span class="btn-label" id="currentCity" style="margin-left: 5px; font-size: 13px;">АЛМАТЫ</span>
+                    <span class="btn-label" id="currentCity" data-default-city="Алматы" style="margin-left: 5px; font-size: 13px;">Алматы</span>
                 </div>
                 <div class="dropdown-content">
-                    <a href="#" data-value="Алматы">Алматы</a>
-                    <a href="#" data-value="Астана">Астана</a>
-                    <a href="#" data-value="Шымкент">Шымкент</a>
-                    <a href="#" data-value="Караганда">Караганда</a>
+                    <a href="#" data-city-value="Алматы">Алматы</a>
+                    <a href="#" data-city-value="Астана">Астана</a>
+                    <a href="#" data-city-value="Шымкент">Шымкент</a>
+                    <a href="#" data-city-value="Караганда">Караганда</a>
                 </div>
             </div>
 
@@ -38,8 +38,8 @@
                     <span class="btn-label" id="currentLang" style="margin-left: 5px; font-size: 13px;">RU</span>
                 </div>
                 <div class="dropdown-content">
-                    <a href="#" data-value="RU">RU</a>
-                    <a href="#" data-value="KZ">KZ</a>
+                    <a href="#" data-lang-value="ru">RU</a>
+                    <a href="#" data-lang-value="kz">KZ</a>
                 </div>
             </div>
         </div>
@@ -47,57 +47,60 @@
           <a href="/" class="logo">DÉSSO FLOWERS ®</a>
 
           <div class="header-actions">
-              <a href="{% if user.is_authenticated %}{% url 'personal_account:personal_account' %}#favorites{% else %}{% url 'personal_account:register' %}{% endif %}" 
-                class="action-btn" 
-                aria-label="Избранное">
+              <a href="{% if user.is_authenticated %}{% url 'personal_account:personal_account' %}#favorites{% else %}{% url 'personal_account:register' %}{% endif %}"
+                class="action-btn"
+                aria-label="Избранное"
+                data-i18n-aria-label="header.favorites">
                   <span class="cart-badge favorites-badge" {% if not wishlist_items_count %}style="display:none"{% endif %}>{{ wishlist_items_count|default:0 }}</span>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
               </a>
-              <a href="{% if user.is_authenticated %}{% url 'personal_account:personal_account' %}{% else %}{% url 'personal_account:register' %}{% endif %}" 
-                class="action-btn" 
-                aria-label="Личный кабинет">
+              <a href="{% if user.is_authenticated %}{% url 'personal_account:personal_account' %}{% else %}{% url 'personal_account:register' %}{% endif %}"
+                class="action-btn"
+                aria-label="Личный кабинет"
+                data-i18n-aria-label="header.account">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
               </a>
-              <a href="{% if user.is_authenticated %}{% url 'personal_account:personal_account' %}#cart{% else %}{% url 'personal_account:register' %}{% endif %}" 
-                class="action-btn" 
-                aria-label="Корзина">
+              <a href="{% if user.is_authenticated %}{% url 'personal_account:personal_account' %}#cart{% else %}{% url 'personal_account:register' %}{% endif %}"
+                class="action-btn"
+                aria-label="Корзина"
+                data-i18n-aria-label="header.cart">
                   <span class="cart-badge" {% if not cart_items_count %}style="display:none"{% endif %}>{{ cart_items_count|default:0 }}</span>
                   <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
               </a>
           </div>
       </div>
-      
+
       <div class="header-bottom" id="headerBottom">
         <nav class="nav-row">
-          
+
           <div class="dropdown">
-            <a href="#" class="dropbtn">Каталог</a> 
+            <a href="#" class="dropbtn" data-i18n="header.catalog">Каталог</a>
             <div class="dropdown-content">
-              <a href="{% url 'catalog_page' %}">Коллекции DÉSSO</a>
+              <a href="{% url 'catalog_page' %}" data-i18n="header.catalogCollections">Коллекции DÉSSO</a>
             </div>
           </div>
 
           <div class="dropdown">
-            <a href="#" class="dropbtn">Магазины</a> 
+            <a href="#" class="dropbtn" data-i18n="header.shops">Магазины</a>
             <div class="dropdown-content">
-              <a href="#">Алматы</a>
-              <a href="#">Астана</a>
-              <a href="#">Караганда</a>
-              <a href="#">Шымкент</a>
-              <a href="#">Семей</a>
-              <a href="#">Атырау</a>
-              <a href="#">Каскелен</a>
-              <a href="#">Тараз</a>
-              <a href="#">Актау</a>
-              <a href="#">Талдыкорган</a>
+              <a href="#" data-city-label="Алматы">Алматы</a>
+              <a href="#" data-city-label="Астана">Астана</a>
+              <a href="#" data-city-label="Караганда">Караганда</a>
+              <a href="#" data-city-label="Шымкент">Шымкент</a>
+              <a href="#" data-city-label="Семей">Семей</a>
+              <a href="#" data-city-label="Атырау">Атырау</a>
+              <a href="#" data-city-label="Каскелен">Каскелен</a>
+              <a href="#" data-city-label="Тараз">Тараз</a>
+              <a href="#" data-city-label="Актау">Актау</a>
+              <a href="#" data-city-label="Талдыкорган">Талдыкорган</a>
             </div>
           </div>
 
           <div class="dropdown">
-            <a href="#" class="dropbtn">Контакты</a> 
+            <a href="#" class="dropbtn" data-i18n="header.contacts">Контакты</a>
             <div class="dropdown-content">
-              <a href="#">Адреса магазинов</a>
-              <a href="https://api.whatsapp.com/send?phone=77007077701">Служба поддержки</a>
+              <a href="#" data-i18n="header.shopAddresses">Адреса магазинов</a>
+              <a href="https://api.whatsapp.com/send?phone=77007077701" data-i18n="header.support">Служба поддержки</a>
             </div>
           </div>
 
@@ -123,7 +126,7 @@
               {% if slide.subtitle %}
                 <p class="subtitle">{{ slide.subtitle }}</p>
               {% endif %}
-              
+
               {% if slide.cta_text %}
                   <a href="{{ slide.cta_link|default:'#' }}" class="cta">{{ slide.cta_text }}</a>
               {% endif %}
@@ -142,8 +145,7 @@
 
 
   {% block stories %}
-    <!-- ===== STORIES (preview circles) ===== -->
-    <section class="stories" aria-label="Сториз">
+    <section class="stories" aria-label="Сториз" data-i18n-aria-label="stories.section">
       <div class="container">
         <div class="track">
           {% for story in stories %}
@@ -162,17 +164,15 @@
       </div>
     </section>
 
-
-    <!-- ===== STORIES MODAL ===== -->
     <div class="stories-modal" id="storiesModal" aria-hidden="true">
       <div class="stories-backdrop"></div>
 
-      <div class="stories-frame" role="dialog" aria-modal="true" aria-label="Истории">
+      <div class="stories-frame" role="dialog" aria-modal="true" aria-label="Истории" data-i18n-aria-label="stories.modal">
         <div class="stories-progress" id="storiesProgress"></div>
         <div class="stories-media" id="storiesMedia"></div>
-        <button class="stories-zone left"  id="storiesPrev" aria-label="Назад"></button>
-        <button class="stories-zone right" id="storiesNext" aria-label="Дальше"></button>
-        <button class="stories-close" id="storiesClose" aria-label="Закрыть">✕</button>
+        <button class="stories-zone left"  id="storiesPrev" aria-label="Назад" data-i18n-aria-label="stories.prev"></button>
+        <button class="stories-zone right" id="storiesNext" aria-label="Дальше" data-i18n-aria-label="stories.next"></button>
+        <button class="stories-close" id="storiesClose" aria-label="Закрыть" data-i18n-aria-label="stories.close">✕</button>
       </div>
     </div>
   {% endblock stories %}
@@ -181,36 +181,34 @@
         {% block content %}
         {% endblock %}
     </main>
-  
-  <!-- Floating CTA (Contact button) -->
+
   <a href="https://api.whatsapp.com/send?phone=77007077701" class="floating-consult">
-      Связаться с консультантом
+      <span data-i18n="floating.consult">Связаться с консультантом</span>
   </a>
-    <!-- ===== FOOTER ===== -->
   <footer>
     <div class="container foot">
       <div>
         <h4>DÉSSO FLOWERS ®</h4>
-        <p>Источник гормонов счастья. Цветы и подарки 24/7.</p>
+        <p data-i18n="footer.tagline">Источник гормонов счастья. Цветы и подарки 24/7.</p>
       </div>
       <div>
-        <h4>Навигация</h4>
+        <h4 data-i18n="footer.navigation">Навигация</h4>
         <ul>
-          <li><a href="#">Каталог</a></li>
-          <li><a href="#">Доставка</a></li>
-          <li><a href="#">Контакты</a></li>
+          <li><a href="#" data-i18n="footer.catalog">Каталог</a></li>
+          <li><a href="#" data-i18n="footer.delivery">Доставка</a></li>
+          <li><a href="#" data-i18n="footer.contacts">Контакты</a></li>
         </ul>
       </div>
       <div>
-        <h4>Компания</h4>
+        <h4 data-i18n="footer.company">Компания</h4>
         <ul>
-          <li><a href="#">О нас</a></li>
-          <li><a href="#">Вакансии</a></li>
-          <li><a href="#">Отзывы</a></li>
+          <li><a href="#" data-i18n="footer.about">О нас</a></li>
+          <li><a href="#" data-i18n="footer.jobs">Вакансии</a></li>
+          <li><a href="#" data-i18n="footer.reviews">Отзывы</a></li>
         </ul>
       </div>
       <div>
-        <h4>Соцсети</h4>
+        <h4 data-i18n="footer.social">Соцсети</h4>
         <ul>
           <li><a href="#">Instagram</a></li>
           <li><a href="#">WhatsApp</a></li>
@@ -221,23 +219,21 @@
     <div class="copyright">{{ now|date:"Y" }} DESSO Flowers ® </div>
   </footer>
 
-  <!-- Скрипты страницы -->
   {% block scripts %}
   <script src="{% static 'base_page/js/hero.js' %}"></script>
   <script src="{% static 'base_page/js/header.js' %}"></script>
+  <script src="{% static 'base_page/js/localization.js' %}"></script>
   <script src="{% static 'base_page/js/global_actions.js' %}"></script>
   <script>
     const STORIES = {
       {% for story in stories %}
         "{{ story.id }}": [
-          {% for item in story.items.all %} 
+          {% for item in story.items.all %}
             {
               type: "{{ item.media_type }}",
               src: "{{ item.file.url }}",
               {% if item.poster %}poster: "{{ item.poster.url }}",{% endif %}
               {% if item.duration %}duration: {{ item.duration }},{% endif %}
-
-              /* CTA-данные (обязательно экранируем текст для JS) */
               {% if item.cta_enabled %}cta_enabled: true,{% else %}cta_enabled: false,{% endif %}
               {% if item.cta_text %}cta_text: "{{ item.cta_text|escapejs }}",{% endif %}
               {% if item.cta_link %}cta_link: "{{ item.cta_link }}",{% endif %}

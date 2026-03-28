@@ -9,20 +9,13 @@
   <link rel="stylesheet" href="{% static 'main_page/css/main_page.css' %}">
 {% endblock %}
 
-
 {% block content %}
-
-  {% if new_products %}
-    <!-- ===== Новинки (замени существующий блок Новинки) ===== -->
+{% if new_products %}
   <section class="home-new">
     <div class="container">
-
-      <!-- header: только заголовок + стрелки справа -->
       <div class="home-new-header">
-        <h2 class="home-new-title">Новинки DÉSSO</h2>
-
+        <h2 class="home-new-title" data-i18n="main.new">Новинки DÉSSO</h2>
         <div class="home-new-controls" style="margin-left:auto;">
-          <!-- стрелки: prev / next (только кнопки) -->
           <button class="slider-arrow" data-prev aria-label="prev">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M15 6 L9 12 L15 18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
@@ -36,14 +29,12 @@
         </div>
       </div>
 
-      <!-- сам слайдер -->
       <div class="home-new-slider js-slider" data-scroller>
         <div class="home-new-scroller" data-scroller-inner>
           <div class="home-new-track">
             {% for product in new_products %}
               <article class="catalog-card home-new-card">
                 <div class="catalog-card-media" style="position: relative; display: block;">
-                  
                   <a href="#" style="display: block; width: 100%; height: 100%;">
                     {% if product.media_type == "image" %}
                       <img src="{{ product.file.url }}" alt="{{ product.name }}">
@@ -56,101 +47,45 @@
 
                   <div class="card-actions">
                     {% if user.is_authenticated %}
-                        {# ===== WISHLIST ===== #}
-                        {% if product.id in wishlist_product_ids %}
-                            <button type="button"
-                                    class="btn-action wishlist-btn in-wishlist"
-                                    data-product-id="{{ product.id }}"
-                                    aria-label="Уже в избранном">
-                                <svg width="24" height="24" viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67
-                                          l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78
-                                          l1.06 1.06L12 21.23l7.78-7.78
-                                          1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-                                  </path>
-                                </svg>
-                            </button>
-                        {% else %}
-                            <button type="button"
-                                    class="btn-action wishlist-btn"
-                                    data-product-id="{{ product.id }}"
-                                    aria-label="Добавить в избранное">
-                                <svg width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67
-                                          l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78
-                                          l1.06 1.06L12 21.23l7.78-7.78
-                                          1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-                                  </path>
-                                </svg>
-                            </button>
-                        {% endif %}
-                        {# ===== CART ===== #}
-                        {% if product.id in cart_product_ids %}
-                            <button type="button"
-                                    class="btn-action cart-btn in-cart"
-                                    data-product-id="{{ product.id }}"
-                                    aria-label="Уже в корзине">
-                                <svg width="24" height="24" viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                  <circle cx="9" cy="21" r="1"></circle>
-                                  <circle cx="20" cy="21" r="1"></circle>
-                                  <path d="M1 1h4l2.68 13.39
-                                          a2 2 0 0 0 2 1.61h9.72
-                                          a2 2 0 0 0 2-1.61L23 6H6">
-                                  </path>
-                                </svg>
-                            </button>
-                        {% else %}
-                            <button type="button"
-                                    class="btn-action cart-btn"
-                                    data-product-id="{{ product.id }}"
-                                    aria-label="Добавить в корзину">
-                                <svg width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                  <circle cx="9" cy="21" r="1"></circle>
-                                  <circle cx="20" cy="21" r="1"></circle>
-                                  <path d="M1 1h4l2.68 13.39
-                                          a2 2 0 0 0 2 1.61h9.72
-                                          a2 2 0 0 0 2-1.61L23 6H6">
-                                  </path>
-                                </svg>
-                            </button>
-                        {% endif %}
+                      {% if product.id in wishlist_product_ids %}
+                        <button type="button" class="btn-action wishlist-btn in-wishlist" data-product-id="{{ product.id }}" aria-label="Уже в избранном">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                          </svg>
+                        </button>
+                      {% else %}
+                        <button type="button" class="btn-action wishlist-btn" data-product-id="{{ product.id }}" aria-label="Добавить в избранное">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                          </svg>
+                        </button>
+                      {% endif %}
 
+                      {% if product.id in cart_product_ids %}
+                        <button type="button" class="btn-action cart-btn in-cart" data-product-id="{{ product.id }}" aria-label="Уже в корзине">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                          </svg>
+                        </button>
+                      {% else %}
+                        <button type="button" class="btn-action cart-btn" data-product-id="{{ product.id }}" aria-label="Добавить в корзину">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                          </svg>
+                        </button>
+                      {% endif %}
                     {% else %}
-
-                        <a href="{% url 'personal_account:register' %}" class="btn-action">
-                            <!-- SVG сердца -->
-                        </a>
-
-                        <a href="{% url 'personal_account:register' %}" class="btn-action">
-                            <!-- SVG корзины -->
-                        </a>
-
+                      <a href="{% url 'personal_account:register' %}" class="btn-action"></a>
+                      <a href="{% url 'personal_account:register' %}" class="btn-action"></a>
                     {% endif %}
-
                   </div>
 
                   {% if not product.is_active %}
-                    <span class="catalog-card-badge catalog-card-badge--out">НЕТ В НАЛИЧИИ</span>
+                    <span class="catalog-card-badge catalog-card-badge--out" data-i18n="catalog.out">Нет в наличии</span>
                   {% elif product.is_new %}
                     <span class="catalog-card-badge catalog-card-badge--new">NEW</span>
                   {% endif %}
@@ -169,24 +104,18 @@
         </div>
       </div>
 
-      <!-- ПРОГРЕСС-БАР: ПОД СЛАЙДЕРОМ -->
       <div class="home-new-progress" aria-hidden="true" style="margin-top:18px;">
         <div class="home-new-progress__bar">
           <div class="home-new-progress__fill" style="width:0%"></div>
         </div>
       </div>
-
     </div>
   </section>
 
-  <!-- ======= ХИТЫ (та же структура: header + slider) ======= -->
   <section id="hits" class="home-new" style="padding-top: 40px;">
     <div class="container">
-
-      <!-- HEADER: стрелки + прогресс -->
       <div class="home-new-header js-slider-header">
-        <h2 class="home-new-title">Хиты продаж</h2>
-
+        <h2 class="home-new-title" data-i18n="main.hits">Хиты продаж</h2>
         <div class="home-new-controls">
           <button class="slider-arrow" data-prev aria-label="prev">
             <svg viewBox="0 0 24 24" width="26" height="26">
@@ -201,15 +130,12 @@
         </div>
       </div>
 
-      <!-- SLIDER -->
       <div class="home-new-slider js-slider" data-scroller>
         <div class="home-new-scroller" data-scroller-inner>
           <div class="home-new-track">
-
             {% for product in hits %}
               <article class="catalog-card home-new-card">
                 <div class="catalog-card-media" style="position: relative; display: block;">
-                  
                   <a href="#" style="display: block; width: 100%; height: 100%;">
                     {% if product.media_type == "image" %}
                       <img src="{{ product.file.url }}" alt="{{ product.name }}">
@@ -221,118 +147,59 @@
                   </a>
 
                   <div class="card-actions">
-
                     {% if user.is_authenticated %}
+                      {% if product.id in wishlist_product_ids %}
+                        <button type="button" class="btn-action wishlist-btn in-wishlist" data-product-id="{{ product.id }}" aria-label="Уже в избранном">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                          </svg>
+                        </button>
+                      {% else %}
+                        <button type="button" class="btn-action wishlist-btn" data-product-id="{{ product.id }}" aria-label="Добавить в избранное">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                          </svg>
+                        </button>
+                      {% endif %}
 
-                        {# ===== WISHLIST ===== #}
-                        {% if product.id in wishlist_product_ids %}
-                            <button type="button"
-                                    class="btn-action wishlist-btn in-wishlist"
-                                    data-product-id="{{ product.id }}"
-                                    aria-label="Уже в избранном">
-                                <svg width="24" height="24" viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67
-                                          l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78
-                                          l1.06 1.06L12 21.23l7.78-7.78
-                                          1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-                                  </path>
-                                </svg>
-                            </button>
-                        {% else %}
-                            <button type="button"
-                                    class="btn-action wishlist-btn"
-                                    data-product-id="{{ product.id }}"
-                                    aria-label="Добавить в избранное">
-                                <svg width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67
-                                          l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78
-                                          l1.06 1.06L12 21.23l7.78-7.78
-                                          1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-                                  </path>
-                                </svg>
-                            </button>
-                        {% endif %}
-
-                        {# ===== CART ===== #}
-                        {% if product.id in cart_product_ids %}
-                            <button type="button"
-                                    class="btn-action cart-btn in-cart"
-                                    data-product-id="{{ product.id }}"
-                                    aria-label="Уже в корзине">
-                                <svg width="24" height="24" viewBox="0 0 24 24"
-                                    fill="currentColor"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                  <circle cx="9" cy="21" r="1"></circle>
-                                  <circle cx="20" cy="21" r="1"></circle>
-                                  <path d="M1 1h4l2.68 13.39
-                                          a2 2 0 0 0 2 1.61h9.72
-                                          a2 2 0 0 0 2-1.61L23 6H6">
-                                  </path>
-                                </svg>
-                            </button>
-                        {% else %}
-                            <button type="button"
-                                    class="btn-action cart-btn"
-                                    data-product-id="{{ product.id }}"
-                                    aria-label="Добавить в корзину">
-                                <svg width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                  <circle cx="9" cy="21" r="1"></circle>
-                                  <circle cx="20" cy="21" r="1"></circle>
-                                  <path d="M1 1h4l2.68 13.39
-                                          a2 2 0 0 0 2 1.61h9.72
-                                          a2 2 0 0 0 2-1.61L23 6H6">
-                                  </path>
-                                </svg>
-                            </button>
-                        {% endif %}
-
+                      {% if product.id in cart_product_ids %}
+                        <button type="button" class="btn-action cart-btn in-cart" data-product-id="{{ product.id }}" aria-label="Уже в корзине">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                          </svg>
+                        </button>
+                      {% else %}
+                        <button type="button" class="btn-action cart-btn" data-product-id="{{ product.id }}" aria-label="Добавить в корзину">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                          </svg>
+                        </button>
+                      {% endif %}
                     {% else %}
-
-                        <a href="{% url 'personal_account:register' %}" class="btn-action">
-                            <!-- SVG сердца -->
-                        </a>
-
-                        <a href="{% url 'personal_account:register' %}" class="btn-action">
-                            <!-- SVG корзины -->
-                        </a>
-
+                      <a href="{% url 'personal_account:register' %}" class="btn-action"></a>
+                      <a href="{% url 'personal_account:register' %}" class="btn-action"></a>
                     {% endif %}
-
                   </div>
+                </div>
 
                 <div class="catalog-card-body">
                   <div class="catalog-card-category">{{ product.description }}</div>
                   <h3 class="catalog-card-title">{{ product.name }}</h3>
                   <div class="catalog-card-footer">
                     <div class="catalog-card-price">{{ product.price }} ₸</div>
-                    <div class="small text-muted">Продано: {{ product.total_sales }}</div>
+                    <div class="small text-muted"><span data-i18n="main.sold">Продано:</span> {{ product.total_sales }}</div>
                   </div>
                 </div>
               </article>
             {% endfor %}
-
           </div>
         </div>
       </div>
-      <!-- ПРОГРЕСС-БАР: ПОД СЛАЙДЕРОМ (для Хитов) -->
+
       <div class="home-new-progress" aria-hidden="true" style="margin-top:18px;">
         <div class="home-new-progress__bar">
           <div class="home-new-progress__fill" style="width:0%"></div>
@@ -341,15 +208,12 @@
     </div>
   </section>
 
-  <!-- ===== БАННЕРЫ FULL-BLEED (широкие) ===== -->
   <section class="banners-wide">
     <div class="banners-wide-scroller js-banners-scroller" data-scroller>
       <div class="banners-wide-track">
         {% for b in banners_wide %}
           <div class="banners-wide-item">
-            <a href="{{ b.url|default:'#' }}" 
-              class="banner-link" 
-              {% if b.target_blank %} target="_blank" rel="noopener"{% endif %}>
+            <a href="{{ b.url|default:'#' }}" class="banner-link" {% if b.target_blank %}target="_blank" rel="noopener"{% endif %}>
               <img src="{{ b.image.url }}" alt="{{ b.title }}">
               {% if b.title %}
                 <div class="banner-overlay">
@@ -359,18 +223,18 @@
             </a>
           </div>
         {% empty %}
-          <!-- Заглушка -->
           <div class="banners-wide-item">
             <a href="#" class="banner-link">
               <img src="{% static 'main_page/img/banner-placeholder-wide.jpg' %}" alt="banner">
-              <div class="banner-overlay"><div class="banner-title">Акция</div></div>
+              <div class="banner-overlay">
+                <div class="banner-title" data-i18n="main.bannerFallback">Акция</div>
+              </div>
             </a>
           </div>
         {% endfor %}
       </div>
     </div>
 
-    <!-- прогресс -->
     <div class="banners-wide-progress">
       <div class="banners-wide-progress__bar">
         <div class="banners-wide-progress__fill" style="width:0%"></div>
@@ -378,11 +242,10 @@
     </div>
   </section>
 
-  <!-- ====== КАРУСЕЛЬ ВИДЕО (YouTube cards), СХОЖА С НОВИНКАМИ/ХИТАМИ ====== -->
   <section class="home-new" style="padding-top: 10px; padding-bottom: 40px;">
     <div class="container">
       <div class="home-new-header">
-        <h2 class="home-new-title">Рубрика</h2>
+        <h2 class="home-new-title" data-i18n="main.rubric">Рубрика</h2>
         <div class="home-new-controls" style="margin-left:auto;">
           <button class="slider-arrow" data-prev aria-label="prev">
             <svg viewBox="0 0 24 24"><path d="M15 6 L9 12 L15 18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
@@ -393,16 +256,12 @@
         </div>
       </div>
 
-      <!-- слайдер: используем ту же структуру .js-slider / data-scroller -->
       <div class="home-new-slider js-slider video-slider" data-scroller>
         <div class="home-new-scroller" data-scroller-inner>
           <div class="home-new-track">
             {% for v in video_cards %}
               <article class="catalog-card home-new-card video-card">
-                <a href="javascript:void(0)"
-                  class="catalog-card-media video-poster"
-                  data-embed-src="{{ v.embed }}"
-                  data-youtube-id="{{ v.youtube_id }}">
+                <a href="javascript:void(0)" class="catalog-card-media video-poster" data-embed-src="{{ v.embed }}" data-youtube-id="{{ v.youtube_id }}">
                   {% if v.poster %}
                     <img src="{{ v.poster.url }}" alt="{{ v.title }}">
                   {% else %}
@@ -412,7 +271,7 @@
                 </a>
 
                 <div class="catalog-card-body">
-                  <div class="catalog-card-category">Видео</div>
+                  <div class="catalog-card-category" data-i18n="main.video">Видео</div>
                   <h3 class="catalog-card-title">{{ v.title }}</h3>
                 </div>
               </article>
@@ -421,19 +280,15 @@
         </div>
       </div>
 
-      <!-- ПРОГРЕСС-БАР (как у других слайдеров) -->
       <div class="home-new-progress" aria-hidden="true" style="margin-top:18px;">
         <div class="home-new-progress__bar">
           <div class="home-new-progress__fill" style="width:0%"></div>
         </div>
       </div>
-
     </div>
   </section>
-  {% endif %}
-
+{% endif %}
 {% endblock %}
-
 
 {% block scripts %}
   {{ block.super }}

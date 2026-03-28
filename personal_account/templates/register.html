@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Вход и Регистрация — DÉSSO FLOWERS{% endblock %}
+{% block title %}Вход и регистрация — DÉSSO FLOWERS{% endblock %}
 
 {% block hero %}{% endblock %}
 {% block stories %}{% endblock %}
@@ -28,7 +28,6 @@
             border: 1px solid #eee;
         }
 
-        /* Табы переключения */
         .auth-tabs {
             display: flex;
             border-bottom: 1px solid #eee;
@@ -53,7 +52,6 @@
             font-weight: 600;
         }
 
-        /* Формы */
         .auth-form-container {
             display: none;
             animation: fadeIn 0.3s ease;
@@ -82,7 +80,7 @@
             border-radius: 8px;
             font-size: 15px;
         }
-        
+
         .btn-submit {
             width: 100%;
             padding: 14px;
@@ -99,7 +97,7 @@
             from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
         .errorlist { color: #e74c3c; list-style: none; padding: 0; font-size: 13px; margin-top: 5px; }
     </style>
 {% endblock %}
@@ -107,10 +105,10 @@
 {% block content %}
 <section class="auth-section">
     <div class="auth-card">
-        
+
         <div class="auth-tabs">
-            <div class="auth-tab active" onclick="switchAuthTab('register')">Регистрация</div>
-            <div class="auth-tab" onclick="switchAuthTab('login')">Вход</div>
+            <div class="auth-tab active" onclick="switchAuthTab('register')" data-i18n="auth.registerTab">Регистрация</div>
+            <div class="auth-tab" onclick="switchAuthTab('login')" data-i18n="auth.loginTab">Вход</div>
         </div>
 
         <div id="tab-register" class="auth-form-container active">
@@ -119,12 +117,28 @@
                 <input type="hidden" name="next" value="{{ next_url }}">
                 {% for field in form %}
                     <div class="form-group">
-                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {% if field.name == "email" %}
+                          <label for="{{ field.id_for_label }}">Email</label>
+                        {% elif field.name == "first_name" %}
+                          <label for="{{ field.id_for_label }}" data-i18n="profile.firstName">Имя</label>
+                        {% elif field.name == "last_name" %}
+                          <label for="{{ field.id_for_label }}" data-i18n="profile.lastName">Фамилия</label>
+                        {% elif field.name == "phone" %}
+                          <label for="{{ field.id_for_label }}" data-i18n="profile.phone">Телефон</label>
+                        {% elif field.name == "city" %}
+                          <label for="{{ field.id_for_label }}" data-i18n="profile.city">Город</label>
+                        {% elif field.name == "password1" %}
+                          <label for="{{ field.id_for_label }}" data-i18n="auth.password">Пароль</label>
+                        {% elif field.name == "password2" %}
+                          <label for="{{ field.id_for_label }}" data-i18n="auth.passwordConfirm">Подтверждение пароля</label>
+                        {% else %}
+                          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {% endif %}
                         {{ field }}
                         {% if field.errors %}<div class="errorlist">{{ field.errors }}</div>{% endif %}
                     </div>
                 {% endfor %}
-                <button type="submit" class="btn-submit">Зарегистрироваться</button>
+                <button type="submit" class="btn-submit" data-i18n="auth.register">Зарегистрироваться</button>
             </form>
         </div>
 
@@ -137,11 +151,11 @@
                     <input type="email" name="username" class="form-input" required>
                 </div>
                 <div class="form-group">
-                    <label>Пароль</label>
+                    <label data-i18n="auth.password">Пароль</label>
                     <input type="password" name="password" class="form-input" required>
                 </div>
                 <div id="login-error-msg" style="color:red; font-size:14px; margin-bottom:10px; display:none;"></div>
-                <button type="submit" class="btn-submit">Войти</button>
+                <button type="submit" class="btn-submit" data-i18n="auth.login">Войти</button>
             </form>
         </div>
 
@@ -164,13 +178,10 @@
         return cookieValue;
     }
 
-    // Логика переключения табов
     function switchAuthTab(tabName) {
-        // Убираем активность у всех
         document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.auth-form-container').forEach(f => f.classList.remove('active'));
-        
-        // Добавляем нужному
+
         if(tabName === 'register') {
             document.querySelectorAll('.auth-tab')[0].classList.add('active');
             document.getElementById('tab-register').classList.add('active');
@@ -180,12 +191,11 @@
         }
     }
 
-    // Обработка входа (AJAX)
     document.getElementById('login-page-form').addEventListener('submit', function(e) {
         e.preventDefault();
         const formData = new FormData(this);
         const data = Object.fromEntries(formData.entries());
-        data.email = data.username; 
+        data.email = data.username;
 
         fetch("{% url 'personal_account:api_login' %}", {
             method: 'POST',
@@ -203,7 +213,7 @@
             }
 
             const err = document.getElementById('login-error-msg');
-            err.textContent = payload.message || 'Ошибка входа';
+            err.textContent = payload.message || (window.DessoUI ? window.DessoUI.t('auth.loginError') : 'Ошибка входа');
             err.style.display = 'block';
         });
     });
