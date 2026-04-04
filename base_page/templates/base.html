@@ -167,12 +167,9 @@
     <div class="stories-modal" id="storiesModal" aria-hidden="true">
       <div class="stories-backdrop"></div>
 
-      <div class="stories-frame" role="dialog" aria-modal="true" aria-label="Истории">
-        <div class="stories-progress" id="storiesProgress"></div>
-        <div class="stories-media" id="storiesMedia"></div>
-        <button class="stories-zone left"  id="storiesPrev" aria-label="Назад"></button>
-        <button class="stories-zone right" id="storiesNext" aria-label="Дальше"></button>
+      <div class="stories-viewer" role="dialog" aria-modal="true" aria-label="Истории">
         <button class="stories-close" id="storiesClose" aria-label="Закрыть">✕</button>
+        <div class="stories-rail" id="storiesRail"></div>
       </div>
     </div>
   {% endblock stories %}
@@ -227,25 +224,29 @@
   <script src="{% static 'base_page/js/header.js' %}"></script>
   <script src="{% static 'base_page/js/global_actions.js' %}"></script>
   <script>
-    const STORIES = {
+    window.STORIES = [
       {% for story in stories %}
-        "{{ story.id }}": [
-          {% for item in story.items.all %} 
-            {
-              type: "{{ item.media_type }}",
-              src: "{{ item.file.url }}",
-              {% if item.poster %}poster: "{{ item.poster.url }}",{% endif %}
-              {% if item.duration %}duration: {{ item.duration }},{% endif %}
-
-              /* CTA-данные (обязательно экранируем текст для JS) */
-              {% if item.cta_enabled %}cta_enabled: true,{% else %}cta_enabled: false,{% endif %}
-              {% if item.cta_text %}cta_text: "{{ item.cta_text|escapejs }}",{% endif %}
-              {% if item.cta_link %}cta_link: "{{ item.cta_link }}",{% endif %}
-          },
-          {% endfor %}
-        ],
+        {
+          id: "{{ story.id }}",
+          title: "{{ story.name|default:story.label|escapejs }}",
+          label: "{{ story.label|default:story.name|escapejs }}",
+          preview: "{{ story.cover_image.url }}",
+          items: [
+            {% for item in story.items.all %}
+              {
+                type: "{{ item.media_type }}",
+                src: "{{ item.file.url }}",
+                {% if item.poster %}poster: "{{ item.poster.url }}",{% endif %}
+                duration: {{ item.duration|default:5000 }},
+                cta_enabled: {% if item.cta_enabled %}true{% else %}false{% endif %},
+                {% if item.cta_text %}cta_text: "{{ item.cta_text|escapejs }}",{% endif %}
+                {% if item.cta_link %}cta_link: "{{ item.cta_link }}",{% endif %}
+              }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+          ]
+        }{% if not forloop.last %},{% endif %}
       {% endfor %}
-    };
+    ];
   </script>
   <script async src="{% static 'base_page/js/stories.js' %}"></script>
   <script src="{% static 'personal_account/js/cart_wishlist.js' %}"></script>

@@ -15,15 +15,14 @@ img{max-width:100%;display:block}
 
 :root {
   /* Основные параметры сториз */
-  --story-width: 600px;            /* максимальная ширина карточки */
+  --story-width: 430px;            /* ширина активной карточки */
   --story-ratio: 9 / 16;           /* соотношение сторон */
-  --story-max-height: 92vh;        /* максимальная высота */
-  --story-radius: 18px;            /* скругление углов */
+  --story-max-height: 88vh;        /* максимальная высота */
+  --story-radius: 28px;            /* скругление углов */
   --story-shadow: 0 20px 80px rgba(0,0,0,.6); /* тень */
-
-  /* Позиции */
-  --story-progress-top: 12px;      
-  --story-cta-bottom: 22px;        
+  --story-side-width: 270px;
+  --story-progress-top: 14px;
+  --story-cta-bottom: 22px;
 }
 
 /* ===== HERO (full-bleed) ===== */
@@ -160,6 +159,10 @@ img{max-width:100%;display:block}
   background: conic-gradient(from 0deg, #ff8bd1, #7b2cbf, #ff8bd1);
 }
 
+.story.is-viewed .ring {
+  background: linear-gradient(135deg, #d7d7d7, #a7a7a7);
+}
+
 .story .circle {
   width: 86px;
   height: 86px;
@@ -193,114 +196,309 @@ img{max-width:100%;display:block}
 
 /* ===== Stories modal (lightbox) ===== */
 .stories-modal{
-  position:fixed; inset:0; display:none; z-index:1000;
+  position:fixed;
+  inset:0;
+  display:none;
+  z-index:1000;
 }
-.stories-modal[aria-hidden="false"]{ display:block; }
+
+.stories-modal[aria-hidden="false"]{
+  display:block;
+}
 
 .stories-backdrop{
-  position:absolute; inset:0; background:rgba(0,0,0,.75);
+  position:absolute;
+  inset:0;
+  background:rgba(7, 7, 7, .88);
+  backdrop-filter: blur(6px);
 }
 
-.stories-frame{
-  position:absolute; inset:0;
-  display:grid; place-items:center;
-  padding:24px;
+.stories-viewer{
+  position:relative;
+  z-index:1;
+  min-height:100dvh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:28px 72px;
 }
 
-.stories-media {
-  position: relative;
-  width: min(var(--story-width), calc(var(--story-max-height) * (var(--story-ratio))));
-  aspect-ratio: var(--story-ratio);
-  max-height: var(--story-max-height);
-  background: #000;
-  border-radius: var(--story-radius);
-  overflow: hidden;
-  box-shadow: var(--story-shadow);
-  transform-origin: center;
-  transition: .25s ease;
+.stories-rail{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  width:100%;
+  max-width:1400px;
+  overflow:hidden;
 }
 
-/* CTA кнопка */
-.stories-media .cta-button {
-  position: absolute;
-  left: 50%;
-  bottom: var(--story-cta-bottom);
-  transform: translateX(-50%);
-  z-index: 20;
-
-  padding: 12px 20px;
-  border-radius: 999px;
-  font-weight: 600;
-  color: #fff;
-  background: linear-gradient(90deg, #ff7aa2, #7b2cbf);
-  text-decoration: none;
-  box-shadow: 0 8px 30px rgba(0,0,0,.35);
+.stories-card{
+  position:relative;
+  flex:0 0 var(--story-side-width);
+  width:var(--story-side-width);
+  aspect-ratio:var(--story-ratio);
+  border:0;
+  border-radius:var(--story-radius);
+  overflow:hidden;
+  background:#111;
+  cursor:pointer;
+  padding:0;
+  color:#fff;
+  box-shadow:0 20px 50px rgba(0,0,0,.28);
+  transform:scale(.9);
+  opacity:.35;
+  transition:transform .25s ease, opacity .25s ease, filter .25s ease;
 }
 
-@media (max-width: 700px) {
-  .stories-media .cta-button {
-    padding: 10px 16px;
-    font-size: 14px;
-    bottom: 14px;
+.stories-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,.22) 42%, rgba(0,0,0,.72) 100%);
+  pointer-events:none;
+}
+
+.stories-card.is-active{
+  flex-basis:min(var(--story-width), calc(var(--story-max-height) * var(--story-ratio)));
+  width:min(var(--story-width), calc(var(--story-max-height) * var(--story-ratio)));
+  max-height:var(--story-max-height);
+  opacity:1;
+  transform:scale(1);
+  filter:none;
+  box-shadow:var(--story-shadow);
+}
+
+.stories-card:not(.is-active):hover{
+  opacity:.58;
+  transform:scale(.94);
+}
+
+.stories-card.is-hidden{
+  display:none;
+}
+
+.stories-media{
+  position:absolute;
+  inset:0;
+  background:#121212;
+}
+
+.stories-media > video,
+.stories-media > img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  background:#111;
+}
+
+.stories-card:not(.is-active) .stories-media > video,
+.stories-card:not(.is-active) .stories-media > img{
+  filter:grayscale(.08) brightness(.72);
+}
+
+.stories-progress{
+  position:absolute;
+  top:var(--story-progress-top);
+  left:14px;
+  right:14px;
+  display:flex;
+  gap:6px;
+  pointer-events:none;
+  z-index:4;
+}
+
+.stories-progress .seg{
+  flex:1;
+  height:3px;
+  background:rgba(255,255,255,.28);
+  border-radius:999px;
+  overflow:hidden;
+}
+
+.stories-progress .seg .bar{
+  width:0;
+  height:100%;
+  background:#fff;
+}
+
+.stories-card-head{
+  position:absolute;
+  top:28px;
+  left:16px;
+  right:16px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  z-index:4;
+  pointer-events:none;
+}
+
+.stories-card-head img{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  object-fit:cover;
+  border:1px solid rgba(255,255,255,.45);
+}
+
+.stories-card-meta{
+  min-width:0;
+}
+
+.stories-card-title,
+.stories-card-label{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.stories-card-title{
+  font-size:14px;
+  font-weight:700;
+  color:#fff;
+}
+
+.stories-card-label{
+  font-size:12px;
+  color:rgba(255,255,255,.82);
+  margin-top:2px;
+}
+
+.stories-card-copy{
+  position:absolute;
+  left:18px;
+  right:18px;
+  bottom:18px;
+  z-index:4;
+  pointer-events:none;
+}
+
+.stories-card-copy .stories-card-title{
+  font-size:clamp(15px, 2vw, 18px);
+}
+
+.stories-card-copy .stories-card-label{
+  font-size:clamp(12px, 1.6vw, 14px);
+  margin-top:6px;
+}
+
+.stories-card.is-active .stories-card-copy{
+  bottom:24px;
+}
+
+.stories-card.is-active .stories-card-copy .stories-card-title{
+  font-size:22px;
+}
+
+.stories-card.is-active .stories-card-copy .stories-card-label{
+  font-size:15px;
+}
+
+.stories-card.is-active.has-cta .stories-card-copy{
+  bottom:84px;
+}
+
+.stories-media .cta-button{
+  position:absolute;
+  left:18px;
+  right:18px;
+  bottom:18px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:48px;
+  padding:12px 18px;
+  border-radius:999px;
+  background:rgba(255,255,255,.96);
+  color:#141414;
+  font-weight:700;
+  text-decoration:none;
+  box-shadow:0 14px 30px rgba(0,0,0,.24);
+  z-index:5;
+}
+
+.stories-zone{
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:50%;
+  background:transparent;
+  border:0;
+  cursor:pointer;
+  z-index:5;
+}
+
+.stories-zone.left{
+  left:0;
+}
+
+.stories-zone.right{
+  right:0;
+}
+
+.stories-close{
+  position:absolute;
+  top:18px;
+  right:18px;
+  width:42px;
+  height:42px;
+  border:0;
+  border-radius:50%;
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  font-size:18px;
+  cursor:pointer;
+  z-index:2;
+  backdrop-filter:blur(10px);
+}
+
+@media (max-width: 980px){
+  .stories-viewer{
+    padding:20px 16px;
+  }
+
+  .stories-rail{
+    gap:12px;
+  }
+
+  .stories-card{
+    flex-basis:220px;
+    width:220px;
   }
 }
 
-/* видео/фото внутри 9:16 — аккуратно вписываем */
-.stories-media > video,
-.stories-media > img{
-  position:absolute; inset:0; width:100%; height:100%;
-  object-fit:contain; /* сохраняем вертикальную форму 9:16 без обрезания */
-  background:#000;
-}
+@media (max-width: 700px){
+  :root{
+    --story-width: min(100vw - 24px, 420px);
+    --story-max-height: min(100dvh - 24px, 820px);
+  }
 
-/* progress */
-.stories-progress{
-  position:absolute; top:12px; width:min(420px, 92vw);
-  display:flex; gap:6px; pointer-events:none;
-}
-.stories-progress .seg{
-  flex:1; height:3px; background:rgba(255,255,255,.35);
-  border-radius:999px; overflow:hidden;
-}
-.stories-progress .seg .bar{
-  height:100%; width:0%; background:#fff; transition:none;
-}
+  .stories-viewer{
+    padding:12px;
+    align-items:stretch;
+  }
 
-/* зоны тапа */
-.stories-zone{
-  position:absolute; inset:0 0 0 0; background:transparent; border:0; cursor:pointer;
-}
-.stories-zone.left{ right:50%; }
-.stories-zone.right{ left:50%; }
+  .stories-rail{
+    max-width:none;
+  }
 
-/* close */
-.stories-close {
-  position: absolute;
-  top: 16px;
-  /* Увеличиваем отступ от края контента. 
-     Было: calc(50% - контент/2)
-     Стало: вычитаем еще 40-50px, чтобы отодвинуть вправо */
-  right: calc(50% - min(420px, 92vw)/2 - 50px); 
-  
-  /* Убираем transform, так как мы теперь точнее позиционируем через right, 
-     либо ставим translateX(0), чтобы не путаться */
-  transform: none; 
-  
-  background: rgba(0,0,0,0.5);
-  color: #fff;
-  border: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  cursor: pointer;
-  backdrop-filter: blur(2px);
-  z-index: 1100; /* Убедимся, что он выше всех элементов */
-}
+  .stories-card{
+    display:none;
+  }
 
-@media (max-width: 600px) {
-  .stories-close {
-    right: 15px; /* На мобилках просто фиксированный отступ от края экрана */
-    top: 15px;
+  .stories-card.is-active{
+    display:block;
+    width:100%;
+    flex-basis:100%;
+    max-height:none;
+  }
+
+  .stories-close{
+    top:14px;
+    right:14px;
   }
 }
 
