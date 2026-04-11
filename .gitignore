@@ -23,3 +23,7 @@ media/
 *.mp4
 *.mov
 *.avi
+
+staticfiles/
+venv/
+.env
