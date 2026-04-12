@@ -18,6 +18,7 @@
   {% block header %}
     <header class="site-header" id="siteHeader">
       <div class="header-top">
+        <button class="burger" id="burger">☰</button>
           <div class="header-settings">
             <div class="dropdown" id="cityDropdown">
                 <div class="action-btn dropbtn">
@@ -44,7 +45,10 @@
             </div>
         </div>
 
-          <a href="/" class="logo">DÉSSO FLOWERS ®</a>
+          <a href="/" class="logo">
+            <span class="logo-desktop">DÉSSO FLOWERS ®</span>
+            <span class="logo-mobile">DÉSSO FLOWERS ®</span>
+          </a>
 
           <div class="header-actions">
               <a href="{% if user.is_authenticated %}{% url 'personal_account:personal_account' %}#favorites{% else %}{% url 'personal_account:register' %}{% endif %}" 
@@ -73,7 +77,8 @@
           <div class="dropdown">
             <a href="#" class="dropbtn">Каталог</a> 
             <div class="dropdown-content">
-              <a href="{% url 'catalog_page' %}">Коллекции DÉSSO</a>
+              <a href="{% url 'catalog_page' %}">DÉSSO FLOWERS & SWEETS</a>
+              <a href="{% url 'catalog_page' %}">DÉSSO PERFUMES</a>
             </div>
           </div>
 
@@ -193,7 +198,7 @@
       <div>
         <h4>Навигация</h4>
         <ul>
-          <li><a href="#">Каталог</a></li>
+          <li><a href="#"></a></li>
           <li><a href="#">Доставка</a></li>
           <li><a href="#">Контакты</a></li>
         </ul>
@@ -250,6 +255,21 @@
   </script>
   <script async src="{% static 'base_page/js/stories.js' %}"></script>
   <script src="{% static 'personal_account/js/cart_wishlist.js' %}"></script>
+  <script>
+  const burger = document.getElementById('burger');
+  const menu = document.getElementById('headerBottom');
+
+  burger.addEventListener('click', () => {
+    menu.classList.toggle('active');
+  });
+
+  // dropdown по клику на мобиле
+  document.querySelectorAll('.dropdown').forEach(drop => {
+    drop.addEventListener('click', () => {
+      drop.classList.toggle('active');
+    });
+  });
+</script>
   {% endblock %}
 
 </body>

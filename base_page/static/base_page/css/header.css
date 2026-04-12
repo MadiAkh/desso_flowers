@@ -554,3 +554,147 @@
     display: block;
     animation: fadeInDown 0.2s ease-out; /* Более быстрая и четкая анимация */
 }
+
+/* ===== MOBILE HEADER ===== */
+.burger {
+  display: none;
+  font-size: 26px;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* мобильная версия */
+@media (max-width: 768px) {
+
+  .burger {
+    display: block;
+  }
+
+  .header-top {
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+
+  /* скрываем десктоп меню */
+  .header-bottom {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    max-height: 0;
+    overflow: hidden;
+    flex-direction: column;
+    transition: max-height .3s ease;
+  }
+
+  .header-bottom.active {
+    max-height: 300px;
+  }
+
+  .nav-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+  }
+
+  .nav-row a {
+    color: #56348b;
+  }
+
+  /* убираем hover dropdown */
+  .dropdown-content {
+    position: static;
+    transform: none;
+    box-shadow: none;
+    display: none;
+  }
+
+  .dropdown.active .dropdown-content {
+    display: block;
+  }
+}
+
+
+@media (max-width: 768px) {
+
+  .site-header {
+    background: #fff !important;
+    backdrop-filter: none !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,.05);
+  }
+
+  .site-header:hover {
+    background: #fff !important;
+    backdrop-filter: none !important;
+  }
+
+  .logo,
+  .action-btn,
+  .burger,
+  .nav-row a {
+    color: #56348b !important;
+  }
+
+}
+
+@media (max-width: 768px) {
+  .header-settings {
+    display: none;
+  }
+}
+
+.logo-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .logo-desktop {
+    display: none;
+  }
+  .logo-mobile {
+    display: block;
+    font-size: 20px;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .header-top {
+    display: grid;
+    grid-template-columns: 40px 1fr 80px;
+    align-items: center;
+  }
+
+  .burger {
+    justify-self: start;
+  }
+
+  .logo {
+    justify-self: center;
+  }
+
+  .header-actions {
+    justify-self: end;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .site-header:hover {
+    background: #fff;
+  }
+
+  .site-header:hover .logo,
+  .site-header:hover .action-btn,
+  .site-header:hover .nav-row a {
+    color: #56348b;
+  }
+}
